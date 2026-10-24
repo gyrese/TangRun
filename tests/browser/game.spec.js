@@ -51,10 +51,11 @@ test('mobile controls move and jump without overflow',async({page})=>{
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.locator('#play').click();
   const finger={x:135,y:240,id:1},right={x:195,y:240,id:1};
-  const jump=await page.locator('[data-control="jump"]').boundingBox();
-  const slide=await page.locator('[data-control="slide"]').boundingBox();
   const cdp=await page.context().newCDPSession(page);
   await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:2});
+  await expect(page.locator('body')).toHaveClass(/phone-mode/);
+  const jump=await page.locator('[data-control="jump"]').boundingBox();
+  const slide=await page.locator('[data-control="slide"]').boundingBox();
   const point=(box,id)=>({x:box.x+box.width/2,y:box.y+box.height/2,id});
   await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[finger]});await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[right]});await page.waitForTimeout(500);
   await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[right,point(slide,2)]});await page.waitForTimeout(150);

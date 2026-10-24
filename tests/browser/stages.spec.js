@@ -37,3 +37,15 @@ test('landscape selection fits on a phone and has visible keyboard focus',async(
  const play=await page.locator('#play').boundingBox();expect(play.y+play.height).toBeLessThanOrEqual(390);
  await page.screenshot({path:'.local/review-v5/selection-phone.png'});
 });
+
+test('phone finish keeps replay and next level accessible',async({browser})=>{
+ const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true}),page=await context.newPage();
+ await page.addInitScript(()=>{Element.prototype.requestFullscreen=()=>Promise.resolve();});
+ await page.goto('/');await expect(page.locator('#boot-screen')).toBeHidden();await expect(page.locator('#play')).toBeEnabled();
+ await page.locator('[data-stage="volcano"]').click();await page.locator('#play').click();
+ await page.evaluate(()=>{const s=window.__LTN__.game.scene.getScene('run');s.elapsed=19000;s.runner.x=s.runEnd+1;});
+ await expect(page.locator('#next-stage')).toBeVisible();
+ await page.screenshot({path:'.local/review-v5/finish-phone.png'});
+ for(const id of ['play','next-stage']){const rect=await page.locator(`#${id}`).boundingBox();expect(rect.y).toBeGreaterThanOrEqual(0);expect(rect.y+rect.height).toBeLessThanOrEqual(390);}
+ await context.close();
+});

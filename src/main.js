@@ -53,6 +53,7 @@ class RunScene extends Phaser.Scene{
   this.checkpoint={x:this.runStart};const floor=groundAt(this.level,this.runStart);this.runner=createRunner(this.runStart,heightOn(floor,this.runStart));this.runner.surfaceId=floor.id;
   try{best=readBest(localStorage,recordKey(selectedStage));}catch{best=null;}
   $('best').textContent=best?formatTime(best):'— — : — —';$('next-stage').hidden=true;$('split-results').textContent='';
+  document.querySelectorAll('.progress-track>i').forEach(marker=>marker.hidden=!!stage);
   for(const coin of this.coins)coin.setActive(true).setVisible(true);
   this.syncPlayer();this.cameras.main.scrollX=Math.max(0,this.runStart-160);this.cameras.main.scrollY=0;this.dust.clear();
   this.backgrounds.forEach((background,i)=>{background.tilePositionX=0;background.setAlpha(i===this.zone?1:0);});

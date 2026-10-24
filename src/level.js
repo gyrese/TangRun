@@ -36,7 +36,7 @@ export function buildLevel(){
  // Learning -> repetition -> mastery. Upper routes remain optional throughout.
  level.gaps=STRIPS.slice(1).map((s,i)=>[STRIPS[i].at(-1)[0],s[0][0]]);
  const floorAt=x=>{const s=groundAt({terrain},x);return heightOn(s,x);};
- const sceneryFixes={'scenery-4':2500,'scenery-8':6330,'scenery-12':9570,'scenery-14':11100,'scenery-17':12700,'scenery-20':14780,'scenery-27':19350,'scenery-30':21900,'scenery-31':23150,'scenery-37':2080,'cluster-13':2770,'cluster-62':12300,'cluster-75':15200,'cluster-104':21000};
+ const sceneryFixes={'scenery-4':2720,'scenery-8':6330,'scenery-12':9570,'scenery-14':11100,'scenery-17':12750,'scenery-20':14780,'scenery-27':19350,'scenery-30':21900,'scenery-31':23150,'scenery-37':2080,'cluster-13':2770,'cluster-62':12300,'cluster-75':15200,'cluster-104':21000};
  for(const item of level.scenery)if(sceneryFixes[item.id]!==undefined)item.x=sceneryFixes[item.id];
  const smallHut=level.scenery.find(s=>s.id==='scenery-14');smallHut.scale=.5;
  for(const mover of level.movers)mover.style='ropebridge';

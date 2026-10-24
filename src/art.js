@@ -12,7 +12,12 @@ export function preloadArt(scene){
  scene.load.image('volcano','/assets/v3/volcano.webp');scene.load.image('mafate','/assets/v3/mafate-remparts.webp');scene.load.image('beam','/assets/v3/beam.webp');
 }
 export function drawBackdrop(scene){
- scene.backgrounds=['volcano','mafate','coast'].map((key,i)=>scene.add.tileSprite(0,0,scene.scale.width,540,key).setOrigin(0).setScrollFactor(0).setDepth(-30+i).setAlpha(i===0?1:0));
+ // Bring the coastal horizon above the running surface; the original framing
+ // buried the entire ocean behind the foreground when following the valley floor.
+ const coast=scene.textures.get('coast').getSourceImage(),framed=scene.textures.createCanvas('coast-framed',coast.width,540),c=framed.context;
+ c.imageSmoothingEnabled=false;c.drawImage(coast,0,0,coast.width,378);
+ c.drawImage(coast,0,510,coast.width,30,0,378,coast.width,162);framed.refresh();
+ scene.backgrounds=['volcano','mafate','coast-framed'].map((key,i)=>scene.add.tileSprite(0,0,scene.scale.width,540,key).setOrigin(0).setScrollFactor(0).setDepth(-30+i).setAlpha(i===0?1:0));
  scene.background=scene.backgrounds[0];
  const motes=scene.add.graphics().setScrollFactor(.12).setDepth(-10);
  for(let i=0;i<80;i++){motes.fillStyle(i%3?0xb9d49a:0xffbe77,.25);motes.fillRect((i*379+140)%3000,60+(i*53)%285,i%4?1:2,1);}

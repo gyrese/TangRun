@@ -241,21 +241,8 @@
   "pickups": 253,
   "checkpoints": 15,
   "scenery": {
-    "placed": 136,
-    "omitted": [
-      {
-        "id": "scenery-4",
-        "key": "lavarocks",
-        "x": 2500,
-        "visible": false
-      },
-      {
-        "id": "scenery-17",
-        "key": "hut",
-        "x": 12700,
-        "visible": false
-      }
-    ]
+    "placed": 138,
+    "omitted": []
   },
   "missingAssets": []
 }
