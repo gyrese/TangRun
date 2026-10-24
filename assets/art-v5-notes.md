@@ -1,0 +1,15 @@
+# Révision visuelle V5
+
+Génération avec l’outil intégré ImageGen, puis seconde passe de détourage avec alpha. Originaux archivés dans `assets/source/v5`. Les quatre découpes lossless sont dans `public/assets/v5` et leurs coordonnées dans `assets/manifest-v5.json`. Aucun logo généré : le logo officiel déjà présent reste utilisé.
+
+## Prompt de création
+
+Create a production 2D sidescroller game modular terrain sprite atlas for a Reunion island platformer. Transparent background real alpha. Cohesive restrained detailed pixel art, dark blue charcoal volcanic basalt, moss sage green, weathered brown timber, warm muted highlights, side-on orthographic, no perspective. One 1536 by 1024 atlas, four isolated sprites in four equal quadrants with ample transparent margins, absolutely no text labels characters logos shadows outside objects. TOP LEFT: broad horizontal natural basalt ledge 600px wide, perfectly horizontal flat walkable top, 90px thick fractured irregular rocky underside, a thin subtle moss surface. TOP RIGHT: single suspension footbridge 600px wide, perfectly horizontal wooden walking deck, only two posts at extreme endpoints, sagging ropes above deck, no intermediary posts, 110px total height. BOTTOM LEFT: natural continuous basalt rock looping arch, circular hollow interior exactly a clean circle, centered quadrant, outer radius200px inner radius165px, flat bottom plinth, face built of organically irregular basalt boulders with sparse moss, no bricks no gold stripes no text. BOTTOM RIGHT: standalone tall tapered basalt pinnacle, flat plateau top, 200px wide by360px tall, irregular organically fractured sides and dark depth, sparse moss near top. All sprites share identical pixel detail scale, crisp deliberate pixel edges rather than painted blur. Atlas is a functional game sprite sheet, not a concept scene.
+
+## Prompt de détourage
+
+Precise background extraction of this game atlas. Preserve the exact four sprite objects, their colors, proportions and positions. Remove ALL background, all glow, fog, gradient, ground shadow and atmospheric haze everywhere between and around objects, and inside the hollow loop. Background must be truly fully transparent alpha 0. Only the rock ledge, the wooden suspension bridge with stone feet, the hollow rock loop and the rock pinnacle should remain. Their interiors must be opaque. Crisp clean cutout edges, no fringe. No other change.
+
+## Intégration
+
+Les nouveaux sprites remplacent les façades suspendues, les piliers rectangulaires, les ponts constitués de petits tronçons et la boucle en briques. Les bâtiments sont posés au sol et la route haute de la côte est abaissée pour laisser voir l’océan. Les surfaces de marche et l’ouverture du looping sont enregistrées indépendamment des marges des images. La matière du sol vient du même rocher ; ses bords sont réfléchis pour atténuer les raccords. Les panneaux sont plus rares et plus courts. Les textes de l’accueil, de l’interface, des panneaux et des messages ont été relus.

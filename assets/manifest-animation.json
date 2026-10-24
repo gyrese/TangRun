@@ -1,0 +1,200 @@
+[
+  {
+    "key": "water",
+    "file": "public/assets/animation/water-sheet.png",
+    "source": "assets/source/animation/water.png",
+    "frames": 8,
+    "frameSize": [
+      128,
+      224
+    ],
+    "sourceBounds": [
+      [
+        75,
+        28,
+        342,
+        447
+      ],
+      [
+        72,
+        28,
+        342,
+        447
+      ],
+      [
+        74,
+        27,
+        344,
+        443
+      ],
+      [
+        74,
+        27,
+        344,
+        443
+      ],
+      [
+        73,
+        28,
+        344,
+        448
+      ],
+      [
+        73,
+        28,
+        344,
+        448
+      ],
+      [
+        75,
+        28,
+        344,
+        444
+      ],
+      [
+        79,
+        28,
+        339,
+        448
+      ]
+    ],
+    "scale": 0.44280442804428044,
+    "alpha": [
+      0,
+      255
+    ],
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "fire",
+    "file": "public/assets/animation/fire-sheet.png",
+    "source": "assets/source/animation/fire.png",
+    "frames": 8,
+    "frameSize": [
+      96,
+      128
+    ],
+    "sourceBounds": [
+      [
+        99,
+        225,
+        341,
+        446
+      ],
+      [
+        59,
+        124,
+        362,
+        446
+      ],
+      [
+        17,
+        51,
+        377,
+        446
+      ],
+      [
+        15,
+        84,
+        399,
+        446
+      ],
+      [
+        61,
+        46,
+        418,
+        406
+      ],
+      [
+        0,
+        83,
+        398,
+        409
+      ],
+      [
+        74,
+        81,
+        353,
+        409
+      ],
+      [
+        108,
+        236,
+        277,
+        409
+      ]
+    ],
+    "scale": 0.22110552763819097,
+    "alpha": [
+      0,
+      255
+    ],
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "cat",
+    "file": "public/assets/animation/cat-sheet.png",
+    "source": "assets/source/animation/cat.png",
+    "frames": 8,
+    "frameSize": [
+      64,
+      64
+    ],
+    "sourceBounds": [
+      [
+        58,
+        190,
+        357,
+        437
+      ],
+      [
+        70,
+        180,
+        348,
+        439
+      ],
+      [
+        56,
+        185,
+        319,
+        443
+      ],
+      [
+        17,
+        195,
+        328,
+        435
+      ],
+      [
+        46,
+        50,
+        372,
+        406
+      ],
+      [
+        25,
+        47,
+        339,
+        406
+      ],
+      [
+        10,
+        137,
+        377,
+        406
+      ],
+      [
+        27,
+        29,
+        366,
+        406
+      ]
+    ],
+    "scale": 0.14323607427055704,
+    "alpha": [
+      0,
+      255
+    ],
+    "generatedWith": "built-in ImageGen"
+  }
+]

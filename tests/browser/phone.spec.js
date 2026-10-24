@@ -1,0 +1,23 @@
+import {test,expect} from '@playwright/test';
+test('phone landscape floating joystick, simultaneous jump and portrait pause',async({browser})=>{
+ const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true});const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(()=>{Element.prototype.requestFullscreen=()=>Promise.resolve();});
+ await page.goto('http://127.0.0.1:5180');await expect(page.locator('#play')).toBeEnabled();await expect(page.locator('body')).toHaveClass(/phone-mode/);await page.locator('#play').click();
+ await expect(page.locator('#joystick')).toBeHidden();
+ const view=await page.locator('#viewport').boundingBox();expect(view.x).toBe(0);expect(view.width).toBe(844);
+ await expect.poll(()=>page.evaluate(()=>window.__LTN__.game.scale.gameSize.width)).toBe(Math.round(540*view.width/view.height));
+ const cdp=await context.newCDPSession(page),finger={x:135,y:240,id:1};
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[finger]});await expect(page.locator('#joystick')).toBeVisible();
+ const position=await page.locator('#joystick').boundingBox();expect(Math.abs(position.x+56-135)).toBeLessThan(2);expect(Math.abs(position.y+56-240)).toBeLessThan(2);
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...finger,x:195}]});await page.waitForTimeout(450);
+ const moved=await page.evaluate(()=>window.__LTN__.state);expect(moved.x).toBeGreaterThan(140);
+ const box=await page.locator('[data-control="jump"]').boundingBox();const jump={x:box.x+box.width/2,y:box.y+box.height/2,id:2};
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...finger,x:195},jump]});await page.waitForTimeout(120);expect((await page.evaluate(()=>window.__LTN__.state)).grounded).toBe(false);
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await expect(page.locator('#joystick')).toBeHidden();
+ await page.screenshot({path:'.local/phone-landscape-stick.png'});
+ await page.setViewportSize({width:390,height:844});await expect(page.locator('.rotate-phone')).toBeVisible();await expect.poll(()=>page.evaluate(()=>window.__LTN__.state.mode)).toBe('paused');
+ await page.setViewportSize({width:844,height:390});await expect(page.locator('.rotate-phone')).toBeHidden();await page.locator('#play').click();
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[finger]});await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...finger,x:75}]});await page.waitForTimeout(650);expect((await page.evaluate(()=>window.__LTN__.state)).vx).toBeLessThan(0);
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});await expect(page.locator('#joystick')).toBeHidden();
+ expect(errors).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await context.close();
+});

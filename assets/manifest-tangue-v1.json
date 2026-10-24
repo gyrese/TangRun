@@ -1,0 +1,28 @@
+{
+  "character": "Tangue de La Réunion",
+  "tool": "built-in ImageGen",
+  "source": "assets/source/tangue-v1.png",
+  "frameSize": [
+    64,
+    64
+  ],
+  "run": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "extras": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "previousCharacterBackup": "backups/chat-2026-10-24"
+}

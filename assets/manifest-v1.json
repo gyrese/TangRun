@@ -1,0 +1,247 @@
+{
+  "tool": "built-in ImageGen",
+  "date": "2026-10-24",
+  "assets": [
+    {
+      "file": "public/assets/coast-v1.webp",
+      "source": "assets/source/coast-v1.png",
+      "size": [
+        960,
+        540
+      ],
+      "bytes": 620226,
+      "alpha": null,
+      "role": "decorative-background",
+      "collision": false
+    },
+    {
+      "file": "public/assets/coast-parallax-v1.webp",
+      "source": "assets/source/coast-v1.png",
+      "size": [
+        1920,
+        540
+      ],
+      "bytes": 1246668,
+      "alpha": null,
+      "role": "decorative-background",
+      "collision": false,
+      "horizontalSeam": "exact mirrored boundaries",
+      "scrollFactor": 0.045
+    },
+    {
+      "file": "public/assets/ground-v1.webp",
+      "source": "assets/source/ground-v1.png",
+      "size": [
+        576,
+        150
+      ],
+      "bytes": 141644,
+      "alpha": null,
+      "role": "repeatable-platform-texture",
+      "collision": false,
+      "horizontalSeam": "exact mirrored boundaries"
+    },
+    {
+      "file": "public/assets/qg-v1.webp",
+      "source": "assets/source/qg-v1.png",
+      "size": [
+        768,
+        296
+      ],
+      "bytes": 296130,
+      "alpha": [
+        0,
+        255
+      ],
+      "role": "finish-scenery",
+      "pivot": [
+        0.5,
+        1
+      ],
+      "collision": false
+    },
+    {
+      "file": "public/assets/mascot-run-v1.png",
+      "source": "assets/source/mascot-v1.png",
+      "size": [
+        384,
+        64
+      ],
+      "bytes": 34385,
+      "alpha": [
+        0,
+        255
+      ],
+      "role": "animated-player-visual",
+      "frames": 6,
+      "frameSize": [
+        64,
+        64
+      ],
+      "footBaseline": 62,
+      "sourceBounds": [
+        [
+          113,
+          90,
+          417,
+          478
+        ],
+        [
+          76,
+          106,
+          435,
+          478
+        ],
+        [
+          66,
+          104,
+          408,
+          478
+        ],
+        [
+          98,
+          53,
+          432,
+          432
+        ],
+        [
+          98,
+          64,
+          430,
+          432
+        ],
+        [
+          42,
+          40,
+          445,
+          382
+        ]
+      ],
+      "collision": false
+    },
+    {
+      "file": "public/assets/palm-v1.webp",
+      "source": "assets/source/props-v1.png",
+      "size": [
+        212,
+        276
+      ],
+      "bytes": 49494,
+      "alpha": [
+        0,
+        255
+      ],
+      "role": "decorative-palm",
+      "pivot": [
+        0.5,
+        1
+      ],
+      "collision": false,
+      "sourceRegion": [
+        150,
+        0,
+        750,
+        625
+      ],
+      "sourceBounds": [
+        97,
+        20,
+        551,
+        611
+      ]
+    },
+    {
+      "file": "public/assets/arcade-v1.webp",
+      "source": "assets/source/props-v1.png",
+      "size": [
+        63,
+        118
+      ],
+      "bytes": 11706,
+      "alpha": [
+        0,
+        255
+      ],
+      "role": "decorative-arcade",
+      "pivot": [
+        0.5,
+        1
+      ],
+      "collision": false,
+      "sourceRegion": [
+        850,
+        0,
+        1360,
+        625
+      ],
+      "sourceBounds": [
+        123,
+        105,
+        388,
+        601
+      ]
+    },
+    {
+      "file": "public/assets/crate-v1.webp",
+      "source": "assets/source/props-v1.png",
+      "size": [
+        63,
+        64
+      ],
+      "bytes": 8692,
+      "alpha": [
+        0,
+        255
+      ],
+      "role": "crate-visual",
+      "pivot": [
+        0.5,
+        1
+      ],
+      "collision": false,
+      "sourceRegion": [
+        200,
+        630,
+        760,
+        1024
+      ],
+      "sourceBounds": [
+        132,
+        26,
+        448,
+        347
+      ]
+    },
+    {
+      "file": "public/assets/planter-v1.webp",
+      "source": "assets/source/props-v1.png",
+      "size": [
+        113,
+        78
+      ],
+      "bytes": 13708,
+      "alpha": [
+        0,
+        255
+      ],
+      "role": "decorative-planter",
+      "pivot": [
+        0.5,
+        1
+      ],
+      "collision": false,
+      "sourceRegion": [
+        800,
+        630,
+        1536,
+        1024
+      ],
+      "sourceBounds": [
+        57,
+        11,
+        567,
+        363
+      ]
+    }
+  ]
+}

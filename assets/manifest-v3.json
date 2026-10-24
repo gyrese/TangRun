@@ -1,0 +1,708 @@
+[
+  {
+    "key": "pier",
+    "file": "public/assets/v3/pier.webp",
+    "source": "assets/source/v3/harbor.png",
+    "region": [
+      0,
+      0,
+      660,
+      490
+    ],
+    "bounds": [
+      10,
+      172,
+      650,
+      483
+    ],
+    "size": [
+      268,
+      130
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "rocks",
+    "file": "public/assets/v3/rocks.webp",
+    "source": "assets/source/v3/harbor.png",
+    "region": [
+      620,
+      0,
+      1145,
+      485
+    ],
+    "bounds": [
+      6,
+      238,
+      519,
+      464
+    ],
+    "size": [
+      159,
+      70
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "boat",
+    "file": "public/assets/v3/boat.webp",
+    "source": "assets/source/v3/harbor.png",
+    "region": [
+      1120,
+      0,
+      1672,
+      485
+    ],
+    "bounds": [
+      9,
+      70,
+      543,
+      466
+    ],
+    "size": [
+      175,
+      130
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "bench",
+    "file": "public/assets/v3/bench.webp",
+    "source": "assets/source/v3/harbor.png",
+    "region": [
+      0,
+      500,
+      580,
+      941
+    ],
+    "bounds": [
+      66,
+      109,
+      548,
+      359
+    ],
+    "size": [
+      112,
+      58
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "bollards",
+    "file": "public/assets/v3/bollards.webp",
+    "source": "assets/source/v3/harbor.png",
+    "region": [
+      580,
+      500,
+      1145,
+      941
+    ],
+    "bounds": [
+      29,
+      155,
+      545,
+      346
+    ],
+    "size": [
+      149,
+      55
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "surfboards",
+    "file": "public/assets/v3/surfboards.webp",
+    "source": "assets/source/v3/harbor.png",
+    "region": [
+      1145,
+      480,
+      1672,
+      941
+    ],
+    "bounds": [
+      67,
+      11,
+      451,
+      390
+    ],
+    "size": [
+      111,
+      110
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "kiosk",
+    "file": "public/assets/v3/kiosk.webp",
+    "source": "assets/source/v3/district.png",
+    "region": [
+      0,
+      0,
+      557,
+      470
+    ],
+    "bounds": [
+      8,
+      53,
+      543,
+      445
+    ],
+    "size": [
+      252,
+      185
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "comics",
+    "file": "public/assets/v3/comics.webp",
+    "source": "assets/source/v3/district.png",
+    "region": [
+      557,
+      0,
+      1105,
+      470
+    ],
+    "bounds": [
+      36,
+      107,
+      505,
+      446
+    ],
+    "size": [
+      256,
+      185
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "gameshop",
+    "file": "public/assets/v3/gameshop.webp",
+    "source": "assets/source/v3/district.png",
+    "region": [
+      1105,
+      0,
+      1672,
+      470
+    ],
+    "bounds": [
+      9,
+      107,
+      562,
+      445
+    ],
+    "size": [
+      303,
+      185
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "footbridge",
+    "file": "public/assets/v3/footbridge.webp",
+    "source": "assets/source/v3/district.png",
+    "region": [
+      0,
+      500,
+      675,
+      941
+    ],
+    "bounds": [
+      28,
+      150,
+      667,
+      341
+    ],
+    "size": [
+      335,
+      100
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "neonarrow",
+    "file": "public/assets/v3/neonarrow.webp",
+    "source": "assets/source/v3/district.png",
+    "region": [
+      700,
+      480,
+      1000,
+      941
+    ],
+    "bounds": [
+      78,
+      65,
+      265,
+      361
+    ],
+    "size": [
+      73,
+      115
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "arch",
+    "file": "public/assets/v3/arch.webp",
+    "source": "assets/source/v3/district.png",
+    "region": [
+      1080,
+      470,
+      1672,
+      941
+    ],
+    "bounds": [
+      4,
+      27,
+      580,
+      371
+    ],
+    "size": [
+      410,
+      245
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "plants",
+    "file": "public/assets/v3/plants.webp",
+    "source": "assets/source/v3/festival.png",
+    "region": [
+      0,
+      0,
+      580,
+      520
+    ],
+    "bounds": [
+      27,
+      74,
+      580,
+      513
+    ],
+    "size": [
+      120,
+      95
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "frangipani",
+    "file": "public/assets/v3/frangipani.webp",
+    "source": "assets/source/v3/festival.png",
+    "region": [
+      540,
+      0,
+      1120,
+      520
+    ],
+    "bounds": [
+      15,
+      60,
+      567,
+      513
+    ],
+    "size": [
+      286,
+      235
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "lantern",
+    "file": "public/assets/v3/lantern.webp",
+    "source": "assets/source/v3/festival.png",
+    "region": [
+      1150,
+      0,
+      1536,
+      520
+    ],
+    "bounds": [
+      35,
+      16,
+      287,
+      513
+    ],
+    "size": [
+      94,
+      185
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "terrace",
+    "file": "public/assets/v3/terrace.webp",
+    "source": "assets/source/v3/festival.png",
+    "region": [
+      0,
+      520,
+      490,
+      1024
+    ],
+    "bounds": [
+      27,
+      20,
+      468,
+      452
+    ],
+    "size": [
+      138,
+      135
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "speakers",
+    "file": "public/assets/v3/speakers.webp",
+    "source": "assets/source/v3/festival.png",
+    "region": [
+      500,
+      520,
+      940,
+      1024
+    ],
+    "bounds": [
+      5,
+      92,
+      385,
+      449
+    ],
+    "size": [
+      101,
+      95
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "canopy",
+    "file": "public/assets/v3/canopy.webp",
+    "source": "assets/source/v3/festival.png",
+    "region": [
+      950,
+      520,
+      1536,
+      1024
+    ],
+    "bounds": [
+      1,
+      70,
+      572,
+      448
+    ],
+    "size": [
+      189,
+      125
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "lavarocks",
+    "file": "public/assets/v3/lavarocks.webp",
+    "source": "assets/source/v3/island.png",
+    "region": [
+      0,
+      0,
+      555,
+      480
+    ],
+    "bounds": [
+      16,
+      274,
+      549,
+      463
+    ],
+    "size": [
+      231,
+      82
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "basaltarch",
+    "file": "public/assets/v3/basaltarch.webp",
+    "source": "assets/source/v3/island.png",
+    "region": [
+      555,
+      0,
+      1145,
+      480
+    ],
+    "bounds": [
+      8,
+      132,
+      585,
+      468
+    ],
+    "size": [
+      386,
+      225
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "tamarind",
+    "file": "public/assets/v3/tamarind.webp",
+    "source": "assets/source/v3/island.png",
+    "region": [
+      1145,
+      0,
+      1672,
+      480
+    ],
+    "bounds": [
+      0,
+      43,
+      510,
+      468
+    ],
+    "size": [
+      312,
+      260
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "hut",
+    "file": "public/assets/v3/hut.webp",
+    "source": "assets/source/v3/island.png",
+    "region": [
+      0,
+      500,
+      575,
+      941
+    ],
+    "bounds": [
+      11,
+      55,
+      573,
+      370
+    ],
+    "size": [
+      268,
+      150
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "ropebridge",
+    "file": "public/assets/v3/ropebridge.webp",
+    "source": "assets/source/v3/island.png",
+    "region": [
+      575,
+      580,
+      1240,
+      930
+    ],
+    "bounds": [
+      1,
+      78,
+      658,
+      284
+    ],
+    "size": [
+      287,
+      90
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "waterfall",
+    "file": "public/assets/v3/waterfall.webp",
+    "source": "assets/source/v3/island.png",
+    "region": [
+      1240,
+      480,
+      1672,
+      941
+    ],
+    "bounds": [
+      15,
+      11,
+      420,
+      422
+    ],
+    "size": [
+      276,
+      280
+    ],
+    "pivot": [
+      0.5,
+      1
+    ],
+    "collision": false,
+    "generatedWith": "built-in ImageGen"
+  },
+  {
+    "key": "volcano",
+    "file": "public/assets/v3/volcano.webp",
+    "size": [
+      1920,
+      540
+    ],
+    "source": "assets/source/v3/volcano.png",
+    "generatedWith": "built-in ImageGen",
+    "collision": false,
+    "seam": "mirrored"
+  },
+  {
+    "key": "mafate",
+    "file": "public/assets/v3/mafate.webp",
+    "size": [
+      1920,
+      540
+    ],
+    "source": "assets/source/v3/mafate.png",
+    "generatedWith": "built-in ImageGen",
+    "collision": false,
+    "seam": "mirrored"
+  },
+  {
+    "key": "coast-wide",
+    "file": "public/assets/v3/coast-wide.webp",
+    "size": [
+      1920,
+      540
+    ],
+    "source": "assets/source/v3/coast-wide.png",
+    "generatedWith": "built-in ImageGen",
+    "collision": false,
+    "seam": "single wide panorama"
+  },
+  {
+    "key": "mafate-remparts",
+    "file": "public/assets/v3/mafate-remparts.webp",
+    "size": [
+      1920,
+      540
+    ],
+    "source": "assets/source/v3/mafate-remparts.png",
+    "generatedWith": "built-in ImageGen",
+    "collision": false,
+    "seam": "single wide panorama"
+  },
+  {
+    "key": "beam",
+    "file": "public/assets/v3/beam.webp",
+    "source": "public/assets/v3/footbridge.webp",
+    "size": [
+      288,
+      24
+    ],
+    "collision": "visual matches beam rectangle"
+  }
+]
