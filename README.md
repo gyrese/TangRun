@@ -2,6 +2,8 @@
 
 ## Variante tangue — 24 octobre 2026
 
+La course utilise huit poses dédiées à une foulée complète, avec cadrage et échelle communs. Source : `assets/source/tangue-run-v3.png` ; atlas : `public/assets/tangue/run-cycle-v3.png` ; export : `python scripts/prepare-tangue-run.py`. Les poses d’attente, saut et roulade restent séparées.
+
 Le personnage actif est désormais le tangue de La Réunion V2 : héros bipède en pixel art, course sur deux pieds, lunettes de soleil noires, baskets et foulard corail. Pour rejouer avec le chat, ajouter `?perso=cat` à l’adresse du jeu ; `?perso=tangue-v1` retrouve le premier tangue ; `?perso=tangue` sélectionne la nouvelle version. Les collisions et les mouvements restent identiques.
 
 La sauvegarde complète du chat, de ses assets et du code avant ce changement se trouve dans `backups/chat-2026-10-24/`. Ses sources et exports restent aussi présents à leurs emplacements d’origine. Les nouveaux sprites sont indépendants : `assets/source/tangue-v2.png` et `public/assets/tangue/`. Régénération des atlas : `python scripts/prepare-tangue.py --version v2`. Le prompt est conservé dans `assets/prompt-tangue-v2.txt`.

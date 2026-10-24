@@ -8,6 +8,7 @@ export function preloadArt(scene){
  for(const key of ['ledge','bridge','loop','pinnacle'])scene.load.image(`island-${key}`,`/assets/v5/${key}.webp`);
  for(const [key,file]of Object.entries({coast:'v3/coast-wide.webp',qg:'qg-v1.webp',palm:'palm-v1.webp',arcade:'arcade-v1.webp',crate:'crate-v1.webp',planter:'planter-v1.webp',ground:'ground-v1.webp',barLogo:'logo-les-toiles-noires.png'}))scene.load.image(key,`/assets/${file}`);
  scene.load.spritesheet('mascot',character.run,{frameWidth:64,frameHeight:64});
+ if(character.runCycle)scene.load.spritesheet('mascot-run-cycle',character.runCycle,{frameWidth:64,frameHeight:64});
  for(const key of V3_KEYS)scene.load.image(key,`/assets/v3/${key}.webp`);
  scene.load.image('volcano','/assets/v3/volcano.webp');scene.load.image('mafate','/assets/v3/mafate-remparts.webp');scene.load.image('beam','/assets/v3/beam.webp');
 }
@@ -72,6 +73,7 @@ export function updateMascot(scene){
   const landing=p.grounded&&visualTime-(scene.landedAt??-1000)<120;
   const special=scene.mode==='finished'?7:landing?6:idle?(visualTime%3800>3620?5:4):null;
   if(special!==null)scene.mascot.setTexture('mascot-extras',special);
+  else if(p.grounded&&character.runCycle)scene.mascot.setTexture('mascot-run-cycle',Math.floor(scene.mascotCycle.phase*character.runFrames/4));
   else scene.mascot.setTexture('mascot',!p.grounded?5:1+cycleFrame);
   scene.mascot.setOrigin(.5,1).setScale(1,idle?1+Math.sin(visualTime*.003)*.012:1).setAngle(p.angle*180/Math.PI*.45).setPosition(p.x+4,p.feet+2);
  }
