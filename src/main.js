@@ -4,6 +4,8 @@ import {preloadArt,drawBackdrop,drawStreet,drawPlatformArt,updateMascot,drawCour
 import {buildLevel,formatTime,readBest,WORLD_WIDTH,GOAL_X,SPEED,MAX_SPEED,ZONES,STAGES,recordKey,groundAt,heightOn} from './level.js';
 import {createRunner,stepRunner} from './movement.js';
 import {createLivingWorld,updateLivingWorld} from './living-world.js';
+import {drawPathDetails} from './route-dressing.js';
+import {createSpeedFeedback,resetSpeedFeedback,updateSpeedFeedback,fitSpeedBackdrop} from './speed-feedback.js';
 const $=id=>document.getElementById(id),reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const touch={left:false,right:false,jump:false,slide:false};let gameScene,best=null,selectedStage='campaign';
 try{best=readBest(localStorage);}catch{}
@@ -25,12 +27,12 @@ class RunScene extends Phaser.Scene{
   ctx.fillStyle='#5b9076';ctx.fillRect(4,2,10,18);ctx.fillStyle='#ccecb2';ctx.fillRect(2,5,14,12);ctx.fillStyle='#fff6be';ctx.fillRect(7,4,4,14);texture.refresh();
   drawBackdrop(this);
   for(const p of [...this.level.terrain,...this.level.platforms])drawPlatformArt(this,p);
-  drawStreet(this);drawCourseMechanisms(this);
+  drawStreet(this);drawCourseMechanisms(this);drawPathDetails(this);
   this.coins=this.level.tokens.map(t=>this.add.image(t.x,t.y,'token').setDepth(6));
   this.player=this.add.rectangle(80,400,22,34,0xffffff,0);
   this.mascot=this.add.sprite(84,422,'mascot',0).setOrigin(.5,1).setDepth(10);
   this.visualClock=0;this.landedAt=-1000;createLivingWorld(this);
-  this.dust=this.add.graphics().setDepth(9);updateMascot(this);
+  this.dust=this.add.graphics().setDepth(9);createSpeedFeedback(this);updateMascot(this);
   this.cameras.main.setBounds(0,0,WORLD_WIDTH,1000);
   this.cameras.main.startFollow(this.player,true,reducedMotion?1:.12,reducedMotion?1:.1,-140,110);
   this.cameras.main.setDeadzone(90,80);
@@ -48,7 +50,7 @@ class RunScene extends Phaser.Scene{
   this.updateHud();$('play').disabled=false;$('play').textContent='APPUYER SUR START';
  }
  startRun(){
-  clearControls();this.input.keyboard.resetKeys();this.mode='running';document.body.classList.add('is-playing');this.runner=createRunner();this.elapsed=0;this.count=0;this.falls=0;this.zone=0;this.clock=0;this.accumulator=0;this.lastHud=0;this.trails=[];this.checkpoint=ZONES[0].checkpoint;
+  clearControls();resetSpeedFeedback(this);this.input.keyboard.resetKeys();this.mode='running';document.body.classList.add('is-playing');this.runner=createRunner();this.elapsed=0;this.count=0;this.falls=0;this.zone=0;this.clock=0;this.accumulator=0;this.lastHud=0;this.trails=[];this.checkpoint=ZONES[0].checkpoint;
   const stage=STAGES.find(s=>s.id===selectedStage);this.activeStage=stage??null;this.runStart=stage?.start??80;this.runEnd=stage?.end??GOAL_X;this.zone=stage?.zone??0;this.splits=[];this.splitStarted=0;
   this.checkpoint={x:this.runStart};const floor=groundAt(this.level,this.runStart);this.runner=createRunner(this.runStart,heightOn(floor,this.runStart));this.runner.surfaceId=floor.id;
   try{best=readBest(localStorage,recordKey(selectedStage));}catch{best=null;}
@@ -70,12 +72,14 @@ class RunScene extends Phaser.Scene{
   }
  }
  respawn(){
+  resetSpeedFeedback(this);
   this.falls++;const floor=groundAt(this.level,this.checkpoint.x);this.runner=createRunner(this.checkpoint.x,heightOn(floor,this.checkpoint.x));this.runner.surfaceId=floor.id;this.trails=[];audio.tone(150,.16);
   if(!reducedMotion)this.cameras.main.flash(100,255,128,93,false);
   this.syncPlayer();toast('Retour au dernier drapeau · le temps continue');
  }
  syncPlayer(){const p=this.runner;this.player.setPosition(p.loop?p.loop.x+100:p.x,p.loop?p.loop.baseY-140:p.feet-20);updateMascot(this);updateCourseMechanisms(this);}
  finish(){
+  this.speedFeedback.wind.clear();this.speedFeedback.streakCount=0;
   this.splits.push({zone:this.zone,ms:this.elapsed-this.splitStarted});this.mode='finished';document.body.classList.remove('is-playing');$('pause').disabled=true;const newBest=!best||this.elapsed<best;
   updateMascot(this);
   if(newBest){best=Math.floor(this.elapsed);try{localStorage.setItem(recordKey(selectedStage),String(best));}catch{toast('Record disponible pour cette session uniquement');}}
@@ -96,6 +100,10 @@ class RunScene extends Phaser.Scene{
  update(_,delta){
   if(this.mode==='running'||this.mode==='ready'){this.visualClock+=Math.min(delta,100);updateLivingWorld(this,reducedMotion);if(this.mode==='ready')updateMascot(this);}
   this.backgrounds.forEach(background=>background.tilePositionX=reducedMotion?0:this.cameras.main.scrollX*.045);
+  // The coast is a framed panorama, not a seamless tile: pan from its own zone
+  // and stop before either edge can wrap a cropped palm into the middle of the sky.
+  const coast=this.backgrounds[2],coastWidth=this.textures.get('coast-framed').getSourceImage().width;
+  coast.tilePositionX=reducedMotion?0:Math.min(Math.max(0,(this.cameras.main.scrollX-ZONES[2].x)*.045),Math.max(0,coastWidth-coast.width));
   this.backgrounds[1].setAlpha(Phaser.Math.Clamp((this.runner.x-ZONES[1].x+250)/500,0,1));
   this.backgrounds[2].setAlpha(Phaser.Math.Clamp((this.runner.x-ZONES[2].x+250)/500,0,1));
   if(this.mode!=='running')return;
@@ -114,12 +122,7 @@ class RunScene extends Phaser.Scene{
   if(zone>this.zone){this.splits.push({zone:this.zone,ms:this.elapsed-this.splitStarted});this.splitStarted=this.elapsed;this.zone=zone;this.checkpoint=ZONES[zone].checkpoint;toast(`${ZONES[zone].name} · Nouvelle étape`);audio.tone(700,.14);}
   const checkpoint=[...this.level.checkpoints].reverse().find(c=>c.x<=this.runner.x);if(checkpoint&&checkpoint.x>this.checkpoint.x){this.checkpoint=checkpoint;toast('Drapeau atteint · nouveau point de reprise');}
   if(this.runner.x>=this.runEnd){this.finish();return;}
-  this.cameras.main.setFollowOffset(-140-Math.min(90,Math.abs(this.runner.vx)*.1),110);
-  if(!reducedMotion){
-   this.dust.clear();this.trails=this.trails.filter(t=>this.clock-t.time<240);
-   if(this.runner.sliding&&Math.abs(this.runner.vx)>250)this.trails.push({x:this.runner.x,y:this.runner.feet-5,time:this.clock});
-   for(const t of this.trails){this.dust.fillStyle(0xffb777,(1-(this.clock-t.time)/240)*.5);this.dust.fillRect(t.x-5,t.y-3,7,3);}
-  }
+  updateSpeedFeedback(this,delta,reducedMotion);
   if(this.clock-this.lastHud>40){this.updateHud();this.lastHud=this.clock;}
  }
 }
@@ -183,7 +186,7 @@ function fitGameViewport(){
  const width=phoneMedia.matches?Math.round(540*bounds.width/bounds.height):960;
  if(game.scale.gameSize.width!==width)game.scale.setGameSize(width,540);
  else game.scale.refresh();
- for(const background of gameScene?.backgrounds||[])background.setSize(width,540);
+ if(gameScene?.backgrounds)fitSpeedBackdrop(gameScene);
 }
 new ResizeObserver(fitGameViewport).observe($('viewport'));
 window.addEventListener('resize',fitGameViewport);

@@ -13,6 +13,7 @@ export const STAGES=[
 ];
 export const recordKey=(stageId='campaign')=>stageId==='campaign'?BEST_KEY:`${BEST_KEY}-${stageId}`;
 import {COURSE} from './course-data.js';
+import {buildRouteDressing} from './route-dressing.js';
 const STRIPS=[
  [[0,420],[650,420],[1250,650],[1650,650],[2250,450],[2580,450]],
  [[2660,450],[3200,450],[3800,610],[4200,610],[4700,390],[5200,390],[5850,650],[6250,650],[6850,420],[7250,420],[7650,420]],
@@ -71,7 +72,8 @@ export function buildLevel(){
   const key=ledge.route==='mafate'?'plants':ledge.route==='city'?'lantern':'rocks';
   level.scenery.push({id:`ledge-life-${ledge.id}`,key,x:ledge.x+ledge.w-12,y:ledge.y+3,scale:key==='lantern'?.48:.3,anchor:'absolute',depth:1});
  }
- return {...level,terrain,tokens,stages:STAGES};
+ const dressing=buildRouteDressing(level,terrain);level.scenery.push(...dressing.scenery);
+ return {...level,terrain,tokens,stages:STAGES,pathDetails:dressing.details};
 }
 export function movingSurfaces(level,time=0){
  return(level.movers||[]).map(p=>{

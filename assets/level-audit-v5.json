@@ -239,9 +239,10 @@
     }
   ],
   "pickups": 253,
+  "pathDetails": 365,
   "checkpoints": 15,
   "scenery": {
-    "placed": 138,
+    "placed": 195,
     "omitted": []
   },
   "missingAssets": []

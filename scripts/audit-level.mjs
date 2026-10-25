@@ -26,7 +26,7 @@ const scenery=level.scenery.map(item=>{
  const asset=manifest.find(a=>a.key===item.key),width=(asset?.size[0]||212)*item.scale;
  return{id:item.id,key:item.key,x:item.x,visible:!!resolveScenery(level,item,width)};
 });
-const report={version:LEVEL_VERSION,stages:STAGES.map(stage=>({...stage,simulation:simulate(stage.start,stage.end),rolling:simulate(stage.start,stage.end,{slide:true})})),campaign:simulate(80,24700),recovery:level.checkpoints.map(c=>({x:c.x,simulation:simulate(c.x,STAGES.find(s=>s.end>c.x).end)})),gaps:level.gaps.map(([a,b])=>({x:a,width:b-a,normalJumpRange:Math.round(SPEED*1100/1550)})),pickups:level.tokens.length,checkpoints:level.checkpoints.length,scenery:{placed:scenery.filter(s=>s.visible).length,omitted:scenery.filter(s=>!s.visible)},missingAssets:missing};
+const report={version:LEVEL_VERSION,stages:STAGES.map(stage=>({...stage,simulation:simulate(stage.start,stage.end),rolling:simulate(stage.start,stage.end,{slide:true})})),campaign:simulate(80,24700),recovery:level.checkpoints.map(c=>({x:c.x,simulation:simulate(c.x,STAGES.find(s=>s.end>c.x).end)})),gaps:level.gaps.map(([a,b])=>({x:a,width:b-a,normalJumpRange:Math.round(SPEED*1100/1550)})),pickups:level.tokens.length,pathDetails:level.pathDetails?.length||0,checkpoints:level.checkpoints.length,scenery:{placed:scenery.filter(s=>s.visible).length,omitted:scenery.filter(s=>!s.visible)},missingAssets:missing};
 fs.writeFileSync(new URL('../assets/level-audit-v5.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(report,null,2));
 if(missing.length||!report.campaign.ok||report.stages.some(s=>!s.simulation.ok||!s.rolling.ok)||report.recovery.some(c=>!c.simulation.ok))process.exitCode=1;
