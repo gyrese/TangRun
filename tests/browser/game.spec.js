@@ -74,12 +74,12 @@ test('environment sprites animate while ready and freeze when paused',async({pag
  await page.goto('/');await expect(page.locator('#play')).toBeEnabled();
  const samples=[];
  for(let i=0;i<4;i++){
-  samples.push(await page.evaluate(()=>{const s=window.__LTN__.game.scene.getScene('run');return{frame:s.liveWorld.sprites.find(a=>a.key==='fire').sprite.frame.name,time:s.visualClock,elapsed:s.elapsed,x:s.runner.x,bird:s.ambientLife.birds[0].texture.key,clusters:s.placedScenery.filter(p=>p.id.startsWith('cluster-')).length};}));
+  samples.push(await page.evaluate(()=>{const s=window.__LTN__.game.scene.getScene('run');return{frame:s.liveWorld.sprites.find(a=>a.key==='fire').sprite.frame.name,time:s.visualClock,elapsed:s.elapsed,x:s.runner.x,bird:s.ambientLife.birds[0].texture.key,clusters:s.decorPlan.all.length};}));
   await page.waitForTimeout(130);
  }
  expect(new Set(samples.map(s=>s.frame)).size).toBeGreaterThan(1);
  expect(samples.every(s=>s.elapsed===0&&s.x===80)).toBe(true);
- expect(new Set(samples.map(s=>s.bird)).size).toBeGreaterThan(1);expect(samples[0].clusters).toBeGreaterThan(35);
+ expect(new Set(samples.map(s=>s.bird)).size).toBeGreaterThan(1);expect(samples[0].clusters).toBeGreaterThan(20);
  await page.locator('#play').click();await page.locator('#pause').click();
  const paused=await page.evaluate(()=>window.__LTN__.game.scene.getScene('run').visualClock);
  await page.waitForTimeout(250);

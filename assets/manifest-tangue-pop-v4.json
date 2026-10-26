@@ -1,0 +1,17 @@
+{
+  "source": "assets\\source\\tangue-pop-v4.png",
+  "tool": "built-in ImageGen",
+  "frameSize": [
+    64,
+    64
+  ],
+  "runFrames": 8,
+  "sharedRunCrop": [
+    29,
+    18,
+    280,
+    307
+  ],
+  "sharedScale": 0.17142857142857143,
+  "previousCharacter": "?perso=tangue-v2"
+}

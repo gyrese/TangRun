@@ -1,5 +1,5 @@
 {
-  "version": "v5-progression",
+  "version": "v6-island-adventure",
   "stages": [
     {
       "id": "volcano",
@@ -12,13 +12,13 @@
       "color": 15569772,
       "simulation": {
         "ok": true,
-        "seconds": 18.63,
+        "seconds": 16.87,
         "maxSpeed": 850,
         "stoppedFrames": 0
       },
       "rolling": {
         "ok": true,
-        "seconds": 20.63,
+        "seconds": 17.24,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
@@ -34,13 +34,13 @@
       "color": 12440989,
       "simulation": {
         "ok": true,
-        "seconds": 18.27,
+        "seconds": 14.77,
         "maxSpeed": 850,
         "stoppedFrames": 0
       },
       "rolling": {
         "ok": true,
-        "seconds": 19.59,
+        "seconds": 15.35,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
@@ -56,13 +56,13 @@
       "color": 10409691,
       "simulation": {
         "ok": true,
-        "seconds": 14.82,
+        "seconds": 14.27,
         "maxSpeed": 850,
         "stoppedFrames": 0
       },
       "rolling": {
         "ok": true,
-        "seconds": 17.29,
+        "seconds": 16.42,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
@@ -70,7 +70,7 @@
   ],
   "campaign": {
     "ok": true,
-    "seconds": 50.3,
+    "seconds": 41.02,
     "maxSpeed": 850,
     "stoppedFrames": 0
   },
@@ -79,7 +79,7 @@
       "x": 80,
       "simulation": {
         "ok": true,
-        "seconds": 18.63,
+        "seconds": 16.87,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
@@ -88,8 +88,8 @@
       "x": 2250,
       "simulation": {
         "ok": true,
-        "seconds": 14.36,
-        "maxSpeed": 850,
+        "seconds": 11.7,
+        "maxSpeed": 847,
         "stoppedFrames": 0
       }
     },
@@ -97,8 +97,8 @@
       "x": 2850,
       "simulation": {
         "ok": true,
-        "seconds": 12.67,
-        "maxSpeed": 850,
+        "seconds": 10,
+        "maxSpeed": 848,
         "stoppedFrames": 0
       }
     },
@@ -124,7 +124,7 @@
       "x": 8500,
       "simulation": {
         "ok": true,
-        "seconds": 18.27,
+        "seconds": 14.77,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
@@ -133,7 +133,7 @@
       "x": 10800,
       "simulation": {
         "ok": true,
-        "seconds": 11.44,
+        "seconds": 11.43,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
@@ -151,7 +151,7 @@
       "x": 13900,
       "simulation": {
         "ok": true,
-        "seconds": 4.4,
+        "seconds": 4.39,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
@@ -169,7 +169,7 @@
       "x": 16900,
       "simulation": {
         "ok": true,
-        "seconds": 14.82,
+        "seconds": 14.27,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
@@ -178,8 +178,8 @@
       "x": 19700,
       "simulation": {
         "ok": true,
-        "seconds": 15.25,
-        "maxSpeed": 330,
+        "seconds": 12.15,
+        "maxSpeed": 850,
         "stoppedFrames": 0
       }
     },
@@ -187,8 +187,8 @@
       "x": 20850,
       "simulation": {
         "ok": true,
-        "seconds": 11.76,
-        "maxSpeed": 330,
+        "seconds": 8.65,
+        "maxSpeed": 850,
         "stoppedFrames": 0
       }
     },
@@ -196,7 +196,7 @@
       "x": 22000,
       "simulation": {
         "ok": true,
-        "seconds": 4.63,
+        "seconds": 4.09,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
@@ -205,8 +205,8 @@
       "x": 23900,
       "simulation": {
         "ok": true,
-        "seconds": 2.52,
-        "maxSpeed": 330,
+        "seconds": 1.2,
+        "maxSpeed": 820,
         "stoppedFrames": 0
       }
     }
@@ -238,11 +238,11 @@
       "normalJumpRange": 234
     }
   ],
-  "pickups": 253,
-  "pathDetails": 365,
+  "pickups": 315,
+  "pathDetails": 155,
   "checkpoints": 15,
   "scenery": {
-    "placed": 195,
+    "placed": 166,
     "omitted": []
   },
   "missingAssets": []

@@ -11,7 +11,7 @@ test('safe ground gaps fit the full jump envelope',()=>{
   assert.equal(terrain.reduce((sum,p)=>sum+p.w,0)+gaps.reduce((sum,[a,b])=>sum+b-a,0),WORLD_WIDTH);
   assert.ok(GOAL_X<WORLD_WIDTH);
   for(const zone of ZONES){const floor=groundAt(level,zone.checkpoint.x);assert.ok(floor,'Checkpoint has safe floor');assert.equal(floor.slope,0);assert.ok(zone.checkpoint.y<heightOn(floor,zone.checkpoint.x));}
-  assert.ok(BEST_KEY.includes('v5-progression'),'New level has separate records');
+  assert.ok(BEST_KEY.includes('v6-island-adventure'),'New level has separate records');
 });
 test('optional roof chain is reachable with full jumps',()=>{
   const roofs=buildLevel().platforms.filter(p=>p.kind==='roof');

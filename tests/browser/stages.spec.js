@@ -18,7 +18,7 @@ test('level selection, independent records, next level and recovery',async({page
   await expect(page.locator('#split-results')).toContainText(':');
   if(zone<2){await expect(page.locator('#next-stage')).toBeVisible();}else{await expect(page.locator('#next-stage')).toBeHidden();}
  }
- const records=await page.evaluate(()=>Object.keys(localStorage).filter(k=>k.includes('v5-progression')));expect(records).toHaveLength(3);
+ const records=await page.evaluate(()=>Object.keys(localStorage).filter(k=>k.includes('v6-island-adventure')));expect(records).toHaveLength(3);
  await page.locator('[data-stage="campaign"]').click();await expect(page.locator('#best')).toContainText('—');
  await page.locator('[data-stage="volcano"]').click();await page.locator('#play').click();
  await page.evaluate(()=>{const s=window.__LTN__.game.scene.getScene('run');s.runner.x=s.runEnd+1;});

@@ -1,16 +1,20 @@
 const clamp=v=>Math.max(0,Math.min(1,v));
 export function speedProfile(velocity,reduced=false){
  const intensity=reduced?0:clamp((Math.abs(velocity)-360)/490);
- return{intensity,zoom:1-intensity*.065,lookAhead:(velocity< -30?-1:1)*(140+intensity*115)};
+ return{intensity,zoom:1,lookAhead:(velocity< -30?-1:1)*(60+intensity*40)};
 }
 export function createSpeedFeedback(scene){
- scene.speedFeedback={intensity:0,streakCount:0,trail:[],lastEmission:-Infinity,
+ scene.speedFeedback={intensity:0,lookAhead:60,streakCount:0,trail:[],lastEmission:-Infinity,
   wind:scene.add.graphics().setScrollFactor(0).setDepth(15),dust:scene.add.graphics().setDepth(9)};
 }
 export function resetSpeedFeedback(scene){
  const f=scene.speedFeedback;if(!f)return;
- f.intensity=0;f.streakCount=0;f.trail=[];f.lastEmission=-Infinity;f.wind.clear();f.dust.clear();
- scene.cameras.main.setZoom(1);
+ f.intensity=0;f.lookAhead=60;f.streakCount=0;f.trail=[];f.lastEmission=-Infinity;f.wind.clear();f.dust.clear();
+ scene.cameras.main.setZoom(scene.baseZoom??1);
+}
+export function snapCameraToRunner(scene){
+ const p=scene.runner,c=scene.cameras.main;
+ c.centerOn(p.x+(scene.speedFeedback?.lookAhead||60),p.feet-65);
 }
 export function fitSpeedBackdrop(scene){
  const width=scene.scale.width,height=scene.scale.height,zoom=scene.cameras.main.zoom;
@@ -24,8 +28,11 @@ export function updateSpeedFeedback(scene,delta,reduced=false){
  const blend=1-Math.exp(-Math.min(delta,100)/220);
  f.intensity+= (profile.intensity-f.intensity)*blend;
  if(reduced)f.intensity=0;
- camera.setZoom(reduced?1:camera.zoom+(profile.zoom-camera.zoom)*blend);
- camera.setFollowOffset(-profile.lookAhead,110);
+ const baseZoom=scene.baseZoom??1;
+ camera.setZoom(baseZoom);
+ f.lookAhead+=(profile.lookAhead-f.lookAhead)*(1-Math.exp(-Math.min(delta,100)/160));
+ camera.setFollowOffset(-f.lookAhead,45);
+ camera.setLerp(reduced?1:1-Math.exp(-Math.min(delta,100)/60),reduced?1:1-Math.exp(-Math.min(delta,100)/(p.grounded?80:55)));
  // Compensate fixed scenery for the expanded camera view, including phone ratios.
  const width=scene.scale.width,height=scene.scale.height;
  fitSpeedBackdrop(scene);f.wind.clear();f.dust.clear();
@@ -33,7 +40,7 @@ export function updateSpeedFeedback(scene,delta,reduced=false){
  if(reduced){f.trail=[];return;}
  // Lines stay in the upper sky and bottom margin, away from the landing corridor.
  const time=scene.visualClock/1000,direction=velocity<0?-1:1;
- const count=Math.floor(f.intensity*15);
+ const count=Math.floor(f.intensity*8);
  for(let i=0;i<count;i++){
   const phase=((i*.173+time*(.42+f.intensity*.7))%1),x=direction>0?width*(1-phase):width*phase;
   const y=i%3===0?height-22-(i%4)*9:82+(i*37)%100;

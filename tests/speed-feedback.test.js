@@ -6,13 +6,13 @@ import {resolveScenery} from '../src/scenery.js';
 import fs from 'node:fs';
 
 test('speed view preserves normal framing and caps boost effects in both directions',()=>{
- assert.deepEqual(speedProfile(330),{intensity:0,zoom:1,lookAhead:140});
+ assert.deepEqual(speedProfile(330),{intensity:0,zoom:1,lookAhead:60});
  for(const v of [0,330,500,740,850,1200,-330,-850]){
   const p=speedProfile(v);assert.ok(p.intensity>=0&&p.intensity<=1);assert.ok(p.zoom>=.935&&p.zoom<=1);
-  assert.ok(Math.abs(p.lookAhead)<=255);
+  assert.ok(Math.abs(p.lookAhead)<=100);
   if(v< -30)assert.ok(p.lookAhead<0);
  }
- assert.ok(speedProfile(740).zoom<speedProfile(500).zoom);
+ assert.equal(speedProfile(740).zoom,speedProfile(500).zoom);
  assert.equal(speedProfile(850,true).zoom,1);assert.equal(speedProfile(850,true).intensity,0);
 });
 
@@ -26,9 +26,9 @@ test('new path clusters have valid foundations and leave gameplay mechanisms cle
   assert.ok(!level.gaps.some(([a,b])=>p.x>a-115&&p.x<b+115));
   assert.ok(![...level.springs,...level.pads,...level.checkpoints].some(m=>Math.abs(m.x-p.x)<115));
  }
- assert.ok(level.pathDetails.length>300);
+ assert.ok(level.pathDetails.length>100&&level.pathDetails.length<200);
  for(const p of level.pathDetails){
-  const floor=groundAt(level,p.x),roof=level.platforms.find(s=>s.kind==='roof'&&p.x>=s.x&&p.x<=s.x+s.w&&p.y===s.y+8);
+  const floor=groundAt(level,p.x),roof=level.platforms.find(s=>s.kind==='roof'&&p.x>=s.x&&p.x<=s.x+s.w&&Math.abs(p.y-heightOn(s,p.x)-8)<.001);
   assert.ok(roof||(floor&&Math.abs(p.y-heightOn(floor,p.x)-7)<.001),'Detail must be recessed below a real path');
  }
 });

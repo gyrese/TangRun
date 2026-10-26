@@ -20,13 +20,13 @@ export function buildRouteDressing(level,terrain){
   }
  }
  // Small inset stones, grass seams and shore fragments make ground speed legible.
- for(let x=130,index=0;x<24500;x+=61+(index++%4)*13){
+ for(let x=130,index=0;x<24500;x+=190+(index++%4)*23){
   const floor=floorAt(terrain,x);if(!floor||!clear(x,45))continue;
   details.push({x,y:floor.y+7,zone:x<8400?0:x<16800?1:2,variant:index%4,slope:floor.surface.slope});
  }
- for(const roof of level.platforms.filter(p=>p.kind==='roof')){
+ for(const roof of level.platforms.filter(p=>p.kind==='roof'&&!(p.rail&&Number(p.id.split('-').at(-1))%2))){
   // Recessed edge marks leave both the foot sensor and the landing lip unobscured.
-  for(let x=roof.x+35;x<roof.x+roof.w-28;x+=74)details.push({x,y:roof.y+8,zone:roof.route==='volcano'?0:roof.route==='mafate'?1:2,variant:2,slope:0});
+  for(let x=roof.x+45;x<roof.x+roof.w-45;x+=160)details.push({x,y:roof.y+(x-roof.x)*roof.slope+8,zone:roof.route==='volcano'?0:roof.route==='mafate'?1:2,variant:2,slope:roof.slope});
  }
  return{scenery,details};
 }

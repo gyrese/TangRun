@@ -56,7 +56,9 @@ test('all three upper paths can be entered by their spring and reward the climb'
    const time=i/120;
    if(p.grounded&&p.surfaceId?.startsWith(route)){
     visited.add(p.surfaceId);const roof=level.platforms.find(s=>s.id===p.surfaceId);
-    if(time>heldUntil&&roof.x+roof.w-p.x<Math.max(65,p.vx*.18))heldUntil=time+.4;
+    // Sur une voie continue, on ne saute qu'au bout d'une section.
+    const continues=level.platforms.some(s=>s.route===roof.route&&Math.abs(s.x-roof.x-roof.w)<1);
+    if(time>heldUntil&&!continues&&roof.x+roof.w-p.x<Math.max(65,p.vx*.18))heldUntil=time+.4;
    }
    stepRunner(p,{right:true,jump:time<heldUntil},level,DT);
   }

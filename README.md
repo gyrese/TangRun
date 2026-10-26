@@ -1,6 +1,18 @@
 # LTN — La course au bar
 
+## Traversée V6 — aventure réunionnaise
+
+Refonte du parcours : neuf séquences sur trois actes, trois nouvelles routes intermédiaires, une seconde boucle, 18 sentinelles, boucliers, réserves d'éclats, neuf emblèmes et évents temporisés. Les nouveaux décors représentent lave cordée, tamarin des Hauts, fougère arborescente, vacoa, case créole et embarcation de pêche. Le tangue et le cadrage mobile rapproché sont conservés. [Direction, parcours et validation](assets/adventure-v6.md).
+
+Rouler ou retomber sur une sentinelle permet de la détruire ; un impact consomme le bouclier ou disperse des éclats. Sans protection, retour au dernier drapeau. Les records V6 sont séparés des versions précédentes.
+
+## Tangue pop culture — 25 octobre 2026
+
+Le tangue actif adopte une silhouette plus graphique, des mèches brunes à pointes crème, des lunettes noires, un blouson turquoise et des baskets rétro corail. Les huit poses de course, la roulade, l’attente et la victoire partagent cette direction. L’ancienne version reste accessible avec `?perso=tangue-v2`. Sources et prompt : `assets/source/tangue-pop-v4.png` et `assets/prompt-tangue-pop-v4.txt`. Export : `python scripts/prepare-tangue-pop.py`.
+
 ## Variante tangue — 24 octobre 2026
+
+La course utilise maintenant huit poses dédiées à une foulée complète, avec un cadrage et une échelle communs. Source : `assets/source/tangue-run-v3.png` ; atlas : `public/assets/tangue/run-cycle-v3.png` ; export : `python scripts/prepare-tangue-run.py`. Les poses d’attente, saut et roulade restent séparées.
 
 Le personnage actif est désormais le tangue de La Réunion V2 : héros bipède en pixel art, course sur deux pieds, lunettes de soleil noires, baskets et foulard corail. Pour rejouer avec le chat, ajouter `?perso=cat` à l’adresse du jeu ; `?perso=tangue-v1` retrouve le premier tangue ; `?perso=tangue` sélectionne la nouvelle version. Les collisions et les mouvements restent identiques.
 

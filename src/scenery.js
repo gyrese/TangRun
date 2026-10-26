@@ -1,6 +1,30 @@
 import {GROUND_Y,GOAL_X,ZONES,STAGES,groundAt,heightOn} from './level.js';
 export const V3_KEYS=['pier','rocks','boat','bench','bollards','surfboards','kiosk','comics','gameshop','footbridge','neonarrow','arch','plants','frangipani','lantern','terrace','speakers','canopy','lavarocks','basaltarch','tamarind','hut','ropebridge','waterfall'];
 const WIDE_STRUCTURES=new Set(['hut','kiosk','bench','surfboards','terrace','bollards','arch','comics','gameshop']);
+export const decorOverlap=(a,b,gap=0)=>a.left<b.right+gap&&a.right>b.left-gap&&a.top<b.bottom+gap&&a.bottom>b.top-gap;
+export function planScenery(level,measure){
+ const accepted=[],landmarks=[];
+ const floor=x=>{const p=groundAt(level,x);return p?heightOn(p,x):450;};
+ const protectedAreas=[
+  {left:GOAL_X-400,right:GOAL_X+400,top:GROUND_Y-480,bottom:GROUND_Y+10},
+  ...level.platforms.map(p=>({left:p.x-20,right:p.x+p.w+20,top:Math.min(p.y,p.y2)-35,bottom:Math.max(p.y,p.y2)+8})),
+  ...level.loops.map(p=>({left:p.x-p.radius-35,right:p.x+p.radius+35,top:p.baseY-2*p.radius-20,bottom:p.baseY+8})),
+  ...[...level.springs,...level.checkpoints,...(level.adventure?.monitors||[]),...(level.adventure?.enemies||[])].map(p=>({left:p.x-55-(p.range||0),right:p.x+55+(p.range||0),top:(p.y??floor(p.x))-90,bottom:floor(p.x)+8})),
+ ];
+ const candidates=[...(level.adventure?.landmarks||[]).map((p,i)=>({...p,id:`landmark-${i}`,key:`v6-${p.key}`,anchor:'absolute',landmark:true})),
+  ...level.scenery.filter(p=>!p.id.startsWith('path-cluster-')&&!p.id.startsWith('ledge-life-')&&(!p.id.startsWith('cluster-')||Number(p.id.split('-')[1])%3===0))];
+ for(const item of candidates){
+  const size=measure(item.key);if(!size)continue;
+  const scale=Math.min(item.scale,220/size.width,165/size.height);
+  const width=size.width*scale,height=size.height*scale;
+  const p=resolveScenery(level,{...item,scale},width);if(!p)continue;
+  const bounds={left:p.x-width/2,right:p.x+width/2,top:p.y-height,bottom:p.y};
+  if(protectedAreas.some(b=>decorOverlap(bounds,b,12)))continue;
+  if(accepted.some(q=>decorOverlap(bounds,q.bounds,42)||Math.abs(q.x-p.x)<145&&Math.abs(q.y-p.y)<100))continue;
+  const placed={...p,width,height,bounds};accepted.push(placed);if(item.landmark)landmarks.push(placed);
+ }
+ return{scenery:accepted.filter(p=>!p.landmark),landmarks,all:accepted};
+}
 
 export function resolveScenery(level,item,width){
  if(item.anchor==='absolute')return{...item,y:item.y};
@@ -20,24 +44,15 @@ export function resolveScenery(level,item,width){
 export function drawScenery(scene){
  const level=scene.level;
  const floor=x=>{const s=groundAt(level,x);return s?heightOn(s,x):null;};
- const label=(x,y,text,color='#e4d8bc',size=11)=>scene.add.text(x,y,text,{fontFamily:'monospace',fontSize:`${size}px`,fontStyle:'bold',color,stroke:'#10252b',strokeThickness:2,backgroundColor:'#112a30',padding:{x:8,y:6}}).setDepth(3);
  scene.placedScenery=[];scene.extraProps=[];
- for(const item of level.scenery){
-  const source=scene.textures.get(item.key).getSourceImage();
-  const placement=resolveScenery(level,item,source.width*item.scale);
-  if(!placement)continue;
-  const sprite=scene.add.image(placement.x,placement.y,item.key).setOrigin(.5,1).setScale(item.scale).setDepth(item.depth??1);
-  scene.placedScenery.push({...placement,sprite,width:source.width*item.scale,height:source.height*item.scale});
+ scene.decorPlan=planScenery(level,key=>{if(!scene.textures.exists(key))return null;const source=scene.textures.get(key).getSourceImage();return{width:source.width,height:source.height};});
+ for(const placement of scene.decorPlan.scenery){
+  const sprite=scene.add.image(placement.x,placement.y,placement.key).setOrigin(.5,1).setScale(placement.scale).setDepth(1);
+  scene.placedScenery.push({...placement,sprite});
  }
- // Sparse trail markers: no numbered chapter boards across the scenery.
- for(const sign of level.signs){const y=floor(sign.x);if(y===null)continue;
-  scene.add.rectangle(sign.x+3,y-32,4,64,0x6b5840).setDepth(2);
-  const text=scene.add.text(sign.x-10,y-77,sign.text,{fontFamily:'Arial',fontSize:'12px',color:'#eee5ce',backgroundColor:'#303a30',padding:{x:9,y:7}}).setDepth(3);
-  scene.add.rectangle(text.x,text.y+text.height-2,text.width,2,0x8e8262).setOrigin(0).setDepth(3);
- }
+ // Route guidance uses arrows and flags; no floating text boards.
  for(const checkpoint of level.checkpoints.slice(1)){const x=checkpoint.x,y=floor(x),g=scene.add.graphics().setDepth(2);
   g.fillStyle(0x9b8d69);g.fillRect(x,y-72,3,72);
-  g.fillStyle(0xbdd59d);g.fillTriangle(x+3,y-71,x+30,y-61,x+3,y-50);
   scene.add.rectangle(x,y+2,28,4,0xbdd59d).setDepth(5);
  }
  // Shared visual grammar: ember = jump/bonus, mint = recovery, blue = finish.

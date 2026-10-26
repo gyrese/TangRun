@@ -8,6 +8,7 @@ export function preloadArt(scene){
  for(const key of ['ledge','bridge','loop','pinnacle'])scene.load.image(`island-${key}`,`/assets/v5/${key}.webp`);
  for(const [key,file]of Object.entries({coast:'v3/coast-wide.webp',qg:'qg-v1.webp',palm:'palm-v1.webp',arcade:'arcade-v1.webp',crate:'crate-v1.webp',planter:'planter-v1.webp',ground:'ground-v1.webp',barLogo:'logo-les-toiles-noires.png'}))scene.load.image(key,`/assets/${file}`);
  scene.load.spritesheet('mascot',character.run,{frameWidth:64,frameHeight:64});
+ if(character.runCycle)scene.load.spritesheet('mascot-run-cycle',character.runCycle,{frameWidth:64,frameHeight:64});
  for(const key of V3_KEYS)scene.load.image(key,`/assets/v3/${key}.webp`);
  scene.load.image('volcano','/assets/v3/volcano.webp');scene.load.image('mafate','/assets/v3/mafate-remparts.webp');scene.load.image('beam','/assets/v3/beam.webp');
 }
@@ -47,12 +48,28 @@ export function drawPlatformArt(scene,p){
  }
  // Natural buttes and timber bridges replace suspended shop fronts and thin pillars.
  const bridge=p.style==='ropebridge'||p.style==='comics'||p.style==='gameshop';
+ const route=scene.level.platforms.filter(q=>q.kind==='roof'&&q.route===p.route);
+ const first=route[0]?.id===p.id,last=route.at(-1)?.id===p.id;
+ if(p.rail){
+  // Tronçon incliné : bande pleine qui épouse exactement la pente de collision.
+  const [body,edge,trim]=p.route==='volcano'?[0x3a2a2c,0xc98a5c,0x804c42]:p.route==='mafate'?[0x5a4030,0xc9a46a,0x7b5a3c]:[0x2f3f45,0xe8876a,0x9ed6db];
+  const g=scene.add.graphics().setDepth(3),x2=p.x+p.w+.5;
+  g.fillStyle(body,1).fillPoints([{x:p.x,y:p.y},{x:x2,y:p.y2},{x:x2,y:p.y2+16},{x:p.x,y:p.y+16}],true);
+  g.fillStyle(trim,1).fillPoints([{x:p.x,y:p.y+12},{x:x2,y:p.y2+12},{x:x2,y:p.y2+16},{x:p.x,y:p.y+16}],true);
+  g.lineStyle(3,edge,1).lineBetween(p.x,p.y+1,x2,p.y2+1);
+  const index=route.indexOf(p),next=route[index+1],previous=route[index-1];
+  // Piliers aux extrémités de chaque tronçon et à intervalles réguliers.
+  if(!previous||previous.x+previous.w<p.x-1||index%4===0)drawRockSupport(scene,p.x+8,p.y+10);
+  if(!next||next.x>p.x+p.w+1)drawRockSupport(scene,p.x+p.w-8,p.y2+10);
+  return;
+ }
  if(bridge){
-  for(const x of [p.x+8,p.x+p.w-8])drawRockSupport(scene,x,p.y+4);
+  if(first)drawRockSupport(scene,p.x+8,p.y+4);
+  if(last)drawRockSupport(scene,p.x+p.w-8,p.y+4);
   const scale=p.w/683;
   scene.add.image(p.x,p.y-128*scale,'island-bridge').setOrigin(0).setScale(scale).setDepth(2);
  }else{
-  drawRockSupport(scene,p.x+p.w/2,p.y+4);
+  if(first||last||route.indexOf(p)%3===0)drawRockSupport(scene,p.x+p.w/2,p.y+4);
   const scale=p.w/779;
   scene.add.image(p.x,p.y-27*scale,'island-ledge').setOrigin(0).setScale(scale).setDepth(3);
  }
@@ -77,6 +94,7 @@ export function updateMascot(scene){
   const landing=p.grounded&&visualTime-(scene.landedAt??-1000)<120;
   const special=scene.mode==='finished'?7:landing?6:idle?(visualTime%3800>3620?5:4):null;
   if(special!==null)scene.mascot.setTexture('mascot-extras',special);
+  else if(p.grounded&&character.runCycle)scene.mascot.setTexture('mascot-run-cycle',Math.floor(scene.mascotCycle.phase*character.runFrames/4));
   else scene.mascot.setTexture('mascot',!p.grounded?5:1+cycleFrame);
   scene.mascot.setOrigin(.5,1).setScale(1,idle?1+Math.sin(visualTime*.003)*.012:1).setAngle(p.angle*180/Math.PI*.45).setPosition(p.x+4,p.feet+2);
  }
