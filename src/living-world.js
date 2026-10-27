@@ -1,7 +1,9 @@
 import {createAmbientLife,updateAmbientLife} from './ambient-life.js';
 import {character} from './character.js';
 import {GOAL_X,ZONES} from './level.js';
+import {createRavineArt,updateRavineArt} from './ravine-art.js';
 export function preloadAnimation(scene){
+ scene.load.spritesheet('ravine-lava','/assets/ravines/lava-sheet.png',{frameWidth:128,frameHeight:32});
  for(const[key,file,w,h]of[['water-flow','water',128,224],['volcanic-fire','fire',96,128],['mascot-extras','cat',64,64]]){
   scene.load.spritesheet(key,key==='mascot-extras'?character.extras:`/assets/animation/${file}-sheet.png`,{frameWidth:w,frameHeight:h});
  }
@@ -10,6 +12,7 @@ export function preloadAnimation(scene){
 export function animationFrame(time,fps=10,count=8,phase=0){return(Math.floor(time*fps/1000)+phase)%count;}
 
 export function createLivingWorld(scene){
+ createRavineArt(scene);
  const native=document.createElement('canvas');native.width=64;native.height=64;
  const ctx=native.getContext('2d'),gradient=ctx.createRadialGradient(32,32,0,32,32,32);
  gradient.addColorStop(0,'rgba(255,215,128,.8)');gradient.addColorStop(.3,'rgba(255,172,70,.25)');gradient.addColorStop(1,'rgba(255,172,70,0)');ctx.fillStyle=gradient;ctx.fillRect(0,0,64,64);scene.textures.addCanvas('warm-glow',native);
@@ -37,17 +40,11 @@ export function createLivingWorld(scene){
  // Ambient smoke at the distant crater belongs to the background, not the ground.
  live.crater=scene.add.sprite(684,205,'volcanic-fire',0).setScrollFactor(0).setOrigin(.5,1).setScale(.42).setDepth(-26).setAlpha(.6);
  live.barGlow=scene.add.image(GOAL_X,335,'warm-glow').setScale(3.2,2.2).setDepth(2).setAlpha(.15);
- // Spinning pickups use eight precisely aligned, code-native frames.
- const source=scene.textures.get('token').getSourceImage();
- for(let frame=0;frame<8;frame++){
-  const t=scene.textures.createCanvas(`token-spin-${frame}`,18,22),c=t.context;
-  const width=Math.max(3,Math.round(16*Math.abs(Math.cos(frame*Math.PI/8))));
-  c.imageSmoothingEnabled=false;c.drawImage(source,0,0,18,22,Math.floor((18-width)/2),0,width,22);t.refresh();
- }
  scene.coins.forEach(coin=>coin.baseY=coin.y);createAmbientLife(scene);
 }
 
 export function updateLivingWorld(scene,reducedMotion){
+ updateRavineArt(scene,reducedMotion);
  const live=scene.liveWorld;if(!live)return;updateAmbientLife(scene,reducedMotion);
  const time=scene.visualClock||0,seconds=time/1000,camera=scene.cameras.main;
  const inView=x=>x>camera.scrollX-250&&x<camera.scrollX+scene.scale.width+250;

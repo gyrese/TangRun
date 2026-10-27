@@ -1,0 +1,10 @@
+Generated with the built-in ImageGen tool, transparent_background=true.
+
+Use case: stylized-concept. Create a game-ready TRANSPARENT sprite atlas of SIX authentic Reunion Island environment props, not generic fantasy tropics. Original polished 16-bit side-scrolling game pixel art, navy shadows, coral sunlight, jade greens. No characters, no text, no gradients or background, genuinely transparent alpha in all empty space. Strict 3 columns x 2 rows equal grid, each item entirely INSIDE its 512x512 cell with 35 pixel empty transparent margin; no touching adjacent items.
+TOP LEFT: low volcanic basalt outcrop of Piton de la Fournaise with realistic black pahoehoe rope lava folds, red-brown scoria and a few glowing orange cracks, NO crystals.
+TOP MIDDLE: a Tamarin des Hauts (Acacia heterophylla), pale grey twisted branching trunk, airy flattened fine green canopy, wisps of hanging lichen, mossy roots.
+TOP RIGHT: traditional Reunion Creole one-storey timber house, white scalloped lambrequin roof trim, corrugated teal roof, coral shutters, veranda, basalt stone base, hydrangeas.
+BOTTOM LEFT: Reunion tree fern, slender dark fibrous trunk topped with large arching finely divided fronds and curled young fiddlehead.
+BOTTOM MIDDLE: coastal vacoa Pandanus utilis tree with unmistakable exposed stilt roots, branched trunk and stiff long strap leaves in spiral tufts, NOT a coconut palm.
+BOTTOM RIGHT: Saint-Gilles small traditional wooden fishing pirogue pulled ashore beside dark basalt rocks, coiled rope and buoy, turquoise and white hull, no water plane.
+Side view orthographic prop elevations with bottom contact point, beautiful readable silhouettes, local botanical and architectural specificity. 1536x1024 transparent PNG.

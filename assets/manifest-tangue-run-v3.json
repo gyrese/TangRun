@@ -1,0 +1,16 @@
+{
+  "source": "assets\\source\\tangue-run-v3.png",
+  "tool": "built-in ImageGen",
+  "frames": 8,
+  "frameSize": [
+    64,
+    64
+  ],
+  "sharedCrop": [
+    22,
+    20,
+    419,
+    424
+  ],
+  "sharedScale": 0.13366336633663367
+}

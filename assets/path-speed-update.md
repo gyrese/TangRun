@@ -1,5 +1,7 @@
 # Chemins et sensation de vitesse
 
+Mise à jour du 26 octobre : l'affichage sélectionne désormais les décors selon leur encombrement, avec une marge entre les sprites et des zones dégagées autour du jeu. Les panneaux textuels et les détails redondants sont supprimés. Le zoom reste fixe ; l'anticipation est limitée à 60–100 px, le suivi est plus réactif et porte sur la position réelle du personnage dans les loopings. Les points bonus sont espacés des patrouilles et des drapeaux. La description du 25 octobre ci-dessous conserve l'historique de la première version.
+
 25 octobre 2026 — complément de la revue V5.
 
 ## Décors des chemins

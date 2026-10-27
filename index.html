@@ -2,8 +2,14 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#101614" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="La course au bar" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" href="/assets/logo-les-toiles-noires.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" type="image/png" href="/assets/logo-les-toiles-noires.png" />
     <meta name="description" content="Du Piton de la Fournaise à Saint-Gilles, traverse La Réunion et bats ton chrono dans le jeu des Toiles Noires." />
     <title>La course au bar — Les Toiles Noires</title>
@@ -15,6 +21,7 @@
           <div class="game-hud"><div class="zone-label"><span id="zone-number">01</span><div><small>ÉTAPE</small><strong id="zone-name">Le Piton de la Fournaise</strong></div></div><div class="time-block"><small>TEMPS</small><output id="timer">00:00.000</output></div><div class="speed-meter" id="speed-meter"><small>ÉLAN</small><strong id="speed-value">×0.0</strong><span><i id="speed-fill"></i></span></div><div class="best-block"><small>RECORD PERSONNEL</small><strong id="best">— — : — —</strong></div><button id="sound" class="icon-button" aria-label="Activer le son" aria-pressed="false" title="Activer le son">SON <span id="sound-state">NON</span></button><button id="pause" class="icon-button" aria-label="Mettre en pause" title="Pause (P)" disabled>Ⅱ</button></div>
           <div class="game-viewport" id="viewport">
             <div id="game" role="application" aria-label="Jeu de plateformes. Flèches ou Q et D pour courir, Espace pour sauter, flèche bas ou S pour glisser, R pour recommencer, P pour mettre en pause." tabindex="0"></div>
+            <div class="adventure-hud" aria-label="Exploration"><div><small id="shield-state">ÉCLATS</small><strong id="shard-count">00</strong></div><div><small>EMBLÈMES</small><strong id="relic-count">0/9</strong></div><div class="chapter-caption"><strong id="chapter-name">La coulée ardente</strong><small id="chapter-hint">Prends de l’élan dans la descente</small></div></div>
             <div class="screen-overlay" id="overlay">
               <div class="overlay-content"><div class="title-emblem" aria-hidden="true"><canvas class="pixel-logo" width="94" height="100"></canvas><span>LES TOILES NOIRES</span></div><p class="eyebrow" id="overlay-kicker">LES TOILES NOIRES</p><h2 id="overlay-title">LA COURSE<br><em>AU BAR</em></h2><p id="overlay-copy">DU VOLCAN À SAINT-GILLES</p><div id="stage-picker" class="stage-picker" role="group" aria-label="Choisir le parcours">
                 <div class="stage-options"><button data-stage="campaign" aria-pressed="true">LA TRAVERSÉE<small>3 niveaux</small></button><button data-stage="volcano" aria-pressed="false">01 · VOLCAN<small>Découverte</small></button><button data-stage="mafate" aria-pressed="false">02 · MAFATE<small>Précision</small></button><button data-stage="coast" aria-pressed="false">03 · OCÉAN<small>Maîtrise</small></button></div>
@@ -26,7 +33,7 @@
           </div>
           <div class="progress-track" aria-label="Progression du parcours"><div id="progress"></div><i style="left:33.3%"></i><i style="left:66.6%"></i></div>
           <div class="game-footer"><div class="control-help"><span><kbd>←</kbd><kbd>→</kbd> Courir</span><span><kbd>ESPACE</kbd> Sauter</span><span><kbd>↓</kbd> Glisser</span><span><kbd>R</kbd> Rejouer</span></div><span class="run-state" id="run-state"><i></i> PRÊT À COURIR</span><button id="restart" class="text-button">Recommencer ↻</button></div>
-          <div id="joystick-zone" class="joystick-zone" aria-label="Zone du joystick : pose le pouce puis déplace-le pour courir"><div id="joystick" class="joystick" hidden><span id="joystick-knob"></span></div><span class="stick-hint">Pose le pouce ici</span></div><div class="rotate-phone" role="status"><span aria-hidden="true">↻</span><h2>Tourne ton téléphone</h2><p>La course se joue en paysage.<br>Le pouce gauche dirige, le droit saute.</p></div><div class="touch-controls" aria-label="Commandes tactiles"><div><button data-control="left" aria-label="Courir vers la gauche">←</button><button data-control="right" aria-label="Courir vers la droite">→</button></div><div><button data-control="slide" class="slide-button" aria-label="Glisser en maintenant appuyé">↓</button><button data-control="jump" class="jump-button" aria-label="Sauter">SAUTER ↗</button></div></div>
+          <div id="joystick-zone" class="joystick-zone" aria-label="Zone du joystick : déplace le pouce pour courir, vers le bas pour te baisser"><div id="joystick" class="joystick" hidden><span id="joystick-knob"></span></div><span class="stick-hint">Pose le pouce ici · ↓ se baisser</span></div><div class="rotate-phone" role="status"><span aria-hidden="true">↻</span><h2>Tourne ton téléphone</h2><p>La course se joue en paysage.<br>Le pouce gauche dirige, le droit saute.</p></div><div class="touch-controls" aria-label="Commandes tactiles"><div><button data-control="left" aria-label="Courir vers la gauche">←</button><button data-control="right" aria-label="Courir vers la droite">→</button></div><div><button data-control="jump" class="jump-button" aria-label="Sauter">SAUTER ↗</button></div></div>
         </section>
       </main>
       <p id="announcer" class="sr-only" aria-live="polite"></p>
@@ -36,6 +43,6 @@
       <div class="boot-wordmark">LTN<span>PROD</span></div><p>PRÉSENTE</p>
       <button id="skip-boot" aria-label="Passer l’introduction">START · PASSER</button>
     </div>
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/bootstrap.js"></script>
   </body>
 </html>

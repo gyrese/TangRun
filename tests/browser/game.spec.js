@@ -15,6 +15,8 @@ test('complete route with keyboard, pause, restart and persistent record',async(
   expect((await page.evaluate(()=>window.__LTN__.state)).elapsed).toBe(paused.elapsed);
   await page.locator('#play').click();await page.keyboard.press('r');
   expect((await page.evaluate(()=>window.__LTN__.state)).elapsed).toBe(0);
+  // Roll through encounters as in the movement traversal tests, and jump gaps.
+  await page.keyboard.down('ArrowDown');
   // Drive the actual keyboard interface. Anticipate the next physical obstruction.
   await page.evaluate(async()=>{
     const {buildLevel}=await import('/src/level.js');
@@ -35,6 +37,7 @@ test('complete route with keyboard, pause, restart and persistent record',async(
     },16);
   });
   await expect.poll(async()=> {const s=await page.evaluate(()=>window.__LTN__.state);return s.mode==='finished'?'finished':`${s.mode} x=${Math.round(s.x)} y=${Math.round(s.y)} falls=${s.falls}`;},{timeout:65000}).toBe('finished');
+  await page.keyboard.up('ArrowDown');
   const end=await page.evaluate(()=>window.__LTN__.state);
   expect(end.zone).toBe(2);expect(end.elapsed).toBeGreaterThan(18000);expect(end.best).toBeGreaterThan(0);expect(end.falls).toBe(0);expect(end.maxSpeed).toBeGreaterThan(600);
   expect(end.backgroundOffset).toBeGreaterThan(300);expect(end.backgroundOffset).toBeLessThan(end.cameraX*.1);
@@ -74,12 +77,12 @@ test('environment sprites animate while ready and freeze when paused',async({pag
  await page.goto('/');await expect(page.locator('#play')).toBeEnabled();
  const samples=[];
  for(let i=0;i<4;i++){
-  samples.push(await page.evaluate(()=>{const s=window.__LTN__.game.scene.getScene('run');return{frame:s.liveWorld.sprites.find(a=>a.key==='fire').sprite.frame.name,time:s.visualClock,elapsed:s.elapsed,x:s.runner.x,bird:s.ambientLife.birds[0].texture.key,clusters:s.placedScenery.filter(p=>p.id.startsWith('cluster-')).length};}));
+  samples.push(await page.evaluate(()=>{const s=window.__LTN__.game.scene.getScene('run');return{frame:s.liveWorld.sprites.find(a=>a.key==='fire').sprite.frame.name,time:s.visualClock,elapsed:s.elapsed,x:s.runner.x,bird:s.ambientLife.birds[0].texture.key,clusters:s.decorPlan.all.length};}));
   await page.waitForTimeout(130);
  }
  expect(new Set(samples.map(s=>s.frame)).size).toBeGreaterThan(1);
  expect(samples.every(s=>s.elapsed===0&&s.x===80)).toBe(true);
- expect(new Set(samples.map(s=>s.bird)).size).toBeGreaterThan(1);expect(samples[0].clusters).toBeGreaterThan(35);
+ expect(new Set(samples.map(s=>s.bird)).size).toBeGreaterThan(1);expect(samples[0].clusters).toBeGreaterThan(20);
  await page.locator('#play').click();await page.locator('#pause').click();
  const paused=await page.evaluate(()=>window.__LTN__.game.scene.getScene('run').visualClock);
  await page.waitForTimeout(250);

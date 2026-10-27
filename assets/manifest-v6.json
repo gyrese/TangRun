@@ -1,0 +1,92 @@
+[
+  {
+    "key": "lava",
+    "file": "public/assets/v6/lava.png",
+    "size": [
+      420,
+      226
+    ],
+    "source": "assets\\source\\reunion-v6.png",
+    "crop": [
+      12,
+      196,
+      570,
+      496
+    ]
+  },
+  {
+    "key": "tamarin",
+    "file": "public/assets/v6/tamarin.png",
+    "size": [
+      420,
+      333
+    ],
+    "source": "assets\\source\\reunion-v6.png",
+    "crop": [
+      475,
+      81,
+      993,
+      492
+    ]
+  },
+  {
+    "key": "case-creole",
+    "file": "public/assets/v6/case-creole.png",
+    "size": [
+      420,
+      266
+    ],
+    "source": "assets\\source\\reunion-v6.png",
+    "crop": [
+      966,
+      138,
+      1524,
+      491
+    ]
+  },
+  {
+    "key": "fern",
+    "file": "public/assets/v6/fern.png",
+    "size": [
+      373,
+      360
+    ],
+    "source": "assets\\source\\reunion-v6.png",
+    "crop": [
+      25,
+      523,
+      489,
+      971
+    ]
+  },
+  {
+    "key": "vacoa",
+    "file": "public/assets/v6/vacoa.png",
+    "size": [
+      386,
+      360
+    ],
+    "source": "assets\\source\\reunion-v6.png",
+    "crop": [
+      525,
+      516,
+      1012,
+      970
+    ]
+  },
+  {
+    "key": "pirogue",
+    "file": "public/assets/v6/pirogue.png",
+    "size": [
+      420,
+      208
+    ],
+    "source": "assets\\source\\reunion-v6.png",
+    "crop": [
+      976,
+      696,
+      1523,
+      967
+    ]
+  }
+]

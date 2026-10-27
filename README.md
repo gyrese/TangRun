@@ -1,6 +1,36 @@
 # LTN — La course au bar
 
+## Atelier de niveaux / Admin
+
+Refonte de l’atelier : recherche dans les objets, familles Construire/Jouer/Décorer, aperçu de placement, mini-carte, calques masquables/verrouillables et mode Vue large. Les déplacements utilisent un aperçu direct sans reconstruction du décor pendant le geste. « Tester ici » permet de démarrer près de la zone affichée. Raccourcis : V sélectionner, B placer, H déplacer la vue, flèches ajuster (Maj = 10 px), Ctrl D dupliquer, F cadrer, F4 vue large, Ctrl + molette zoom sous le curseur.
+
+
+Audit du 26 octobre : [causes, corrections et vérifications](assets/editor-audit-2026-10-26.md). Les décors sont désormais figés à leurs positions affichées pendant la création ; déplacer un objet ne relance plus le placement des autres. Les patrouilles et oscillations sont arrêtées dans l’éditeur et actives en mode Tester. Échap annule le geste en cours ; Alt + clic sélectionne un objet derrière un autre.
+
+
+Ouvrir `/?admin` (ou `/admin`) ou le lien **ADMIN · Éditeur de niveaux** dans le jeu. Choisir un type d'élément, puis **Placer** et cliquer sur la carte. **Sélectionner** permet de déplacer un élément et de modifier ses propriétés dans l'inspecteur. Le sol et les plateformes ont une largeur, une hauteur initiale Y et une hauteur finale Y2 pour dessiner les pentes. Les segments du sol sont indépendants ; conserver un support aux trois départs (X 80, 8500, 16900).
+
+L’aperçu utilise les fonctions de dessin et les sprites du jeu, avec un panorama cadré sans répétition. La bibliothèque affiche les objets réels à placer. Les poignées aux extrémités du sol et des plateformes ajustent les pentes à la souris. Espace + glisser, le bouton Main, la molette et le curseur sous la carte parcourent le niveau ; Maj + molette déplace la vue verticalement et le sélecteur de région rejoint chaque acte. La grille visuelle est facultative. Les décors placés ou déplacés manuellement conservent leur position et leur échelle dans le jeu. Annuler/rétablir, duplication, suppression et aimantation à 10 pixels sont disponibles. `Ctrl+S` sauvegarde, `Ctrl+Z` annule et `Suppr` supprime la sélection hors d'un champ.
+
+**Sauvegarder** conserve le brouillon dans ce navigateur. **Tester le parcours** sauvegarde puis ouvre `/?custom=1`, qui charge le niveau édité avec des records séparés. Le jeu à l'adresse normale conserve son parcours original. **Exporter** télécharge un JSON ; **Importer** restaure un export. Charger l'original est annulable. L'atelier est local, sans compte administrateur ni publication serveur : exporter les fichiers pour disposer d'une sauvegarde durable ou changer de navigateur.
+
+## Finition des sprites — pixel art animé
+
+Corniches en basalte naturel, pièces dorées animées, nouveaux drones, drapeaux, ressorts et linteaux. Les objets utilisent une palette limitée et des animations à appui fixe ; le parcours V6 est conservé. [Aperçu animé](assets/sprite-polish-gameplay.webm) · [Atlas et consignes de génération](assets/sprite-polish-v1.md).
+
+## Traversée V6 — aventure réunionnaise
+
+Refonte du parcours : neuf séquences sur trois actes, trois nouvelles routes intermédiaires, une seconde boucle, 18 sentinelles, boucliers, réserves d'éclats, neuf emblèmes et évents temporisés. Les nouveaux décors représentent lave cordée, tamarin des Hauts, fougère arborescente, vacoa, case créole et embarcation de pêche. Le tangue et le cadrage mobile rapproché sont conservés. [Direction, parcours et validation](assets/adventure-v6.md).
+
+Rouler ou retomber sur une sentinelle permet de la détruire ; un impact consomme le bouclier ou disperse des éclats. Sans protection, retour au dernier drapeau. Les records V6 sont séparés des versions précédentes.
+
+## Tangue pop culture — 25 octobre 2026
+
+Le tangue actif adopte une silhouette plus graphique, des mèches brunes à pointes crème, des lunettes noires, un blouson turquoise et des baskets rétro corail. Les huit poses de course, la roulade, l’attente et la victoire partagent cette direction. L’ancienne version reste accessible avec `?perso=tangue-v2`. Sources et prompt : `assets/source/tangue-pop-v4.png` et `assets/prompt-tangue-pop-v4.txt`. Export : `python scripts/prepare-tangue-pop.py`.
+
 ## Variante tangue — 24 octobre 2026
+
+La course utilise maintenant huit poses dédiées à une foulée complète, avec un cadrage et une échelle communs. Source : `assets/source/tangue-run-v3.png` ; atlas : `public/assets/tangue/run-cycle-v3.png` ; export : `python scripts/prepare-tangue-run.py`. Les poses d’attente, saut et roulade restent séparées.
 
 Le personnage actif est désormais le tangue de La Réunion V2 : héros bipède en pixel art, course sur deux pieds, lunettes de soleil noires, baskets et foulard corail. Pour rejouer avec le chat, ajouter `?perso=cat` à l’adresse du jeu ; `?perso=tangue-v1` retrouve le premier tangue ; `?perso=tangue` sélectionne la nouvelle version. Les collisions et les mouvements restent identiques.
 
@@ -83,3 +113,5 @@ Pour régénérer les exports depuis les sources (Python et Pillow requis) : `py
 Guides consultés du dépôt demandé : https://github.com/gamedev-skills/awesome-gamedev-agent-skills — router, platformer, level-design, phaser-core, phaser-arcade-physics, prototype-fast. Les instructions ont été lues, sans installation globale.
 
 Question du prototype : les déplacements et les choix de trajet donnent-ils envie de recommencer pour gagner du temps ? Premier essai à faire avec une personne qui découvre le jeu : apprend-elle les sauts en moins de 30 secondes, puis relance-t-elle volontairement une partie ? Valider ce point avant de produire une grande bibliothèque d’illustrations.
+
+Sprites pixel art animés : [sources, atlas et validation](assets/props-v2.md).

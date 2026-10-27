@@ -1,11 +1,16 @@
 import Phaser from 'phaser';
+import {touchesLava} from './ravine-art.js';
+import {loadPlayableLevel} from './editor-store.js';
 import './style.css';
 import {preloadArt,drawBackdrop,drawStreet,drawPlatformArt,updateMascot,drawCourseMechanisms,updateCourseMechanisms} from './art.js';
 import {buildLevel,formatTime,readBest,WORLD_WIDTH,GOAL_X,SPEED,MAX_SPEED,ZONES,STAGES,recordKey,groundAt,heightOn} from './level.js';
 import {createRunner,stepRunner} from './movement.js';
 import {createLivingWorld,updateLivingWorld} from './living-world.js';
 import {drawPathDetails} from './route-dressing.js';
-import {createSpeedFeedback,resetSpeedFeedback,updateSpeedFeedback,fitSpeedBackdrop} from './speed-feedback.js';
+import {createSpeedFeedback,resetSpeedFeedback,updateSpeedFeedback,fitSpeedBackdrop,snapCameraToRunner} from './speed-feedback.js';
+import {createAdventureState,stepAdventure,adventureRank} from './adventure.js';
+import {preloadAdventure,createAdventureArt,updateAdventureArt} from './adventure-art.js';
+import {preparePropArt} from './prop-art.js';
 const $=id=>document.getElementById(id),reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const touch={left:false,right:false,jump:false,slide:false};let gameScene,best=null,selectedStage='campaign';
 try{best=readBest(localStorage);}catch{}
@@ -20,11 +25,10 @@ function clearControls(){resetStick();Object.keys(touch).forEach(k=>touch[k]=fal
 
 class RunScene extends Phaser.Scene{
  constructor(){super('run');}
- preload(){this.load.on('progress',v=>$('play').textContent=`CHARGEMENT ${Math.round(v*100)} %`);preloadArt(this);}
+ preload(){this.load.on('progress',v=>$('play').textContent=`CHARGEMENT ${Math.round(v*100)} %`);preloadArt(this);preloadAdventure(this);}
  create(){
-  gameScene=this;this.level=buildLevel();this.mode='ready';this.runner=createRunner();this.elapsed=0;this.count=0;this.falls=0;this.zone=0;this.checkpoint=ZONES[0].checkpoint;this.runStart=80;this.runEnd=GOAL_X;this.splits=[];this.splitStarted=0;this.clock=0;this.accumulator=0;this.lastHud=0;this.trails=[];
-  const texture=this.textures.createCanvas('token',18,22),ctx=texture.context;
-  ctx.fillStyle='#5b9076';ctx.fillRect(4,2,10,18);ctx.fillStyle='#ccecb2';ctx.fillRect(2,5,14,12);ctx.fillStyle='#fff6be';ctx.fillRect(7,4,4,14);texture.refresh();
+  gameScene=this;this.level=loadPlayableLevel(buildLevel);this.mode='ready';this.runner=createRunner();this.elapsed=0;this.count=0;this.falls=0;this.zone=0;this.checkpoint=ZONES[0].checkpoint;this.runStart=80;this.runEnd=GOAL_X;this.splits=[];this.splitStarted=0;this.clock=0;this.accumulator=0;this.lastHud=0;this.trails=[];
+  preparePropArt(this);
   drawBackdrop(this);
   for(const p of [...this.level.terrain,...this.level.platforms])drawPlatformArt(this,p);
   drawStreet(this);drawCourseMechanisms(this);drawPathDetails(this);
@@ -34,8 +38,10 @@ class RunScene extends Phaser.Scene{
   this.visualClock=0;this.landedAt=-1000;createLivingWorld(this);
   this.dust=this.add.graphics().setDepth(9);createSpeedFeedback(this);updateMascot(this);
   this.cameras.main.setBounds(0,0,WORLD_WIDTH,1000);
-  this.cameras.main.startFollow(this.player,true,reducedMotion?1:.12,reducedMotion?1:.1,-140,110);
-  this.cameras.main.setDeadzone(90,80);
+  this.cameras.main.startFollow(this.player,true,reducedMotion?1:.25,reducedMotion?1:.3,-60,45);
+  this.cameras.main.setDeadzone();
+  this.adventure=createAdventureState();createAdventureArt(this);updateAdventureArt(this,reducedMotion);
+  fitGameViewport();
   this.keys=this.input.keyboard.addKeys('LEFT,RIGHT,UP,DOWN,SPACE,A,D,Q,W,Z,S,SHIFT,R,P,ESC');
   this.input.keyboard.addCapture(['SPACE','UP','DOWN','LEFT','RIGHT']);
   // Listen to native keydown once: resetting Phaser keys during pause can replay
@@ -50,14 +56,18 @@ class RunScene extends Phaser.Scene{
   this.updateHud();$('play').disabled=false;$('play').textContent='APPUYER SUR START';
  }
  startRun(){
+  this.adventure=createAdventureState();this.adventureArt.chapter=-1;
   clearControls();resetSpeedFeedback(this);this.input.keyboard.resetKeys();this.mode='running';document.body.classList.add('is-playing');this.runner=createRunner();this.elapsed=0;this.count=0;this.falls=0;this.zone=0;this.clock=0;this.accumulator=0;this.lastHud=0;this.trails=[];this.checkpoint=ZONES[0].checkpoint;
   const stage=STAGES.find(s=>s.id===selectedStage);this.activeStage=stage??null;this.runStart=stage?.start??80;this.runEnd=stage?.end??GOAL_X;this.zone=stage?.zone??0;this.splits=[];this.splitStarted=0;
+  const params=new URLSearchParams(location.search),testStart=Number(params.get('spawn'));
+  if(!stage&&params.get('custom')==='1'&&params.has('spawn')&&Number.isFinite(testStart)&&testStart>=80&&testStart<GOAL_X&&groundAt(this.level,testStart)){this.runStart=testStart;this.zone=Math.min(2,Math.floor(testStart/8400));}
   this.checkpoint={x:this.runStart};const floor=groundAt(this.level,this.runStart);this.runner=createRunner(this.runStart,heightOn(floor,this.runStart));this.runner.surfaceId=floor.id;
   try{best=readBest(localStorage,recordKey(selectedStage));}catch{best=null;}
   $('best').textContent=best?formatTime(best):'— — : — —';$('next-stage').hidden=true;$('split-results').textContent='';
   document.querySelectorAll('.progress-track>i').forEach(marker=>marker.hidden=!!stage);
   for(const coin of this.coins)coin.setActive(true).setVisible(true);
-  this.syncPlayer();this.cameras.main.scrollX=Math.max(0,this.runStart-160);this.cameras.main.scrollY=0;this.dust.clear();
+  this.syncPlayer();snapCameraToRunner(this);this.dust.clear();
+  updateAdventureArt(this,reducedMotion);
   this.backgrounds.forEach((background,i)=>{background.tilePositionX=0;background.setAlpha(i===this.zone?1:0);});
   document.body.classList.add('has-started');$('overlay').hidden=true;$('finish-share').hidden=true;$('pause').disabled=false;$('pause').textContent='Ⅱ';$('pause').setAttribute('aria-label','Mettre en pause');
   audio.unlock();audio.tone(440);this.updateHud();$('game').focus({preventScroll:true});
@@ -72,12 +82,13 @@ class RunScene extends Phaser.Scene{
   }
  }
  respawn(){
+  this.adventure.invincible=2.2;this.adventure.shield=false;this.adventure.scatter=[];this.adventure.combo=0;this.count=0;
   resetSpeedFeedback(this);
   this.falls++;const floor=groundAt(this.level,this.checkpoint.x);this.runner=createRunner(this.checkpoint.x,heightOn(floor,this.checkpoint.x));this.runner.surfaceId=floor.id;this.trails=[];audio.tone(150,.16);
   if(!reducedMotion)this.cameras.main.flash(100,255,128,93,false);
-  this.syncPlayer();toast('Retour au dernier drapeau · le temps continue');
+  this.syncPlayer();snapCameraToRunner(this);toast('Retour au dernier drapeau · le temps continue');
  }
- syncPlayer(){const p=this.runner;this.player.setPosition(p.loop?p.loop.x+100:p.x,p.loop?p.loop.baseY-140:p.feet-20);updateMascot(this);updateCourseMechanisms(this);}
+ syncPlayer(){const p=this.runner;this.player.setPosition(p.x,p.feet-20);updateMascot(this);updateCourseMechanisms(this);}
  finish(){
   this.speedFeedback.wind.clear();this.speedFeedback.streakCount=0;
   this.splits.push({zone:this.zone,ms:this.elapsed-this.splitStarted});this.mode='finished';document.body.classList.remove('is-playing');$('pause').disabled=true;const newBest=!best||this.elapsed<best;
@@ -86,6 +97,8 @@ class RunScene extends Phaser.Scene{
   $('best').textContent=formatTime(best);
   overlay({kicker:newBest?'NOUVEAU RECORD PERSONNEL':this.activeStage?this.activeStage.name:'BIENVENUE AUX TOILES NOIRES',title:`${formatTime(this.elapsed)}<br><em>${this.activeStage?'Niveau terminé.':'Bienvenue au bar.'}</em>`,copy:`${this.count} éclats · ${this.falls} chute${this.falls>1?'s':''} · Vitesse maximale ×${(this.runner.maxSpeed/SPEED).toFixed(1)}.`,button:'REJOUER',hint:'R pour recommencer · Ton record reste sur cet appareil'});
   $('split-results').textContent=this.splits.map(s=>`${STAGES[s.zone].name} : ${formatTime(s.ms)}`).join(' · ');
+  const rating=adventureRank(this.adventure,this.falls,this.elapsed/1000,this.adventure.relics.size);
+  $('overlay-copy').textContent=`RANG ${rating.rank} · ${rating.total.toLocaleString('fr-FR')} pts · ${this.adventure.relics.size}/${this.activeStage?3:9} emblèmes · ${this.adventure.defeated.size} sentinelles · ${this.falls} reprises`;
   $('next-stage').hidden=!this.activeStage||this.zone===2;$('stage-picker').hidden=false;
   $('finish-share').hidden=false;this.updateHud();$('progress').style.width='100%';$('run-state').innerHTML='<i></i> PARCOURS TERMINÉ';$('announcer').textContent=`${this.activeStage?'Niveau terminé':'Arrivée au bar'} en ${formatTime(this.elapsed)}.`;audio.tone(1046,.25);$('play').focus({preventScroll:true});
  }
@@ -95,6 +108,9 @@ class RunScene extends Phaser.Scene{
   const momentum=Math.abs(this.runner.vx)/SPEED;
   $('speed-value').textContent=`×${momentum.toFixed(1)}`;$('speed-fill').style.width=`${Math.min(100,Math.abs(this.runner.vx)/MAX_SPEED*100)}%`;
   $('speed-meter').classList.toggle('boosted',momentum>1.3);
+  $('shard-count').textContent=String(this.count).padStart(2,'0');
+  $('relic-count').textContent=`${this.adventure?.relics.size??0}/${this.activeStage?3:9}`;
+  $('shield-state').textContent=this.adventure?.shield?'BOUCLIER':'ÉCLATS';
   if(this.mode==='running')$('run-state').innerHTML=`<i></i> ${this.runner.sliding?'GLISSADE':momentum>1.4?'PLEIN ÉLAN':'EN COURSE'}`;
  }
  update(_,delta){
@@ -115,9 +131,27 @@ class RunScene extends Phaser.Scene{
    if(event.jumped)audio.tone(540);
    if(event.landed)this.landedAt=this.visualClock;
    for(const coin of this.coins)if(coin.active&&Math.abs(coin.x-this.runner.x)<23&&Math.abs(coin.y-(this.runner.feet-25))<32){coin.setActive(false).setVisible(false);this.count++;audio.tone(880,.06);}
-   if(this.runner.feet>1050){this.respawn();break;}
+   const encounter=stepAdventure(this.adventure,this.runner,this.level.adventure,1/120,this.count);this.count=encounter.balance;
+   let hitRespawn=false;
+   for(const e of encounter.events){
+    if(e.type==='respawn'){this.respawn();hitRespawn=true;toast('Plus d’éclats · retour au drapeau');break;}
+    if(e.type==='relic'){toast('Emblème découvert · +1 000 points');audio.tone(1320,.2);}
+    else if(e.type==='shield')toast('Bouclier · protège d’un impact');
+    else if(e.type==='cache'){toast('Réserve · +10 éclats');audio.tone(880);}
+    else if(e.type==='hurt'){toast(`Impact · ${e.lost} éclats dispersés`);audio.tone(180,.15);}
+    else if(e.type==='shield-broken')toast('Bouclier absorbé · continue !');
+    else if(e.type==='defeat')audio.tone(650,.08);
+   }
+   if(hitRespawn)break;
+   if(this.runner.feet>1050||touchesLava(this)){this.respawn();break;}
   }
   this.syncPlayer();
+  updateAdventureArt(this,reducedMotion);
+  const chapter=this.level.adventure.chapters.findIndex(c=>this.runner.x>=c.x&&this.runner.x<c.end);
+  if(chapter!==this.adventureArt.chapter&&chapter>=0){
+   this.adventureArt.chapter=chapter;const c=this.level.adventure.chapters[chapter];
+   $('chapter-name').textContent=c.name;$('chapter-hint').textContent=c.hint;
+  }
   const zone=this.runner.x>=ZONES[2].x?2:this.runner.x>=ZONES[1].x?1:0;
   if(zone>this.zone){this.splits.push({zone:this.zone,ms:this.elapsed-this.splitStarted});this.splitStarted=this.elapsed;this.zone=zone;this.checkpoint=ZONES[zone].checkpoint;toast(`${ZONES[zone].name} · Nouvelle étape`);audio.tone(700,.14);}
   const checkpoint=[...this.level.checkpoints].reverse().find(c=>c.x<=this.runner.x);if(checkpoint&&checkpoint.x>this.checkpoint.x){this.checkpoint=checkpoint;toast('Drapeau atteint · nouveau point de reprise');}
@@ -128,9 +162,9 @@ class RunScene extends Phaser.Scene{
 }
 $('play').disabled=true;
 function pressStart(){
+ if(!document.fullscreenElement)document.documentElement.requestFullscreen?.({navigationUI:'hide'}).catch(()=>{});
  if(!bootFinished){finishBoot();return;}
  if(!gameScene)return;
- if(gameScene.mode==='ready')document.documentElement.requestFullscreen?.().catch(()=>{});
  gameScene.mode==='paused'?gameScene.togglePause():gameScene.startRun();
 }
 $('play').addEventListener('click',pressStart);
@@ -143,15 +177,15 @@ const barLogo=new Image();barLogo.src='/assets/logo-les-toiles-noires.png';
 barLogo.onload=()=>{for(const canvas of document.querySelectorAll('.pixel-logo')){const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.drawImage(barLogo,0,0,canvas.width,canvas.height);}};
 $('restart').addEventListener('click',()=>gameScene?.startRun());$('pause').addEventListener('click',()=>gameScene?.togglePause());
 $('sound').addEventListener('click',()=>{audio.enabled=!audio.enabled;if(audio.enabled)audio.unlock();$('sound-state').textContent=audio.enabled?'OUI':'NON';$('sound').setAttribute('aria-pressed',String(audio.enabled));$('sound').setAttribute('aria-label',audio.enabled?'Couper le son':'Activer le son');if(audio.enabled)audio.tone(660);});
-const phoneMedia=matchMedia('(pointer: coarse) and (max-width: 1100px)');
+const phoneMedia=matchMedia('(pointer: coarse) and (max-width: 1400px)');
 let stickPointer=null,stickOrigin={x:0,y:0};
 const stickZone=$('joystick-zone'),stick=$('joystick'),knob=$('joystick-knob');
-function resetStick(){stickPointer=null;touch.left=false;touch.right=false;stick.hidden=true;knob.style.transform='translate(0px,0px)';}
+function resetStick(){stickPointer=null;touch.left=false;touch.right=false;touch.slide=false;stick.hidden=true;knob.style.transform='translate(0px,0px)';}
 function moveStick(e){
  const dx=e.clientX-stickOrigin.x,dy=e.clientY-stickOrigin.y,distance=Math.hypot(dx,dy),radius=42;
  const factor=distance>radius?radius/distance:1;
  knob.style.transform=`translate(${dx*factor}px,${dy*factor}px)`;
- touch.left=dx< -10;touch.right=dx>10;
+ touch.left=dx< -10;touch.right=dx>10;touch.slide=dy>10;
 }
 stickZone.addEventListener('pointerdown',e=>{
  if(gameScene?.mode!=='running'||stickPointer!==null)return;
@@ -186,7 +220,13 @@ function fitGameViewport(){
  const width=phoneMedia.matches?Math.round(540*bounds.width/bounds.height):960;
  if(game.scale.gameSize.width!==width)game.scale.setGameSize(width,540);
  else game.scale.refresh();
- if(gameScene?.backgrounds)fitSpeedBackdrop(gameScene);
+ if(gameScene?.backgrounds){
+  const baseZoom=phoneMedia.matches?1.25:1;
+  const previousZoom=gameScene.baseZoom??1;
+  gameScene.baseZoom=baseZoom;
+  gameScene.cameras.main.setZoom(gameScene.cameras.main.zoom/previousZoom*baseZoom);
+  fitSpeedBackdrop(gameScene);
+ }
 }
 new ResizeObserver(fitGameViewport).observe($('viewport'));
 window.addEventListener('resize',fitGameViewport);

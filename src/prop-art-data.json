@@ -1,0 +1,514 @@
+{
+  "drone": {
+    "animated": true,
+    "frames": [
+      {
+        "x": 69,
+        "y": 95,
+        "w": 529,
+        "h": 482,
+        "anchorX": 337.73,
+        "anchorY": 333.28
+      },
+      {
+        "x": 701,
+        "y": 98,
+        "w": 555,
+        "h": 471,
+        "anchorX": 980.834,
+        "anchorY": 337.006
+      },
+      {
+        "x": 31,
+        "y": 624,
+        "w": 604,
+        "h": 529,
+        "anchorX": 335.836,
+        "anchorY": 908.614
+      },
+      {
+        "x": 696,
+        "y": 658,
+        "w": 570,
+        "h": 474,
+        "anchorX": 982.728,
+        "anchorY": 905.396
+      }
+    ],
+    "source": "/assets/source/props-polish-v1/drone-animated.png"
+  },
+  "spring": {
+    "animated": true,
+    "frames": [
+      {
+        "x": 127,
+        "y": 115,
+        "w": 618,
+        "h": 373,
+        "anchorX": 435.5,
+        "anchorY": 488
+      },
+      {
+        "x": 800,
+        "y": 197,
+        "w": 617,
+        "h": 291,
+        "anchorX": 1108.0,
+        "anchorY": 488
+      },
+      {
+        "x": 127,
+        "y": 515,
+        "w": 618,
+        "h": 453,
+        "anchorX": 435.5,
+        "anchorY": 968
+      },
+      {
+        "x": 800,
+        "y": 593,
+        "w": 617,
+        "h": 375,
+        "anchorX": 1108.0,
+        "anchorY": 968
+      }
+    ],
+    "source": "/assets/source/props-polish-v1/spring-animated.png"
+  },
+  "checkpoint": {
+    "animated": true,
+    "frames": [
+      {
+        "x": 115,
+        "y": 13,
+        "w": 476,
+        "h": 614,
+        "anchorX": 218.0,
+        "anchorY": 627
+      },
+      {
+        "x": 699,
+        "y": 14,
+        "w": 485,
+        "h": 613,
+        "anchorX": 802.5,
+        "anchorY": 627
+      },
+      {
+        "x": 115,
+        "y": 645,
+        "w": 476,
+        "h": 612,
+        "anchorX": 218.5,
+        "anchorY": 1257
+      },
+      {
+        "x": 699,
+        "y": 645,
+        "w": 470,
+        "h": 612,
+        "anchorX": 802.5,
+        "anchorY": 1257
+      }
+    ],
+    "source": "/assets/source/props-polish-v1/checkpoint-animated.png"
+  },
+  "lowgate": {
+    "x": 37,
+    "y": 149,
+    "w": 2056,
+    "h": 498,
+    "capTop": 203,
+    "capBottom": 405,
+    "anchorX": 0.4980544747081712,
+    "source": "/assets/source/props-polish-v1/lowgate.png"
+  },
+  "coin": {
+    "x": 206,
+    "y": 162,
+    "w": 871,
+    "h": 892,
+    "anchorX": 0.5063145809414467,
+    "source": "/assets/source/props-polish-v1/coin.png"
+  },
+  "crab": {
+    "animated": true,
+    "source": "/assets/source/props-polish-v2/crab.png",
+    "frames": [
+      {
+        "x": 58,
+        "y": 120,
+        "w": 619,
+        "h": 330,
+        "anchorX": 367.0,
+        "anchorY": 450
+      },
+      {
+        "x": 783,
+        "y": 120,
+        "w": 627,
+        "h": 330,
+        "anchorX": 1081.0,
+        "anchorY": 450
+      },
+      {
+        "x": 41,
+        "y": 664,
+        "w": 651,
+        "h": 332,
+        "anchorX": 349.5,
+        "anchorY": 996
+      },
+      {
+        "x": 768,
+        "y": 664,
+        "w": 644,
+        "h": 332,
+        "anchorX": 1048.0,
+        "anchorY": 996
+      }
+    ]
+  },
+  "relic": {
+    "animated": true,
+    "source": "/assets/source/props-polish-v2/relic.png",
+    "frames": [
+      {
+        "x": 208,
+        "y": 18,
+        "w": 373,
+        "h": 526,
+        "anchorX": 394.5,
+        "anchorY": 281.0
+      },
+      {
+        "x": 816,
+        "y": 18,
+        "w": 373,
+        "h": 525,
+        "anchorX": 1002.5,
+        "anchorY": 280.5
+      },
+      {
+        "x": 208,
+        "y": 591,
+        "w": 373,
+        "h": 523,
+        "anchorX": 394.5,
+        "anchorY": 852.5
+      },
+      {
+        "x": 816,
+        "y": 591,
+        "w": 373,
+        "h": 523,
+        "anchorX": 1002.5,
+        "anchorY": 852.5
+      }
+    ]
+  },
+  "cache": {
+    "animated": true,
+    "source": "/assets/source/props-polish-v2/cache.png",
+    "frames": [
+      {
+        "x": 89,
+        "y": 139,
+        "w": 494,
+        "h": 377,
+        "anchorX": 335.5,
+        "anchorY": 516
+      },
+      {
+        "x": 758,
+        "y": 139,
+        "w": 494,
+        "h": 377,
+        "anchorX": 1004.5,
+        "anchorY": 516
+      },
+      {
+        "x": 89,
+        "y": 697,
+        "w": 494,
+        "h": 378,
+        "anchorX": 335.5,
+        "anchorY": 1075
+      },
+      {
+        "x": 758,
+        "y": 697,
+        "w": 494,
+        "h": 378,
+        "anchorX": 1004.5,
+        "anchorY": 1075
+      }
+    ]
+  },
+  "shield": {
+    "animated": true,
+    "source": "/assets/source/props-polish-v2/shield.png",
+    "frames": [
+      {
+        "x": 98,
+        "y": 58,
+        "w": 529,
+        "h": 507,
+        "anchorX": 362.0,
+        "anchorY": 565
+      },
+      {
+        "x": 715,
+        "y": 58,
+        "w": 528,
+        "h": 507,
+        "anchorX": 978.5,
+        "anchorY": 565
+      },
+      {
+        "x": 98,
+        "y": 611,
+        "w": 529,
+        "h": 504,
+        "anchorX": 362.0,
+        "anchorY": 1115
+      },
+      {
+        "x": 714,
+        "y": 611,
+        "w": 529,
+        "h": 504,
+        "anchorX": 978.0,
+        "anchorY": 1115
+      }
+    ]
+  },
+  "boost": {
+    "animated": true,
+    "source": "/assets/source/props-polish-v2/boost.png",
+    "frames": [
+      {
+        "x": 54,
+        "y": 231,
+        "w": 776,
+        "h": 154,
+        "anchorX": 443.0,
+        "anchorY": 385
+      },
+      {
+        "x": 941,
+        "y": 231,
+        "w": 776,
+        "h": 154,
+        "anchorX": 1330.0,
+        "anchorY": 385
+      },
+      {
+        "x": 54,
+        "y": 674,
+        "w": 776,
+        "h": 154,
+        "anchorX": 443.0,
+        "anchorY": 828
+      },
+      {
+        "x": 941,
+        "y": 674,
+        "w": 776,
+        "h": 154,
+        "anchorX": 1330.0,
+        "anchorY": 828
+      }
+    ]
+  },
+  "sign": {
+    "animated": true,
+    "source": "/assets/source/props-polish-v2/sign.png",
+    "frames": [
+      {
+        "x": 183,
+        "y": 94,
+        "w": 348,
+        "h": 449,
+        "anchorX": 343.0,
+        "anchorY": 543
+      },
+      {
+        "x": 872,
+        "y": 94,
+        "w": 348,
+        "h": 450,
+        "anchorX": 1032.0,
+        "anchorY": 544
+      },
+      {
+        "x": 183,
+        "y": 631,
+        "w": 348,
+        "h": 448,
+        "anchorX": 343.0,
+        "anchorY": 1079
+      },
+      {
+        "x": 872,
+        "y": 630,
+        "w": 348,
+        "h": 449,
+        "anchorX": 1032.0,
+        "anchorY": 1079
+      }
+    ]
+  },
+  "finish": {
+    "animated": true,
+    "source": "/assets/source/props-polish-v2/finish.png",
+    "frames": [
+      {
+        "x": 168,
+        "y": 15,
+        "w": 436,
+        "h": 584,
+        "anchorX": 295.0,
+        "anchorY": 599
+      },
+      {
+        "x": 710,
+        "y": 14,
+        "w": 413,
+        "h": 585,
+        "anchorX": 836.5,
+        "anchorY": 599
+      },
+      {
+        "x": 168,
+        "y": 630,
+        "w": 388,
+        "h": 584,
+        "anchorX": 295.0,
+        "anchorY": 1214
+      },
+      {
+        "x": 710,
+        "y": 630,
+        "w": 439,
+        "h": 584,
+        "anchorX": 836.5,
+        "anchorY": 1214
+      }
+    ]
+  },
+  "aura": {
+    "animated": true,
+    "source": "/assets/source/props-polish-v2/aura.png",
+    "frames": [
+      {
+        "x": 199,
+        "y": 27,
+        "w": 449,
+        "h": 441,
+        "anchorX": 423.5,
+        "anchorY": 247.5
+      },
+      {
+        "x": 888,
+        "y": 32,
+        "w": 450,
+        "h": 436,
+        "anchorX": 1113.0,
+        "anchorY": 250.0
+      },
+      {
+        "x": 199,
+        "y": 546,
+        "w": 449,
+        "h": 434,
+        "anchorX": 423.5,
+        "anchorY": 763.0
+      },
+      {
+        "x": 880,
+        "y": 546,
+        "w": 458,
+        "h": 434,
+        "anchorX": 1109.0,
+        "anchorY": 763.0
+      }
+    ]
+  },
+  "bird": {
+    "animated": true,
+    "source": "/assets/source/props-polish-v2/bird.png",
+    "frames": [
+      {
+        "x": 250,
+        "y": 45,
+        "w": 444,
+        "h": 458,
+        "anchorX": 463.477,
+        "anchorY": 384.386
+      },
+      {
+        "x": 903,
+        "y": 190,
+        "w": 503,
+        "h": 313,
+        "anchorX": 1176.065,
+        "anchorY": 385.691
+      },
+      {
+        "x": 126,
+        "y": 681,
+        "w": 576,
+        "h": 268,
+        "anchorX": 470.032,
+        "anchorY": 824.579
+      },
+      {
+        "x": 952,
+        "y": 557,
+        "w": 467,
+        "h": 394,
+        "anchorX": 1184.185,
+        "anchorY": 824.642
+      }
+    ]
+  },
+  "guest": {
+    "animated": true,
+    "source": "/assets/source/props-polish-v2/guest.png",
+    "frames": [
+      {
+        "x": 303,
+        "y": 25,
+        "w": 202,
+        "h": 526,
+        "anchorX": 410.0,
+        "anchorY": 551
+      },
+      {
+        "x": 860,
+        "y": 25,
+        "w": 293,
+        "h": 526,
+        "anchorX": 965.0,
+        "anchorY": 551
+      },
+      {
+        "x": 298,
+        "y": 598,
+        "w": 257,
+        "h": 526,
+        "anchorX": 409.0,
+        "anchorY": 1124
+      },
+      {
+        "x": 859,
+        "y": 598,
+        "w": 204,
+        "h": 526,
+        "anchorX": 968.0,
+        "anchorY": 1124
+      }
+    ]
+  }
+}

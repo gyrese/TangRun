@@ -1,0 +1,58 @@
+{
+  "method": "built-in ImageGen",
+  "common": "Create a production-ready ANIMATED PIXEL ART sprite sheet for a 2D side-view Reunion Island volcanic platform game. Exactly FOUR frames in a precise 2-by-2 grid, same-size cells, wide transparent gutters. SAME object in all frames, identical scale and fixed body/base anchor. Coherent 1990s premium 16-bit pixel art: big deliberate square pixel clusters, hard aliased edges, limited 24-color palette, charcoal blue basalt, aged copper, gold, muted sage, luminous mint accents. Effective sprite resolution 48 pixels across (not a high-resolution painting). Warm light from upper left. GENUINE TRANSPARENT alpha background, including holes. NO background glow, gradient, blur, photorealism, vector flat shapes, isometric view, labels, grid lines, letters or watermarks. Entire object fully visible in each cell.",
+  "specs": [
+    [
+      "crab",
+      "A compact mechanical CRAB ENEMY, corroded copper and charcoal basalt segmented shell, coral red claws, small mint optical eyes inset into a dark face. Four walking cycle poses alternating the six articulated legs and claws. Body remains absolutely fixed in the same place, legs move. A charming but dangerous handcrafted island automaton, readable at 44x36 pixels, no box-shaped face."
+    ],
+    [
+      "relic",
+      "A rare collectible EMBLEM: elegant tall diamond of polished dark volcanic obsidian framed in ornate gold, a carved ember orange mountain at the center and tiny mint highlights. Four frames of a highlight traveling around the bevel, diamond remains perfectly still. Distinct from ordinary circular gold coins. Rich but chunky readable pixel clusters at 32x40."
+    ],
+    [
+      "cache",
+      "A small ancient BONUS CHEST of charcoal basalt and aged copper, a gold coin crest clearly inset on the front, curved hinged lid, sturdy common flat bottom. Four idle frames with a subtle amber glint traveling across metal and the coin crest; the chest does not move or open. This is a compact loot box readable at 40x42 pixels, not a modern screen or monitor."
+    ],
+    [
+      "shield",
+      "A small protective SHIELD BONUS SHRINE, carved basalt base with copper brackets, containing one luminous mint shield-shaped gemstone in the center. Four idle frames with the mint facets gently pulsing and a few tiny pixel glints, stable fixed base, not a bubble, not a modern TV. Readable at 40x42 pixels, visually distinct from the gold coin chest."
+    ],
+    [
+      "boost",
+      "A low wide BOOST PLATE for running over, made of naturally fractured blue-gray basalt with aged copper trim. Three amber chevrons are inset directly into its top face and illuminate sequentially left to right across four frames. Thin horizontal silhouette, flat solid bottom, roughly 4:1 width to height. Small moss tufts at outer corners, no floating arrows. Side view, all parts fixed except traveling light."
+    ],
+    [
+      "sign",
+      "A small JUMP DIRECTION SIGNPOST: a thick low carved basalt foot, a short copper stem, a copper-and-stone plaque bearing one clearly carved arrow pointing diagonally UP AND RIGHT. Four frames of a tiny warm gold glint crossing the carved arrow, sign and foot perfectly fixed. The arrow is a carved pictogram, no lettering. Readable silhouette at 32x40 pixels."
+    ],
+    [
+      "finish",
+      "A beautiful FINISH CHECKPOINT marker: a thin copper pole with elegant gold finial, a black-and-warm-ivory checkerboard fabric pennant blowing to the right, a compact carved basalt pedestal. Four frames of the cloth fluttering; pole and pedestal absolutely fixed on the same baseline. Strict side view. Tall vertical silhouette about 48x96 pixels, no letters, no numbers."
+    ],
+    [
+      "aura",
+      "A magical PROTECTIVE AURA around a game character: a hollow circular ring of chunky mint and turquoise pixel arcs with small golden runic chips. Four animation frames with tiny runic sparks traveling clockwise around the perimeter, ring diameter and center absolutely fixed. The inside of the ring must be completely TRANSPARENT and empty in all frames so the player remains fully visible. Crisp pixel clusters, no gradient or smooth vector stroke, no solid circle, no character inside."
+    ],
+    [
+      "bird",
+      "A small ivory seabird for a coastal platform game, dark blue-gray wing undersides and tiny warm beak, strict side view flying toward the right. Four successive wing-flap poses: wings high, half lowered, wings spread low, half raised. Body, head and tail stay locked to identical coordinates. Tiny readable pixel art at 24x16 pixels, no environment."
+    ],
+    [
+      "guest",
+      "A friendly adult Reunion Island bar patron, warm brown skin, short dark curly hair, teal open shirt over an ivory T-shirt, charcoal trousers, simple copper-brown shoes. Standing in a relaxed three-quarter side view, full body, both shoes on the same baseline. Four subtle idle/talking poses: relaxed, talking with one hand slightly raised, a small friendly wave, relaxed again. Not the player mascot, no sunglasses, no background, no drink or other prop. Coherent compact pixel-art NPC at 24x40 pixels."
+    ]
+  ],
+  "sources": {
+    "crab": "C:\\Users\\gyres\\.codex\\generated_images\\01a17740-ea71-7323-8493-c414caee3641\\exec-b172971c-2572-414a-92ca-248b4112f7c0.png",
+    "relic": "C:\\Users\\gyres\\.codex\\generated_images\\01a17740-ea71-7323-8493-c414caee3641\\exec-bf0d8c4d-ca3a-4652-bca6-1dfc9212f04f.png",
+    "cache": "C:\\Users\\gyres\\.codex\\generated_images\\01a17740-ea71-7323-8493-c414caee3641\\exec-6e7adf25-d2e8-42bd-ad21-76aa5657bc02.png",
+    "shield": "C:\\Users\\gyres\\.codex\\generated_images\\01a17740-ea71-7323-8493-c414caee3641\\exec-f709c0f6-a433-4082-a5ae-c02ffa961fde.png",
+    "boost": "C:\\Users\\gyres\\.codex\\generated_images\\01a17740-ea71-7323-8493-c414caee3641\\exec-f0e259e2-8988-4378-b02d-4de9843f2bbf.png",
+    "sign": "C:\\Users\\gyres\\.codex\\generated_images\\01a17740-ea71-7323-8493-c414caee3641\\exec-0c3870e3-8793-4a62-aceb-c483c9064556.png",
+    "finish": "C:\\Users\\gyres\\.codex\\generated_images\\01a17740-ea71-7323-8493-c414caee3641\\exec-f2e05d82-eb12-4b9b-ae83-0dba813f8c85.png",
+    "aura": "C:\\Users\\gyres\\.codex\\generated_images\\01a17740-ea71-7323-8493-c414caee3641\\exec-e4a382d6-dbdd-45ca-88c2-9e7906a97c1b.png",
+    "bird": "C:\\Users\\gyres\\.codex\\generated_images\\01a17740-ea71-7323-8493-c414caee3641\\exec-00ec20e1-088f-48f9-a481-61b764900156.png",
+    "guest": "C:\\Users\\gyres\\.codex\\generated_images\\01a17740-ea71-7323-8493-c414caee3641\\exec-22cc00da-1c01-4fe7-8c60-d032170016d1.png"
+  }
+}

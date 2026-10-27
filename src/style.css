@@ -45,6 +45,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#02030c}
 .console-mode .arcade{position:fixed;inset:0;max-width:none;margin:0;border:0;border-radius:0;box-shadow:none;background:#02030c;display:block;padding:0}
 .console-mode .game-viewport,.phone-mode.console-mode .game-viewport{position:absolute;inset:0;width:100%;height:100%;max-height:none;aspect-ratio:auto}
 .console-mode #game canvas{object-fit:contain}
+.adventure-hud{display:none;position:absolute;top:78px;left:max(28px,env(safe-area-inset-left));right:max(28px,env(safe-area-inset-right));z-index:12;gap:22px;align-items:flex-start;pointer-events:none;text-shadow:2px 2px #071724}
+.has-started .adventure-hud{display:flex}.adventure-hud small{display:block;font:9px monospace;letter-spacing:1px;color:#ffdb99}.adventure-hud strong{display:block;font:bold 22px monospace;color:#fff1c9;margin-top:3px}.adventure-hud .chapter-caption{margin-left:auto;text-align:right;border-right:2px solid #ffbe77;padding-right:12px}.chapter-caption strong{font-size:13px}.chapter-caption small{font-size:10px;letter-spacing:0;color:#c4ddd1;margin-top:5px}
+.console-mode:not(.is-playing) .adventure-hud{display:none}
+.phone-mode .adventure-hud{top:58px;left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));gap:16px}.phone-mode .adventure-hud strong{font-size:16px}.phone-mode .chapter-caption strong{font-size:11px}.phone-mode .chapter-caption small{font-size:9px}.phone-mode .adventure-hud small{font-size:8px}
+@media(max-width:700px){.chapter-caption{max-width:45%}.chapter-caption small{display:none}}
+.phone-mode.console-mode .game-hud{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
 .console-mode .game-hud{position:absolute;inset:0 0 auto;z-index:12;height:70px;background:linear-gradient(#020a28bb,transparent);padding:12px 28px;gap:24px;pointer-events:none;text-shadow:2px 2px #071340}
 .console-mode .game-hud button{pointer-events:auto;border:2px solid #8397bf;border-radius:0;background:#091735a6;min-height:44px;min-width:44px}
 .console-mode:not(.has-started) .game-hud,.console-mode:not(.has-started) .progress-track{display:none}

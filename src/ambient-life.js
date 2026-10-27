@@ -2,35 +2,23 @@ import {GOAL_X,groundAt,heightOn} from './level.js';
 
 // Ambient motion uses the same paused visual clock as the character animations.
 export function createAmbientLife(scene){
- const life=scene.ambientLife={sky:scene.add.graphics().setScrollFactor(0).setDepth(-24),air:scene.add.graphics().setDepth(2),flags:scene.add.graphics().setDepth(3),birds:[],boats:[],guests:[]};
- // Eight wing positions, snapped to whole pixels rather than rotating a still image.
- for(let frame=0;frame<8;frame++){
-  const texture=scene.textures.createCanvas(`bird-${frame}`,24,16),c=texture.context,wing=[-5,-3,0,3,5,3,0,-3][frame];
-  c.strokeStyle='#e2dcc7';c.lineWidth=2;c.beginPath();c.moveTo(2,8+wing);c.lineTo(7,7+Math.round(wing/2));c.lineTo(12,9);c.lineTo(17,7+Math.round(wing/2));c.lineTo(22,8+wing);c.stroke();c.fillStyle='#dfdccb';c.fillRect(10,8,5,2);texture.refresh();
- }
+ const life=scene.ambientLife={sky:scene.add.graphics().setScrollFactor(0).setDepth(-24),air:scene.add.graphics().setDepth(2),birds:[],boats:[],guests:[]};
  for(let i=0;i<9;i++)life.birds.push(scene.add.image(i*147,100+i%3*34,'bird-0').setScrollFactor(0).setDepth(-22).setScale(i%3===0?.7:1));
  for(let i=0;i<3;i++)life.boats.push(scene.add.image(180+i*370,455+i*16,'boat').setOrigin(.5,1).setScale(.28+i*.035).setScrollFactor(0).setDepth(-23));
- // Small original pixel characters animate at the terrace; no duplicate player mascot.
- const palettes=[['#a6bcb4','#b77450'],['#dcc592','#597b76'],['#bc947c','#a2916c']];
- for(let person=0;person<3;person++)for(let frame=0;frame<4;frame++){
-  const texture=scene.textures.createCanvas(`guest-${person}-${frame}`,20,36),c=texture.context,[skin,shirt]=palettes[person];
-  c.fillStyle='#23343a';c.fillRect(5,3,10,8);c.fillStyle=skin;c.fillRect(7,6,8,8);c.fillStyle='#2c2728';c.fillRect(13,8,2,2);c.fillStyle=shirt;c.fillRect(5,15,11,12);
-  c.fillStyle=skin;c.fillRect(3,17,3,9);c.fillRect(16,frame===3?9:17,3,frame===3?10:9);c.fillStyle='#253b43';c.fillRect(6,26,4,8);c.fillRect(12,26,4,frame%2?6:8);c.fillStyle='#a8aaa0';c.fillRect(5,33,6,2);c.fillRect(12,frame%2?31:33,6,2);texture.refresh();
- }
  for(const [i,x]of [GOAL_X-210,GOAL_X+178,GOAL_X+265].entries()){
-  const floor=groundAt(scene.level,x),y=heightOn(floor,x),sprite=scene.add.image(x,y,`guest-${i}-0`).setOrigin(.5,1).setScale(1.15).setDepth(3);
+  const floor=groundAt(scene.level,x),y=floor?heightOn(floor,x):450,sprite=scene.add.image(x,y,`guest-${i}-0`).setOrigin(.5,1).setScale(1.15).setDepth(3);
   life.guests.push({sprite,x,y,i});
  }
  life.foliage=scene.placedScenery.filter(p=>['palm','plants','frangipani','tamarind'].includes(p.key));
  life.vents=scene.placedScenery.filter(p=>p.key==='lavarocks');
- life.poles=scene.level.checkpoints.slice(1).map(p=>({...p,y:heightOn(groundAt(scene.level,p.x),p.x)}));
+ life.poles=scene.level.checkpoints.slice(1).map(p=>{const floor=groundAt(scene.level,p.x);return{...p,y:floor?heightOn(floor,p.x):p.y};});
 }
 export function updateAmbientLife(scene,reduced){
  const life=scene.ambientLife;if(!life)return;
  const time=reduced?0:scene.visualClock/1000,camera=scene.cameras.main,w=scene.scale.width;
  const coast=scene.backgrounds[2].alpha,forest=scene.backgrounds[1].alpha*(1-coast),volcano=1-scene.backgrounds[1].alpha;
  const visible=x=>x>camera.scrollX-180&&x<camera.scrollX+w+180;
- life.sky.clear();life.air.clear();life.flags.clear();
+ life.sky.clear();life.air.clear();
  // Slow surf lines on the water, beneath all terrain and foreground props.
  for(let row=0;row<7;row++)for(let i=0;i<8;i++){
   const x=((i*167+row*49+time*(5+row*2))%(w+180))-90,y=416+row*17+Math.sin(time*.8+i)*2;
@@ -56,8 +44,17 @@ export function updateAmbientLife(scene,reduced){
   const age=(time*.2+i*.2+vent.x*.001)%1,x=vent.x+Math.sin(age*5+i)*15+age*24,y=vent.y-20-age*115;
   life.air.fillStyle(0x9f9a91,(1-age)*.1*volcano);life.air.fillEllipse(x,y,12+age*26,6+age*12);
  }}
- for(const pole of life.poles){if(!visible(pole.x))continue;const flutter=Math.sin(time*5+pole.x)*3;
-  life.flags.fillStyle(0x92ac7d);life.flags.fillTriangle(pole.x+3,pole.y-70,pole.x+34,pole.y-59+flutter,pole.x+3,pole.y-47);life.flags.lineStyle(1,0xc2c8a0,.6);life.flags.lineBetween(pole.x+3,pole.y-70,pole.x+34,pole.y-59+flutter);
+ for(const flag of scene.checkpointArt||[])flag.sprite.setVisible(visible(flag.x)).setTexture(`polish-checkpoint-${reduced?0:Math.floor(time*7+flag.x*.01)%4}`);
+ for(const cap of scene.gateArt||[])cap.setTexture(`polish-gate-cap-${reduced?0:Math.floor(time*4)%4}`);
+ for(const boost of scene.boostArt||[])boost.setTexture(`polish-boost-${reduced?0:Math.floor(time*8)%4}`);
+ for(const sign of scene.signArt||[])sign.setTexture(`polish-sign-${reduced?0:Math.floor(time*5)%4}`);
+ for(const flag of scene.finishArt||[])flag.setTexture(`polish-finish-${reduced?0:Math.floor(time*7)%4}`);
+ for(const spring of scene.springArt||[]){
+  const active=Math.abs(scene.runner.x-spring.x)<28&&scene.runner.springCooldown>.72;
+  if(active&&!spring.active)spring.triggeredAt=scene.visualClock;
+  spring.active=active;
+  const age=(scene.visualClock-spring.triggeredAt)/1000,frame=reduced?0:age<.07?1:age<.16?2:age<.28?3:0;
+  spring.sprite.setTexture(`polish-spring-${frame}`);
  }
  // Warm light strings at the bar, while the guests talk and occasionally wave.
  if(visible(GOAL_X)){
