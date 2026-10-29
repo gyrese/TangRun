@@ -1,4 +1,5 @@
 import {enemyPosition,ventPhase} from './adventure.js';
+import {ZONES} from './level.js';
 
 export const LANDMARK_KEYS=['lava','tamarin','case-creole','fern','vacoa','pirogue'];
 export function preloadAdventure(scene){for(const key of LANDMARK_KEYS)scene.load.image(`v6-${key}`,`/assets/v6/${key}.png`);}
@@ -13,7 +14,17 @@ function ensureVentNozzleTexture(scene){
  c.fillStyle='#ffe082';c.fillRect(16,7,16,3);
  for(const x of [10,18,26,34]){c.fillStyle='#ffb74d';c.fillRect(x,12,4,4);}
  scene.textures.addCanvas('vent-nozzle',canvas);
+ // Mafate has no lava: its vents are stone valves that release a water jet.
+ const valve=document.createElement('canvas');valve.width=48;valve.height=18;
+ const v=valve.getContext('2d');
+ v.fillStyle='#2a2f33';v.beginPath();v.moveTo(2,18);v.lineTo(8,4);v.lineTo(40,4);v.lineTo(46,18);v.closePath();v.fill();
+ v.strokeStyle='#9fd3d6';v.lineWidth=2;v.stroke();
+ v.fillStyle='#3e7f8f';v.fillRect(12,6,24,5);
+ v.fillStyle='#c8f2ed';v.fillRect(16,7,16,3);
+ for(const x of [10,18,26,34]){v.fillStyle='#6fb3bd';v.fillRect(x,12,4,4);}
+ scene.textures.addCanvas('vent-valve',valve);
 }
+const isWaterVent=v=>v.x>=ZONES[2].x&&v.x<ZONES[3].x;
 
 // All interactive objects use the baked pixel-art animation atlas.
 export function createAdventureArt(scene){
@@ -23,9 +34,10 @@ export function createAdventureArt(scene){
   shield:scene.add.image(0,0,'polish-aura-0').setDepth(11).setVisible(false),
   invincible:scene.add.image(0,0,'polish-hit-0').setDepth(11).setVisible(false)};
  for(const vent of scene.level.adventure.vents){
-  const base=scene.add.image(vent.x,vent.y+2,'vent-nozzle').setOrigin(.5,1).setDepth(7);
-  const fire=scene.add.sprite(vent.x,vent.y-2,'volcanic-fire',0).setOrigin(.5,1).setDisplaySize(42,92).setDepth(8).setVisible(false);
-  a.vents.set(vent.id,{base,fire});
+  const water=isWaterVent(vent);
+  const base=scene.add.image(vent.x,vent.y+2,water?'vent-valve':'vent-nozzle').setOrigin(.5,1).setDepth(7);
+  const fire=scene.add.sprite(vent.x,vent.y-2,water?'water-flow':'volcanic-fire',0).setOrigin(.5,1).setDisplaySize(42,92).setDepth(8).setVisible(false);
+  a.vents.set(vent.id,{base,fire,water});
  }
 
  for(const e of scene.level.adventure.enemies)a.enemies.set(e.id,scene.add.image(e.x,e.y,`v6-${e.kind}-0`).setDepth(8));
@@ -59,7 +71,7 @@ export function updateAdventureArt(scene,reduced=false){
  }
  for(const v of scene.level.adventure.vents){
   const art=a.vents.get(v.id),phase=ventPhase(v,t),active=phase==='active',warning=phase==='warning',visible=inView(v.x);
-  art.base.setVisible(visible).setTint(active?0xff6d42:warning?0xffcc66:0xd8b09c);
+  art.base.setVisible(visible).setTint(art.water?(active?0x7fd6e0:warning?0xc8f2ed:0xb9c8c9):(active?0xff6d42:warning?0xffcc66:0xd8b09c));
   art.fire.setVisible(visible&&(active||warning)).setFrame(reduced?0:Math.floor(t*12)%8).setDisplaySize(active?42:30,active?92:24).setAlpha(active?1:.65);
  }
  const auraFrame=reduced?0:Math.floor(t*8)%4;

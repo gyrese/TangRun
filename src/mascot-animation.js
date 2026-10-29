@@ -1,5 +1,5 @@
 // Drive the stride by distance travelled, not wall-clock speed buckets. The
-// four-phase contract also maps evenly to the eight-frame character sheets.
+// four-phase contract maps evenly to both eight- and sixteen-frame sheets.
 export function advanceMascotCycle(previous, runner, time, identity=runner) {
  const speed=Math.abs(runner.vx);
  const mode=runner.sliding&&speed>12?'roll':runner.grounded&&speed>20?'run':'still';

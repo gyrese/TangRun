@@ -44,13 +44,14 @@ test('reduced motion entrance works on a phone and restarting cancels the sequen
  await start(page);await reachFinish(page);
  await expect.poll(()=>page.evaluate(()=>window.__LTN__.state.mode)).toBe('arriving');
  expect(await page.evaluate(()=>window.__LTN__.game.scene.getScene('run').bar.welcome.alpha)).toBe(1);
- await page.screenshot({path:'.local/bar-arrival-mobile.png'});
+ await page.locator('#game').focus();
  await page.keyboard.press('r');
  await expect.poll(()=>page.evaluate(()=>window.__LTN__.state.mode)).toBe('running');
  await page.waitForTimeout(1100);await expect(page.locator('#overlay')).toBeHidden();
  expect(await page.evaluate(()=>window.__LTN__.state.mode)).toBe('running');
  await reachFinish(page);await expect.poll(()=>page.evaluate(()=>window.__LTN__.state.mode)).toBe('finished');
  await expect(page.locator('#overlay-title')).toContainText('Les Toiles Noires');
+ await page.screenshot({path:'.local/bar-arrival-mobile.png'});
 });
 
 test('intermediate stages keep their immediate results',async({page})=>{
@@ -64,10 +65,12 @@ test('bar has its official sign and live interior that respects pause and reduce
  await start(page);
  const snapshot=()=>page.evaluate(()=>{
   const b=window.__LTN__.game.scene.getScene('run').bar;
-  return{frame:b.activity.frame,patrons:b.activity.patrons.map(p=>[p.sprite.x,p.sprite.y,p.sprite.texture.key]),name:b.sign.text,logo:b.logo.texture.key};
+  return{frame:b.activity.frame,patrons:b.activity.patrons.map(p=>[p.sprite.x,p.sprite.y,p.sprite.texture.key]),name:b.sign.text,logo:b.logo.texture.key,facade:{key:b.facade.texture.key,width:b.facade.width,displayWidth:b.facade.displayWidth,visible:b.facade.visible,alpha:b.facade.alpha}};
  });
  const first=await snapshot();
  expect(first.name).toBe('LES TOILES NOIRES');expect(first.logo).toBe('barLogo');expect(first.patrons).toHaveLength(5);
+ expect(first.facade.key).toBe('toiles-noires-facade');expect(first.facade.width).toBeGreaterThan(1000);
+ expect(first.facade.displayWidth).toBeGreaterThan(500);expect(first.facade.visible).toBe(true);expect(first.facade.alpha).toBe(1);
  await expect.poll(async()=>JSON.stringify(await snapshot())!==JSON.stringify(first)).toBe(true);
  await page.locator('#pause').click();const paused=await snapshot();
  await page.waitForTimeout(400);expect(await snapshot()).toEqual(paused);

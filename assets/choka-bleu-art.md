@@ -2,7 +2,7 @@
 
 Asset: `public/assets/v3/choka-bleu.png` (1586 × 992, transparent PNG).
 Generated with the built-in imagegen tool from the user-supplied entrance photograph. Pixel-art style reference: `public/assets/v3/etiquette.png`.
-Decorative placement: x=18320, y=605, scale=0.27, in the clear coastal stretch before the lagoon loop, L’Étiquette and Les Toiles Noires. Original alpha and pixels preserved. Registered in the shared venue list for editor validation and unmirrored full-color rendering.
+Decorative placement: authored x=17080 (world x=25480 after the snow-region shift), y=425, scale=0.27, at the start of Saint-Gilles. Separated from Le QG by more than a full wide-mobile viewport; L’Étiquette and Les Toiles Noires retain their separate stretches. The pirogue occupies the former Choka Bleu socket. Original alpha and pixels preserved. Registered in the shared venue list for editor validation and unmirrored full-color rendering.
 
 ## Prompt
 

@@ -1,5 +1,19 @@
 # LTN — La course au bar
 
+## Foulée du tangue — 29 octobre 2026
+
+La course du tangue utilise désormais seize poses dédiées, avec une ligne de sol commune pour conserver les phases d'appui et d'envol. La cadence reste liée à la distance parcourue et le personnage se retourne lorsqu'il court vers la gauche. Les poses de saut, de roulade et d'attente restent séparées. L'ancien cycle est accessible avec `?perso=tangue-pop-v4`.
+
+Planche créée avec ImageGen à partir du tangue existant et de la référence de mouvement fournie : [aperçu des 16 poses](assets/preview-tangue-stride-v5.png), [prompt](assets/prompt-tangue-stride-v5.txt), [manifest](assets/manifest-tangue-stride-v5.json). Atlas utilisé : `public/assets/tangue/run-cycle-pop-v5.png`. Export reproductible : `python scripts/prepare-tangue-stride.py`.
+
+## TangRun — classement partagé
+
+L’accueil affiche les dix meilleurs temps de la traversée, avec un pseudo de 2 à 12 caractères. À l’arrivée, le rang du run apparaît sous le tableau ; une place dans le top 10 ouvre la saisie du pseudo. Un temps qualifié reste affiché comme ANONYME tant que son pseudo n’est pas enregistré. Les parcours de test de l’éditeur ne participent pas au classement.
+
+En développement (`npm run dev`) et en prévisualisation (`npm run preview`), Vite sert aussi l’API de classement. Les résultats sont stockés dans `data/leaderboard.json` (chemin configurable avec `LEADERBOARD_FILE`). Avec Docker Compose, le service `leaderboard` sauvegarde les temps dans le volume persistant `leaderboard-data` et Nginx lui transmet `/api/`. Relancer `docker compose up --build -d` pour déployer les deux services. Sauvegarder ce volume pour conserver les résultats.
+
+Le serveur attribue un identifiant à chaque run, vérifie les temps reçus et évite les doublons de fin de run. La simulation du jeu reste côté navigateur ; ces vérifications ne constituent pas un système anti-triche complet. Le service est prévu pour une seule instance avec son volume local.
+
 ## Atelier de niveaux / Admin
 
 Refonte de l’atelier : recherche dans les objets, familles Construire/Jouer/Décorer, aperçu de placement, mini-carte, calques masquables/verrouillables et mode Vue large. Les déplacements utilisent un aperçu direct sans reconstruction du décor pendant le geste. « Tester ici » permet de démarrer près de la zone affichée. Raccourcis : V sélectionner, B placer, H déplacer la vue, flèches ajuster (Maj = 10 px), Ctrl D dupliquer, F cadrer, F4 vue large, Ctrl + molette zoom sous le curseur.
@@ -8,7 +22,7 @@ Refonte de l’atelier : recherche dans les objets, familles Construire/Jouer/D�
 Audit du 26 octobre : [causes, corrections et vérifications](assets/editor-audit-2026-10-26.md). Les décors sont désormais figés à leurs positions affichées pendant la création ; déplacer un objet ne relance plus le placement des autres. Les patrouilles et oscillations sont arrêtées dans l’éditeur et actives en mode Tester. Échap annule le geste en cours ; Alt + clic sélectionne un objet derrière un autre.
 
 
-Ouvrir `/?admin` (ou `/admin`) ou le lien **ADMIN · Éditeur de niveaux** dans le jeu. Choisir un type d'élément, puis **Placer** et cliquer sur la carte. **Sélectionner** permet de déplacer un élément et de modifier ses propriétés dans l'inspecteur. Le sol et les plateformes ont une largeur, une hauteur initiale Y et une hauteur finale Y2 pour dessiner les pentes. Les segments du sol sont indépendants ; conserver un support aux trois départs (X 80, 8500, 16900).
+Ouvrir directement `/editeur`. Aucun bouton du jeu ne donne accès à l’éditeur. Choisir un type d'élément, puis **Placer** et cliquer sur la carte. **Sélectionner** permet de déplacer un élément et de modifier ses propriétés dans l'inspecteur. Le sol et les plateformes ont une largeur, une hauteur initiale Y et une hauteur finale Y2 pour dessiner les pentes. Les segments du sol sont indépendants ; conserver un support aux trois départs (X 80, 8500, 16900).
 
 L’aperçu utilise les fonctions de dessin et les sprites du jeu, avec un panorama cadré sans répétition. La bibliothèque affiche les objets réels à placer. Les poignées aux extrémités du sol et des plateformes ajustent les pentes à la souris. Espace + glisser, le bouton Main, la molette et le curseur sous la carte parcourent le niveau ; Maj + molette déplace la vue verticalement et le sélecteur de région rejoint chaque acte. La grille visuelle est facultative. Les décors placés ou déplacés manuellement conservent leur position et leur échelle dans le jeu. Annuler/rétablir, duplication, suppression et aimantation à 10 pixels sont disponibles. `Ctrl+S` sauvegarde, `Ctrl+Z` annule et `Suppr` supprime la sélection hors d'un champ.
 
@@ -61,7 +75,7 @@ Après une modification du jeu, relancer `docker compose up --build -d`.
 L’image compile le jeu avec Node.js puis sert uniquement le site compilé avec Nginx,
 sans privilèges administrateur. Les ressources exportées dans `public/assets/` sont
 incluses ; les sources graphiques et sauvegardes restent dans le projet mais ne sont
-pas envoyées à Docker. Les meilleurs temps restent enregistrés dans le navigateur.
+pas envoyées à Docker. Les records personnels restent dans le navigateur ; le classement partagé est conservé par le service `leaderboard` dans son volume persistant.
 
 ### Avec Node.js
 

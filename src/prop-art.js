@@ -46,36 +46,49 @@ export function drawStageFlag(scene,x,y){
 }
 
 export function drawRockRail(scene,p){
- const isSnow=p.x<ZONES[1].x,isVolcano=p.x>=ZONES[1].x&&p.x<ZONES[2].x;
- const top=Math.floor(Math.min(p.y,p.y2))-2,depth=40,key=`natural-rail-${p.id}`;
- const width=Math.ceil(p.w)+2,height=Math.ceil(Math.abs(p.y2-p.y))+depth+10;
- const t=scene.textures.createCanvas(key,width,height),c=t.context;
- const tile=basaltTile(scene,isVolcano);
- const route=scene.level.platforms.filter(q=>q.rail&&q.route===p.route),leftEnd=!route.some(q=>q.id!==p.id&&Math.abs(q.x+q.w-p.x)<2),rightEnd=!route.some(q=>q.id!==p.id&&Math.abs(q.x-p.x-p.w)<2);
- c.beginPath();c.moveTo(0,p.y-top);c.lineTo(width,p.y2+(width-p.w)*p.slope-top);
- for(let x=width;x>=0;x-=4)c.lineTo(Math.max(leftEnd?12:0,Math.min(width-(rightEnd?12:0),x)),p.y+x*p.slope-top+depth+3*Math.sin((p.x+x)*.11)+2*Math.sin((p.x+x)*.039));
- c.lineTo(0,p.y-top+depth+3*Math.sin(p.x*.11)+2*Math.sin(p.x*.039));c.closePath();c.save();c.clip();
- c.fillStyle=isSnow?'#1a283a':isVolcano?'#202a2e':'#202a2e';c.fillRect(0,0,width,height);
- const pattern=c.createPattern(tile,'repeat');pattern.setTransform(new DOMMatrix().translate(-p.x%340,-top%700));
- c.fillStyle=pattern;c.globalAlpha=.95;c.fillRect(0,0,width,height);c.globalAlpha=1;
- // Short facets and chipped seams follow the slope instead of stretching one
- // large rock across the whole ledge. World coordinates keep segment joins quiet.
- for(let x=Math.floor(p.x/29)*29-p.x;x<width;x+=29){
-  const y=p.y+x*p.slope-top,seed=Math.abs(Math.floor((p.x+x)/29));
-  c.fillStyle=seed%2?'rgba(5,10,17,.28)':'rgba(143,158,169,.13)';
-  c.beginPath();c.moveTo(x+2,y+5);c.lineTo(x+24,y+5+22*p.slope);c.lineTo(x+20,y+29+22*p.slope);c.lineTo(x+5,y+35);c.closePath();c.fill();
-  c.strokeStyle='#172129';c.lineWidth=2;c.beginPath();c.moveTo(x,y+5);c.lineTo(x+5,y+15);c.lineTo(x+2,y+24);c.lineTo(x+8,y+42);c.stroke();
-  c.fillStyle=isSnow?'#a5c1da':isVolcano?'#74818b':'#889482';c.fillRect(x+8,y+7,4,2);c.fillRect(x+17,y+19,2,2);
-  if(isVolcano&&seed%3===0){
-   c.beginPath();c.moveTo(x+1,y+3);c.lineTo(x+6,y+10);c.lineTo(x+3,y+18);c.lineTo(x+10,y+26);
-   c.strokeStyle='#722b20';c.lineWidth=5;c.stroke();c.strokeStyle='#ef5428';c.lineWidth=2;c.stroke();
-   c.fillStyle='#ffbd5a';c.fillRect(x+4,y+9,2,3);
-  }
+ if(p.style==='canal')return drawCanalRail(scene,p);
+ const volcanic=p.x>=ZONES[1].x&&p.x<ZONES[2].x;
+ const source=scene.textures.get(volcanic?'volcano-ledge':'island-ledge').getSourceImage();
+ // Preserve the illustrated boulders and their transparent, overhanging edge.
+ // Warp one narrow strip at a time along the physical slope, at a fixed scale.
+ const scale=.72,contact=27,top=Math.floor(Math.min(p.y,p.y2))-2;
+ const width=Math.ceil(p.w)+1,height=Math.ceil(Math.abs(p.y2-p.y))+(source.height-contact)*scale+5;
+ const key=`natural-rail-${p.id}`,t=scene.textures.createCanvas(key,width,Math.ceil(height)),c=t.context;
+ c.imageSmoothingEnabled=false;
+ const period=(source.width-12)*scale;
+ for(let x=0;x<width;x++){
+  const sx=6+(((p.x+x)%period+period)%period)/scale;
+  const y=p.y+x*p.slope-top;
+  // The upper rock face meets the collision line; the entire underside retains
+  // the original irregular silhouette rather than being cut into a thin slab.
+  c.drawImage(source,sx,contact,1/scale,source.height-contact,x,y,1,(source.height-contact)*scale);
  }
- const shade=c.createLinearGradient(0,0,0,height);shade.addColorStop(0,isSnow?'rgba(147,197,253,.2)':isVolcano?'rgba(76,86,99,.12)':'rgba(213,198,165,.12)');shade.addColorStop(1,'rgba(4,15,24,.35)');c.fillStyle=shade;c.fillRect(0,0,width,height);
- c.lineWidth=2;c.strokeStyle=isSnow?'#93c5fd':isVolcano?'#89929b':p.route==='mafate'?'#7f9171':'#8d938a';c.beginPath();c.moveTo(0,p.y-top+1);c.lineTo(width,p.y+width*p.slope-top+1);c.stroke();
- for(let x=Math.ceil(p.x/47)*47-p.x;x<width;x+=47){c.fillStyle=isSnow?'#527ea8':isVolcano?'#d76536':'#3c5142';c.fillRect(x,p.y+x*p.slope-top+3,5,2);}
- c.restore();t.refresh();scene.add.image(p.x,top,key).setOrigin(0).setDepth(3);
+ // Small, broken highlights describe the lip without outlining a straight box.
+ for(let x=Math.ceil(p.x/19)*19-p.x;x<width;x+=19){
+  const y=p.y+x*p.slope-top;
+  c.fillStyle=volcanic?'#ab8a72':p.x<ZONES[1].x?'#bad3ec':'#a1aa87';
+  c.fillRect(x,y,3+(Math.floor((p.x+x)/19)%4),1);
+ }
+ t.refresh();scene.add.image(p.x,top,key).setOrigin(0).setDepth(3);
+}
+
+// Orangers canal: mortared stone wall with a water channel under its coping.
+function drawCanalRail(scene,p){
+ const top=Math.floor(Math.min(p.y,p.y2))-2,width=Math.ceil(p.w)+1,height=Math.ceil(Math.abs(p.y2-p.y))+44;
+ const key=`canal-rail-${p.id}`,t=scene.textures.createCanvas(key,width,height),c=t.context;
+ for(let x=0;x<width;x++){
+  const gx=Math.floor(p.x+x),y=Math.round(p.y+x*p.slope-top);
+  c.fillStyle='#d6ccb4';c.fillRect(x,y,1,3);
+  c.fillStyle=gx%9===0?'#bfe8e4':'#3d8aa0';c.fillRect(x,y+3,1,6);
+  c.fillStyle='#2b5f6e';c.fillRect(x,y+9,1,1);
+  for(let row=0;row<3;row++){
+   const by=y+10+row*11,joint=(gx+(row%2)*11)%22===0;
+   c.fillStyle=joint?'#5a5347':['#8a8170','#7d7567','#938a77'][(Math.floor((gx+(row%2)*11)/22)+row)%3];c.fillRect(x,by,1,10);
+   c.fillStyle='#5a5347';c.fillRect(x,by+10,1,1);
+  }
+  c.fillStyle='#3e3a33';c.fillRect(x,y+43,1,1);
+ }
+ t.refresh();scene.add.image(p.x,top,key).setOrigin(0).setDepth(3);
 }
 
 export function basaltTile(scene,volcanic=false){

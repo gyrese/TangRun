@@ -1,0 +1,24 @@
+body:not(.has-started) .screen-overlay,.show-results .screen-overlay{display:grid;grid-template-columns:minmax(0,590px) 320px;justify-content:center;align-content:center;gap:64px;padding-left:60px;padding-right:60px}
+.leaderboard{display:none;min-width:0;padding:22px 24px;background:#0b2339eb;border:2px solid #6f8d94;box-shadow:0 0 0 3px #102b3c,inset 0 0 0 3px #233f52,5px 6px #071b2d55;text-align:left;color:#e3e8d8}
+body:not(.has-started) .leaderboard,.show-results .leaderboard{display:block}
+.leaderboard-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:18px}
+.leaderboard h3{margin:0;color:#ffda80;font:bold 22px monospace;letter-spacing:2px}
+.leaderboard-heading>span{font:9px monospace;letter-spacing:1px;color:#c1d2d0}
+.leaderboard table{width:100%;border-collapse:collapse;table-layout:fixed;font:11px/1.4 monospace}
+.leaderboard th{font-size:8px;letter-spacing:1px;font-weight:400;color:#9fb9bc;padding:0 0 10px;border-bottom:1px solid #587382}
+.leaderboard th:first-child{width:36px}.leaderboard th:last-child{width:88px;text-align:right}
+.leaderboard td{height:29px;border-bottom:1px solid #7e9b9c22;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.leaderboard td:first-child{color:#8baaad;font-size:10px}.leaderboard td:last-child{text-align:right;font-variant-numeric:tabular-nums;color:#e1e5d7}
+.leaderboard tr:first-child td{color:#ffda80}.leaderboard tr:nth-child(2) td:first-child{color:#d2ddd8}.leaderboard tr:nth-child(3) td:first-child{color:#e3ac86}
+.leaderboard-status{font:10px/1.6 monospace;color:#b8ccca;margin:0 0 12px}
+.last-run-rank{border-top:2px solid #8b9b87;margin:17px 0 0;padding-top:16px;font:bold 11px/1.6 monospace;letter-spacing:1px;color:#ffda80}
+.record-form{max-width:380px;margin:24px auto;text-align:left;color:#f5e9c3;font:11px/1.6 monospace}
+.record-form label{display:block;margin-bottom:10px;letter-spacing:1px;color:#ffda80;font-weight:bold}
+.record-form>div{display:flex;gap:8px}.record-form input{min-width:0;width:100%;padding:12px;min-height:46px;border:2px solid #a3b2a2;border-radius:0;background:#102c3e;color:#fff1c5;font:bold 14px monospace;letter-spacing:1px}
+.record-form input:focus-visible{outline:3px solid #ffda80;outline-offset:3px}.record-form input::placeholder{color:#a4bcbf;font-size:11px}
+.record-form button{border:1px solid #ffe2a0;background:#f4c46c;color:#17313c;padding:10px;min-height:46px;font:bold 10px monospace;box-shadow:inset 0 -3px #c6914e}
+.record-form button:hover{background:#ffe2a0}.record-form p{margin:8px 0 0;color:#d5dfd4;font-size:10px}
+.show-results .overlay-content{max-width:590px}.show-results .overlay-content h2{font-size:clamp(34px,6vh,64px)}
+@media(max-width:1050px){body:not(.has-started) .screen-overlay,.show-results .screen-overlay{grid-template-columns:minmax(0,460px) 280px;gap:32px;padding-left:32px;padding-right:32px}.leaderboard{padding:18px}.leaderboard-heading>span{font-size:8px}.leaderboard h3{font-size:20px}}
+@media(max-width:650px) and (min-height:551px){body:not(.has-started) .screen-overlay,.show-results .screen-overlay{display:flex;flex-direction:column;justify-content:flex-start;align-items:center;gap:38px;padding:95px 24px 32px}body:not(.has-started) .overlay-content{margin:0}.leaderboard{width:100%;max-width:380px;flex:none}.leaderboard td{height:29px}body:not(.has-started) .title-bottom{position:relative;inset:auto;flex:none;align-self:stretch;margin-top:18px}.title-ground{display:none}body:not(.has-started) .admin-link{display:none}.show-results .overlay-content{flex:none}.show-results .overlay-stamp{position:static}.show-results .screen-overlay{padding-top:40px;padding-bottom:70px}}
+@media(max-height:550px){body:not(.has-started) .screen-overlay,.show-results .screen-overlay{grid-template-columns:minmax(0,420px) 280px;gap:28px;padding:48px 28px}.leaderboard{padding:12px 16px}.leaderboard-heading{margin-bottom:8px}.leaderboard h3{font-size:18px}.leaderboard th{padding-bottom:6px;font-size:7px}.leaderboard td{height:17px;font-size:9px}.leaderboard td:first-child{font-size:8px}.leaderboard-status{font-size:8px;margin-bottom:8px}.last-run-rank{font-size:9px;margin-top:8px;padding-top:8px}.show-results .overlay-content h2{font-size:30px}.record-form{margin:12px auto}.record-form label{font-size:9px;margin-bottom:6px}.show-results .eyebrow{margin-bottom:10px}.show-results .menu-actions{margin-top:12px}.show-results .finish-share{display:none}.show-results .overlay-stamp{display:none}}

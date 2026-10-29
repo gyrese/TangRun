@@ -61,7 +61,7 @@ export function createEditorRenderer(parent,initialLevel,onReady,onError,onRende
   const originalPads=level.pads;
   scene.level={...level,pads:originalPads.filter(p=>[...level.terrain,...level.platforms].some(s=>s.id===p.surface))};
   const visiblePads=scene.level.pads;drawStreet(scene);scene.level=level;
-  for(const placed of scene.placedScenery){const index=placed.sourceIndex;if(index>=0)visuals.set(`scenery:${index}`,[placed.sprite]);}
+  for(const placed of scene.placedScenery){const index=placed.sourceIndex;if(index>=0)visuals.set(`scenery:${index}`,[placed.sprite,...(placed.supportArt?[placed.supportArt]:[])]);}
   scene.checkpointArt.forEach((p,i)=>visuals.set(`checkpoints:${i+1}`,[p.sprite]));
   scene.springArt.forEach((p,i)=>visuals.set(`springs:${i}`,[p.sprite]));
   level.pads.forEach((p,i)=>{const index=visiblePads.indexOf(p);if(scene.boostArt[index])visuals.set(`pads:${i}`,[scene.boostArt[index]]);else capture('pads',i,()=>scene.add.image(p.x,p.y??450,'polish-boost-0').setOrigin(.5,1).setDepth(6).setTint(0xff826e).setAlpha(.65));});

@@ -4,3 +4,14 @@ services:
     ports:
       - "${PORT:-8080}:8080"
     restart: unless-stopped
+    depends_on:
+      - leaderboard
+  leaderboard:
+    build:
+      context: .
+      target: leaderboard
+    volumes:
+      - leaderboard-data:/data
+    restart: unless-stopped
+volumes:
+  leaderboard-data:

@@ -3,7 +3,7 @@ import {ZONES,groundAt,heightOn} from './level.js';
 export function createRavineArt(scene){
  const texture=scene.textures.get('ravine-lava');
  for(let i=0;i<4;i++)texture.add(`body-${i}`,0,0,i*32+16,128,16);
- const art=scene.ravineArt={lava:[],water:[]};
+ const art=scene.ravineArt={lava:[],water:[],ripples:[]};
  for(const [left,right]of scene.level.gaps){
   if(left<ZONES[1].x||right>=ZONES[2].x)continue;
   const leftGround=groundAt(scene.level,left-1),rightGround=groundAt(scene.level,right+1);
@@ -12,29 +12,41 @@ export function createRavineArt(scene){
   const body=scene.add.image(left-8,y+64,'ravine-lava','body-0').setOrigin(0).setDisplaySize(right-left+16,1700-y-64).setTint(0x923c34).setDepth(1);
   art.lava.push({left,right,y,surface,body});
  }
- // A single tall fall follows the first deep Mafate ravine, behind its paths.
- const gap=scene.level.gaps.find(([a,b])=>a>ZONES[2].x&&b<ZONES[3].x);
- if(gap){
-  const x=(gap[0]+gap[1])/2,top=-180,height=1900;
-  // Preserve the water's native pixels instead of elongating a short sprite.
-  const source=scene.textures.get('water-flow').getSourceImage();
-  for(let i=0;i<8;i++){
-   const t=scene.textures.createCanvas(`ravine-stream-${i}`,48,192),c=t.context;c.imageSmoothingEnabled=false;
-   c.drawImage(source,i*128+40,45,48,96,0,0,48,96);
-   c.save();c.translate(0,192);c.scale(1,-1);c.drawImage(source,i*128+40,45,48,96,0,0,48,96);c.restore();t.refresh();
-   const splash=scene.textures.createCanvas(`ravine-splash-${i}`,40,12),sc=splash.context;
-   // Broken foam at the contact point, without the source sprite's oval pool.
-   for(let n=0;n<26;n++){
-    const px=(n*17+i*7)%38,py=6+(n*13+i*3)%5;
-    sc.fillStyle=n%3===0?'#d1e8da':n%3===1?'#80bcb8':'#53969e';
-    sc.globalAlpha=.45+(n%3)*.15;sc.fillRect(px,py,n%4===0?3:2,1);
-   }
-   splash.refresh();
+ // Moving glints on the Mafate river beds and on the flat stretches of the canal.
+ if(!scene.textures.exists('river-ripple')){
+  const r=scene.textures.createCanvas('river-ripple',48,4),rc=r.context;
+  for(const [x,y,w]of [[2,1,5],[14,2,3],[22,0,6],[35,2,4],[42,1,3]]){rc.fillStyle='#c8f2ed';rc.globalAlpha=.8;rc.fillRect(x,y,w,1);}
+  r.refresh();
+ }
+ const flatRiver=scene.level.terrain.filter(p=>p.slope===0&&p.y>=640&&(scene.level.rivers||[]).some(([a,b])=>p.x>=a-1&&p.x+p.w<=b+1));
+ for(const p of flatRiver)art.ripples.push({sprite:scene.add.tileSprite(p.x,p.y,p.w,4,'river-ripple').setOrigin(0).setDepth(4.5),speed:22});
+ for(const p of scene.level.platforms.filter(p=>p.style==='canal'&&p.slope===0))art.ripples.push({sprite:scene.add.tileSprite(p.x,p.y+3,p.w,4,'river-ripple').setOrigin(0).setDepth(3.5),speed:46});
+ // Mafate falls run behind its paths; each one comes from the level data.
+ const falls=scene.level.cascades||[];
+ if(!falls.length)return;
+ // Preserve the water's native pixels instead of elongating a short sprite.
+ const source=scene.textures.get('water-flow').getSourceImage();
+ for(let i=0;i<8;i++){
+  if(scene.textures.exists(`ravine-stream-${i}`))break;
+  const t=scene.textures.createCanvas(`ravine-stream-${i}`,48,192),c=t.context;c.imageSmoothingEnabled=false;
+  c.drawImage(source,i*128+40,45,48,96,0,0,48,96);
+  c.save();c.translate(0,192);c.scale(1,-1);c.drawImage(source,i*128+40,45,48,96,0,0,48,96);c.restore();t.refresh();
+  const splash=scene.textures.createCanvas(`ravine-splash-${i}`,40,12),sc=splash.context;
+  // Broken foam at the contact point, without the source sprite's oval pool.
+  for(let n=0;n<26;n++){
+   const px=(n*17+i*7)%38,py=6+(n*13+i*3)%5;
+   sc.fillStyle=n%3===0?'#d1e8da':n%3===1?'#80bcb8':'#53969e';
+   sc.globalAlpha=.45+(n%3)*.15;sc.fillRect(px,py,n%4===0?3:2,1);
   }
-  const sprite=scene.add.tileSprite(x,top,64,height,'ravine-stream-0').setOrigin(.5,0).setTileScale(4/3).setDepth(1).setTint(0xb6d9ce).setAlpha(.72);
+  splash.refresh();
+ }
+ for(const {x,width,top,bottom}of falls){
+  const height=bottom-top,half=width/2;
+  const sprite=scene.add.tileSprite(x,top,width,height,'ravine-stream-0').setOrigin(.5,0).setTileScale(4/3).setDepth(1).setTint(0xb6d9ce).setAlpha(.72);
   const impacts=[];
-  for(const p of scene.level.platforms.filter(p=>p.rail&&p.x<x+32&&p.x+p.w>x-32)){
-   const hitX=(Math.max(p.x,x-32)+Math.min(p.x+p.w,x+32))/2,hitY=heightOn(p,hitX);
+  for(const p of scene.level.platforms.filter(p=>p.rail&&p.x<x+half&&p.x+p.w>x-half)){
+   const hitX=(Math.max(p.x,x-half)+Math.min(p.x+p.w,x+half))/2,hitY=heightOn(p,hitX);
+   if(hitY<top||hitY>bottom)continue;
    const foam=scene.add.image(hitX,hitY+1,'ravine-splash-0').setOrigin(.5,1).setAlpha(.8).setDepth(7);
    const drops=Array.from({length:8},(_,i)=>scene.add.rectangle(hitX,hitY,1,i%3===0?2:1,i%2?0xc8f2ed:0x78bfc7,.85).setDepth(7));
    impacts.push({x:hitX,y:hitY,foam,drops});
@@ -52,6 +64,7 @@ export function updateRavineArt(scene,reduced){
   lava.surface.setVisible(visible).setFrame(frame);lava.body.setVisible(visible).setFrame(`body-${frame}`);
   lava.surface.tilePositionX=time*5;
  }
+ for(const ripple of art.ripples)ripple.sprite.tilePositionX=-time*ripple.speed;
  for(const fall of art.water){
   const visible=Math.abs(fall.x-camera.midPoint.x)<scene.scale.width;
   fall.sprite.setVisible(visible).setTexture(`ravine-stream-${Math.floor(time*10)%8}`);fall.sprite.tilePositionY=-time*50;

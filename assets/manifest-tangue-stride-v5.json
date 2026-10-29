@@ -1,0 +1,25 @@
+{
+  "source": "assets/source/tangue-stride-v5.png",
+  "tool": "built-in ImageGen",
+  "file": "public/assets/tangue/run-cycle-pop-v5.png",
+  "frames": 16,
+  "frameSize": [
+    64,
+    64
+  ],
+  "baseline": 62,
+  "rowOffsets": [
+    0,
+    22,
+    34,
+    54
+  ],
+  "sharedCrop": [
+    58,
+    60,
+    288,
+    314
+  ],
+  "sharedScale": 0.1968503937007874,
+  "previousCharacter": "?perso=tangue-pop-v4"
+}

@@ -15,7 +15,7 @@ test('ground gaps fit their downhill or level jump envelope',()=>{
   assert.equal(terrain.reduce((sum,p)=>sum+p.w,0)+gaps.reduce((sum,[a,b])=>sum+b-a,0),WORLD_WIDTH);
   assert.ok(GOAL_X<WORLD_WIDTH);
   for(const zone of ZONES){const floor=groundAt(level,zone.checkpoint.x);assert.ok(floor,'Checkpoint has safe floor');assert.equal(floor.slope,0);assert.ok(zone.checkpoint.y<heightOn(floor,zone.checkpoint.x));}
-  assert.ok(BEST_KEY.includes('v8-snow-descent'),'New level has separate records');
+  assert.ok(BEST_KEY.includes('v9-volcano-summits'),'Redesigned volcano has separate records');
 });
 test('optional roof chain is reachable with full jumps',()=>{
   const roofs=buildLevel().platforms.filter(p=>p.kind==='roof');
@@ -23,6 +23,7 @@ test('optional roof chain is reachable with full jumps',()=>{
    const chain=roofs.filter(r=>r.route===route);
    for(let i=1;i<chain.length;i++){
     const prev=chain[i-1],next=chain[i],rise=prev.y-next.y;
+    if(prev.rail&&next.rail&&Math.abs(prev.x+prev.w-next.x)<.01&&Math.abs(prev.y2-next.y)<.01)continue;
     const discriminant=JUMP_SPEED**2-2*GRAVITY*rise;assert.ok(discriminant>0);
     const reach=SPEED*(JUMP_SPEED+Math.sqrt(discriminant))/GRAVITY;
     assert.ok(next.x-prev.x-prev.w<reach*.7);

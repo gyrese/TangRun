@@ -19,7 +19,9 @@ export function preloadArt(scene){
  scene.load.image('etiquette','/assets/v3/etiquette.png');
  scene.load.image('choka-bleu','/assets/v3/choka-bleu.png');
  scene.load.image('le-qg','/assets/v3/le-qg.png');
+ scene.load.image('toiles-noires-facade','/assets/v3/toiles-noires.png');
  scene.load.image('snow-bg','/assets/snow/piton-lagons-v2.png');
+ scene.load.image('snow-gite','/assets/snow/gite-piton-neiges-large.png');
  scene.load.image('volcano','/assets/v3/volcano.webp');
  scene.load.image('mafate','/assets/v3/mafate-remparts.webp');
  scene.load.image('beam','/assets/v3/beam.webp');
@@ -50,6 +52,7 @@ export function drawPlatformArt(scene,p){
   const pad=18,t=scene.textures.createCanvas(key,Math.ceil(p.w)+1+pad*2,h),c=t.context; c.translate(pad,0);
   const isSnow=p.x<ZONES[1].x,isVolcano=p.x>=ZONES[1].x&&p.x<ZONES[2].x,isMafate=p.x>=ZONES[2].x&&p.x<ZONES[3].x;
   const basalt=basaltTile(scene,isVolcano);
+  const isRiver=isMafate&&Math.min(p.y,p.y2)>=640&&(scene.level.rivers||[]).some(([a,b])=>p.x>=a-1&&p.x+p.w<=b+1);
   c.imageSmoothingEnabled=false;c.beginPath();c.moveTo(0,p.y-minY);c.lineTo(p.w,p.y2-minY);
   if(rightEdge){c.quadraticCurveTo(p.w+14,p.y2-minY+3,p.w+14,p.y2-minY+24);for(let y=40;y<h;y+=12)c.lineTo(p.w+10+4*Math.sin(y*.08)+2*Math.sin(y*.21),y);}
   c.lineTo(p.w+(rightEdge?12:0),h);c.lineTo(leftEdge?-12:0,h);
@@ -58,6 +61,14 @@ export function drawPlatformArt(scene,p){
   c.fillStyle=isSnow?'#1e2d42':isVolcano?'#202b2e':isMafate?'#1e2e24':'#1e2c32';c.fillRect(-pad,0,p.w+1+pad*2,h);
   const pattern=c.createPattern(basalt,'repeat');pattern.setTransform(new DOMMatrix().translate(-p.x%340,-minY%700));c.fillStyle=pattern;c.globalAlpha=isSnow?.28:isVolcano?.32:.22;c.fillRect(-pad,0,p.w+1+pad*2,h);c.globalAlpha=1;
   c.fillStyle=isSnow?'#2a3d58':isVolcano?'#2b161b':isMafate?'#183b2e':'#14282b';c.globalAlpha=.24;c.fillRect(-pad,0,p.w+1+pad*2,h);c.globalAlpha=1;
+  if(isRiver){
+   // Rivière des Galets: a shallow water film over a pebble bed.
+   c.strokeStyle='#6f736c';c.lineWidth=16;c.beginPath();c.moveTo(0,p.y-minY+9);c.lineTo(p.w,p.y2-minY+9);c.stroke();
+   for(let x=0;x<p.w;x+=5){const n=Math.floor(p.x+x),y=p.y+(x/p.w)*(p.y2-p.y)-minY+6+(n*7)%10;c.fillStyle=['#9a9a8e','#b8b5a6','#5d6159','#8c8f86'][n%4];c.fillRect(x,y,3+n%3,2);}
+   c.strokeStyle='#3d8aa0';c.lineWidth=5;c.beginPath();c.moveTo(0,p.y-minY+2.5);c.lineTo(p.w,p.y2-minY+2.5);c.stroke();
+   c.strokeStyle='#c8f2ed';c.lineWidth=1;c.beginPath();c.moveTo(0,p.y-minY+.5);c.lineTo(p.w,p.y2-minY+.5);c.stroke();c.restore();t.refresh();
+   scene.add.image(p.x-pad,minY,key).setOrigin(0).setDepth(4);return;
+  }
   c.strokeStyle=isSnow?'#93b4d8':isVolcano?'#804c42':isMafate?'#58764d':'#6b7357';c.lineWidth=10;c.beginPath();c.moveTo(0,p.y-minY+5);c.lineTo(p.w,p.y2-minY+5);c.stroke();
   c.strokeStyle=isSnow?'#f0f6ff':isVolcano?'#99775c':isMafate?'#96ba6e':'#c2ab78';c.lineWidth=3;c.beginPath();c.moveTo(0,p.y-minY+1.5);c.lineTo(p.w,p.y2-minY+1.5);c.stroke();c.restore();t.refresh();
   scene.add.image(p.x-pad,minY,key).setOrigin(0).setDepth(4);return;
@@ -70,7 +81,8 @@ export function drawPlatformArt(scene,p){
  if(p.rail){
   drawRockRail(scene,p);
   const previous=route[index-1],next=route[index+1];
-  if(!fixedSupports&&(!previous||previous.x+previous.w<p.x-1||index%6===0))drawRockSupport(scene,p.x+12,p.y+10);
+  const supportInterval=p.style==='basalt'?(!previous||Math.floor(previous.x/720)!==Math.floor(p.x/720)):index%6===0;
+  if(!fixedSupports&&(!previous||previous.x+previous.w<p.x-1||supportInterval))drawRockSupport(scene,p.x+12,p.y+10);
   if(!fixedSupports&&(!next||next.x>p.x+p.w+1))drawRockSupport(scene,p.x+p.w-12,p.y2+10);
   return;
  }
@@ -89,29 +101,32 @@ export function drawPlatformArt(scene,p){
 function drawRockSupport(scene,x,y){
  const floor=groundAt(scene.level,x);if(!floor)return;
  const bottom=heightOn(floor,x),h=Math.max(24,bottom-y);
- const key=`support-${Math.round(x)}-${Math.round(y)}`,t=scene.textures.createCanvas(key,44,h),c=t.context;
+ const key=`support-${Math.round(x)}-${Math.round(y)}`;
+ if(scene.textures.exists(key))scene.textures.remove(key);
+ const width=132,t=scene.textures.createCanvas(key,width,Math.ceil(h)),c=t.context;
  const volcanic=x>=ZONES[1].x&&x<ZONES[2].x;
- const source=basaltTile(scene,volcanic);
+ const source=scene.textures.get(volcanic?'volcano-pinnacle':'island-pinnacle').getSourceImage();
  c.imageSmoothingEnabled=false;
- // Repeat at native scale: stretching a short crop washed out tall pillars.
- c.fillStyle='#202932';c.fillRect(2,0,40,h);
- for(let y0=0;y0<h;y0+=112)c.drawImage(source,80+(Math.floor(x/40)%3)*46,40,40,Math.min(112,h-y0),2,y0,40,Math.min(112,h-y0));
- const shade=c.createLinearGradient(2,0,42,0);shade.addColorStop(0,'rgba(173,185,198,.2)');shade.addColorStop(.35,'rgba(0,0,0,0)');shade.addColorStop(1,'rgba(3,9,16,.65)');c.fillStyle=shade;c.fillRect(2,0,40,h);
- for(let y0=18;y0<h;y0+=37){
-  c.strokeStyle='#101922';c.lineWidth=2;c.beginPath();c.moveTo(3,y0);c.lineTo(17,y0+4);c.lineTo(27,y0+1);c.lineTo(41,y0+6);c.stroke();
-  c.fillStyle='#687580';c.fillRect(7,y0-2,7,1);
-  if(volcanic&&Math.floor(y0/37)%3===0){
-   c.beginPath();c.moveTo(26,y0-12);c.lineTo(22,y0-3);c.lineTo(27,y0+3);c.lineTo(24,y0+14);
-   c.strokeStyle='#762c23';c.lineWidth=5;c.stroke();c.strokeStyle='#e65b2d';c.lineWidth=2;c.stroke();c.fillStyle='#ffba54';c.fillRect(24,y0+2,2,2);
-  }
+ // Overlap complete rock silhouettes. Variable widths, offsets and orientation
+ // produce a buttress of rounded boulders instead of a stretched rectangular crop.
+ const step=104,count=Math.ceil(h/step),phase=Math.abs(Math.floor(x/31));
+ for(let i=count-1;i>=0;i--){
+  const y0=i*step-22,w=86+12*Math.sin(phase+i*2.3)+(i===count-1?12:0);
+  const rockHeight=source.height*w/source.width;
+  const offset=5*Math.sin(phase*.7+i*1.9),flip=(phase+i)%2===0;
+  c.save();c.translate(width/2+offset,y0);
+  if(flip)c.scale(-1,1);
+  c.drawImage(source,-w/2,0,w,rockHeight);
+  c.restore();
  }
- t.refresh();scene.add.image(x-22,y,key).setOrigin(0).setDepth(1);
+ t.refresh();scene.add.image(x-width/2,y,key).setOrigin(0).setDepth(1);
 }
 
 export function drawStreet(scene){drawScenery(scene,scene.level);}
 
 export function updateMascot(scene){
  const p=scene.renderRunner??scene.runner;
+ if(!p.loop&&Math.abs(p.vx)>5)scene.mascot.setFlipX(p.vx<0);
  scene.mascotCycle=advanceMascotCycle(scene.mascotCycle,p,scene.visualClock,scene.runner);
  const cycleFrame=Math.floor(scene.mascotCycle.phase);
  if(p.loop){
@@ -143,7 +158,12 @@ function placeMascotOnSurface(scene,p){
   c.drawImage(frame.source.image,frame.cutX,frame.cutY,frame.cutWidth,frame.cutHeight,0,0,canvas.width,canvas.height);
   scene.mascotBounds.set(key,frameBounds(c.getImageData(0,0,canvas.width,canvas.height).data,canvas.width,canvas.height));
  }
- const pose=contactPose(p,scene.mascotBounds.get(key),frame.cutHeight);
+ // A run sheet has a shared ground line: anchoring each airborne shoe to the
+ // floor cancels its flight and makes the torso jump between differently bent legs.
+ const bounds=scene.mascotBounds.get(key);
+ const contactBounds=sprite.texture.key==='mascot-run-cycle'&&character.runBaseline
+  ?{...bounds,bottom:character.runBaseline}:bounds;
+ const pose=contactPose(p,contactBounds,frame.cutHeight);
  sprite.setOrigin(.5,pose.originY).setScale(pose.scale).setRotation(pose.rotation).setPosition(pose.x,pose.y);
 }
 

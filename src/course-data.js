@@ -557,7 +557,7 @@ export const COURSE = {
     {
       "id": "saint-gilles-le-qg",
       "key": "le-qg",
-      "x": 19230,
+      "x": 19170,
       "y": 605,
       "scale": 0.23,
       "anchor": "absolute",
@@ -566,8 +566,8 @@ export const COURSE = {
     {
       "id": "saint-gilles-choka-bleu",
       "key": "choka-bleu",
-      "x": 18320,
-      "y": 605,
+      "x": 17080,
+      "y": 425,
       "scale": 0.27,
       "anchor": "absolute",
       "authored": true
@@ -575,7 +575,7 @@ export const COURSE = {
     {
       "id": "saint-gilles-etiquette",
       "key": "etiquette",
-      "x": 21000,
+      "x": 21040,
       "y": 400,
       "scale": 0.34,
       "anchor": "absolute",

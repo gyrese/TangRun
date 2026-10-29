@@ -1,9 +1,9 @@
 import {GROUND_Y,GOAL_X,ZONES,STAGES,groundAt,heightOn} from './level.js';
-import {drawCheckpoint,drawSpring,drawBoost,drawRouteSign,drawStageFlag} from './prop-art.js';
+import {drawCheckpoint,drawSpring,drawBoost,drawRouteSign,drawStageFlag,basaltTile} from './prop-art.js';
 import {createBar} from './bar-arrival.js';
-export const V3_KEYS=['pier','rocks','boat','bench','bollards','surfboards','kiosk','comics','gameshop','footbridge','neonarrow','arch','plants','frangipani','lantern','terrace','speakers','canopy','lavarocks','basaltarch','tamarind','hut','ropebridge','waterfall','snowman','snow-pine','snow-chunk'];
+export const V3_KEYS=['pier','rocks','boat','bench','bollards','surfboards','kiosk','comics','gameshop','footbridge','neonarrow','arch','plants','frangipani','lantern','terrace','speakers','canopy','lavarocks','basaltarch','tamarind','hut','ropebridge','waterfall','snowman','snow-pine','snow-chunk','snow-gite'];
 export const VENUE_KEYS=['etiquette','choka-bleu','le-qg'];
-const WIDE_STRUCTURES=new Set(['hut','kiosk','bench','surfboards','terrace','bollards','arch','comics','gameshop','v6-case-creole','v6-pirogue',...VENUE_KEYS]);
+const WIDE_STRUCTURES=new Set(['hut','kiosk','bench','surfboards','terrace','bollards','arch','comics','gameshop','v6-case-creole','v6-pirogue','snow-gite',...VENUE_KEYS]);
 const RIGID_ROCKS=new Set(['basaltarch','lavarocks','v6-lava']);
 export const decorOverlap=(a,b,gap=0)=>a.left<b.right+gap&&a.right>b.left-gap&&a.top<b.bottom+gap&&a.bottom>b.top-gap;
 
@@ -90,7 +90,12 @@ export function drawScenery(scene,level){
   const flip=!WIDE_STRUCTURES.has(placement.key)&&i%2===1;
   const sprite=scene.add.image(placement.x,placement.y,placement.key).setOrigin(.5,1).setScale(placement.scale).setFlipX(flip).setDepth(-1).setAlpha(.92).setTint(tint);
   if(VENUE_KEYS.includes(placement.key)||placement.key.startsWith('snow'))sprite.clearTint().setAlpha(1);
-  scene.placedScenery.push({...placement,sprite});
+  let supportArt;
+  if(placement.key==='snow-gite'){
+   sprite.setDepth(-18).setTint(0xb4c7d8).setAlpha(.76);
+   supportArt=drawRefugeShelf(scene,placement);
+  }
+  scene.placedScenery.push({...placement,sprite,supportArt});
  }
  for(const checkpoint of level.checkpoints.slice(1))drawCheckpoint(scene,checkpoint.x,checkpoint.surface&&Number.isFinite(checkpoint.y)?checkpoint.y+20:floor(checkpoint.x));
  scene.stageGates=[];
@@ -99,4 +104,21 @@ export function drawScenery(scene,level){
  for(const pad of level.pads)drawBoost(scene,pad,[...level.platforms,...level.terrain].find(s=>s.id===pad.surface));
  for(const spring of level.springs)drawSpring(scene,spring,spring.surface&&Number.isFinite(spring.y)?spring.y:floor(spring.x));
  createBar(scene);
+}
+
+// A separate mountain ledge grounds the distant refuge behind the downhill path.
+// It is scenery only: it never enters the terrain or collision collections.
+function drawRefugeShelf(scene,p){
+ const left=p.x-p.width*.49,span=p.width*.98,top=p.y-34*p.scale;
+ const key='terrain-art-refuge-shelf',width=Math.ceil(span+50),height=Math.ceil(p.height*2.15);
+ const texture=scene.textures.createCanvas(key,width,height),c=texture.context;
+ c.imageSmoothingEnabled=false;c.beginPath();c.moveTo(0,6);c.lineTo(span,6);
+ for(let y=12;y<=height;y+=12)c.lineTo(span+y*.12+Math.sin(y*.12)*8+Math.sin(y*.037)*11,y);
+ c.lineTo(0,height);c.closePath();c.clip();
+ c.fillStyle='#283c53';c.fillRect(0,0,width,height);
+ c.globalAlpha=.6;c.fillStyle=c.createPattern(basaltTile(scene),'repeat');c.fillRect(0,0,width,height);
+ c.globalAlpha=.3;c.fillStyle='#506b8c';c.fillRect(0,0,width,height);c.globalAlpha=1;
+ c.fillStyle='#b7cada';c.fillRect(0,3,span,3);c.fillStyle='#e1edf7';c.fillRect(0,3,span,1);
+ texture.refresh();
+ return scene.add.image(left,top,key).setOrigin(0).setDepth(-19).setTint(0xa8bfd2).setAlpha(.7);
 }

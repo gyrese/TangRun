@@ -1,24 +1,46 @@
 {
-  "version": "v6-island-adventure",
+  "version": "v9-volcano-summits",
   "stages": [
     {
-      "id": "volcano",
-      "name": "Les coulées",
-      "focus": "Apprendre le saut et l’élan",
-      "difficulty": "Découverte",
+      "id": "snow",
+      "name": "Le Piton des Neiges",
+      "focus": "Pentes à 75 %, grands sauts et descente sans remontée",
+      "difficulty": "Frissons",
       "start": 80,
-      "end": 8350,
+      "end": 8315,
       "zone": 0,
-      "color": 15569772,
+      "color": 9684477,
       "simulation": {
         "ok": true,
-        "seconds": 19.53,
+        "seconds": 10.22,
         "maxSpeed": 850,
         "stoppedFrames": 0
       },
       "rolling": {
         "ok": true,
-        "seconds": 21.64,
+        "seconds": 10.36,
+        "maxSpeed": 850,
+        "stoppedFrames": 0
+      }
+    },
+    {
+      "id": "volcano",
+      "name": "Le Piton de la Fournaise",
+      "focus": "Trois sommets, balcons de basalte et remontées depuis les terrasses",
+      "difficulty": "Ascension",
+      "start": 8480,
+      "end": 16750,
+      "zone": 1,
+      "color": 15569772,
+      "simulation": {
+        "ok": true,
+        "seconds": 18.71,
+        "maxSpeed": 850,
+        "stoppedFrames": 0
+      },
+      "rolling": {
+        "ok": true,
+        "seconds": 20.48,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
@@ -28,20 +50,20 @@
       "name": "Les sentiers de Mafate",
       "focus": "Choisir sa route et maîtriser les appuis",
       "difficulty": "Précision",
-      "start": 8500,
-      "end": 16750,
-      "zone": 1,
+      "start": 16880,
+      "end": 25150,
+      "zone": 2,
       "color": 12440989,
       "simulation": {
         "ok": true,
-        "seconds": 18.27,
-        "maxSpeed": 850,
+        "seconds": 21.4,
+        "maxSpeed": 512,
         "stoppedFrames": 0
       },
       "rolling": {
         "ok": true,
-        "seconds": 19.59,
-        "maxSpeed": 850,
+        "seconds": 18.77,
+        "maxSpeed": 553,
         "stoppedFrames": 0
       }
     },
@@ -50,19 +72,19 @@
       "name": "Le sprint de Saint-Gilles",
       "focus": "Enchaîner vitesse, looping et toits",
       "difficulty": "Maîtrise",
-      "start": 16900,
-      "end": 24700,
-      "zone": 2,
+      "start": 25280,
+      "end": 33100,
+      "zone": 3,
       "color": 10409691,
       "simulation": {
         "ok": true,
-        "seconds": 14.27,
+        "seconds": 16.4,
         "maxSpeed": 850,
         "stoppedFrames": 0
       },
       "rolling": {
         "ok": true,
-        "seconds": 16.42,
+        "seconds": 16.78,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
@@ -70,7 +92,7 @@
   ],
   "campaign": {
     "ok": true,
-    "seconds": 50.66,
+    "seconds": 45.29,
     "maxSpeed": 850,
     "stoppedFrames": 0
   },
@@ -79,79 +101,79 @@
       "x": 80,
       "simulation": {
         "ok": true,
-        "seconds": 19.53,
+        "seconds": 10.22,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
     },
     {
-      "x": 2250,
+      "x": 2300,
       "simulation": {
         "ok": true,
-        "seconds": 14.36,
+        "seconds": 7.49,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
     },
     {
-      "x": 2850,
+      "x": 4290,
       "simulation": {
         "ok": true,
-        "seconds": 12.67,
+        "seconds": 5.15,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
     },
     {
-      "x": 4800,
+      "x": 6240,
       "simulation": {
         "ok": true,
-        "seconds": 6.63,
+        "seconds": 2.86,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
     },
     {
-      "x": 7250,
+      "x": 8000,
       "simulation": {
         "ok": true,
-        "seconds": 3.42,
+        "seconds": 1.04,
         "maxSpeed": 330,
         "stoppedFrames": 0
       }
     },
     {
-      "x": 8500,
+      "x": 8480,
       "simulation": {
         "ok": true,
-        "seconds": 18.27,
+        "seconds": 18.71,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
     },
     {
-      "x": 10800,
+      "x": 10650,
       "simulation": {
         "ok": true,
-        "seconds": 11.44,
+        "seconds": 13.48,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
     },
     {
-      "x": 11800,
+      "x": 11250,
       "simulation": {
         "ok": true,
-        "seconds": 8.68,
+        "seconds": 11.77,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
     },
     {
-      "x": 13900,
+      "x": 13200,
       "simulation": {
         "ok": true,
-        "seconds": 4.4,
+        "seconds": 8.46,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
@@ -160,8 +182,8 @@
       "x": 15650,
       "simulation": {
         "ok": true,
-        "seconds": 2.19,
-        "maxSpeed": 760,
+        "seconds": 3.42,
+        "maxSpeed": 330,
         "stoppedFrames": 0
       }
     },
@@ -169,43 +191,97 @@
       "x": 16900,
       "simulation": {
         "ok": true,
-        "seconds": 14.27,
+        "seconds": 21.34,
+        "maxSpeed": 512,
+        "stoppedFrames": 0
+      }
+    },
+    {
+      "x": 17400,
+      "simulation": {
+        "ok": true,
+        "seconds": 20.22,
+        "maxSpeed": 490,
+        "stoppedFrames": 0
+      }
+    },
+    {
+      "x": 18450,
+      "simulation": {
+        "ok": true,
+        "seconds": 19.6,
+        "maxSpeed": 420,
+        "stoppedFrames": 0
+      }
+    },
+    {
+      "x": 21050,
+      "simulation": {
+        "ok": true,
+        "seconds": 12.01,
+        "maxSpeed": 420,
+        "stoppedFrames": 0
+      }
+    },
+    {
+      "x": 22320,
+      "simulation": {
+        "ok": true,
+        "seconds": 8.33,
+        "maxSpeed": 420,
+        "stoppedFrames": 0
+      }
+    },
+    {
+      "x": 24800,
+      "simulation": {
+        "ok": true,
+        "seconds": 1.15,
+        "maxSpeed": 330,
+        "stoppedFrames": 0
+      }
+    },
+    {
+      "x": 25300,
+      "simulation": {
+        "ok": true,
+        "seconds": 16.34,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
     },
     {
-      "x": 19700,
+      "x": 28100,
       "simulation": {
         "ok": true,
-        "seconds": 13.94,
-        "maxSpeed": 820,
-        "stoppedFrames": 0
-      }
-    },
-    {
-      "x": 20850,
-      "simulation": {
-        "ok": true,
-        "seconds": 10.45,
-        "maxSpeed": 820,
-        "stoppedFrames": 0
-      }
-    },
-    {
-      "x": 22000,
-      "simulation": {
-        "ok": true,
-        "seconds": 4.09,
+        "seconds": 12.51,
         "maxSpeed": 850,
         "stoppedFrames": 0
       }
     },
     {
-      "x": 23900,
+      "x": 29250,
       "simulation": {
         "ok": true,
-        "seconds": 1.2,
+        "seconds": 9.02,
+        "maxSpeed": 850,
+        "stoppedFrames": 0
+      }
+    },
+    {
+      "x": 30400,
+      "simulation": {
+        "ok": true,
+        "seconds": 4.62,
+        "maxSpeed": 850,
+        "stoppedFrames": 0
+      }
+    },
+    {
+      "x": 32300,
+      "simulation": {
+        "ok": true,
+        "seconds": 1.23,
         "maxSpeed": 820,
         "stoppedFrames": 0
       }
@@ -213,37 +289,136 @@
   ],
   "gaps": [
     {
-      "x": 2580,
-      "width": 80,
+      "x": 1700,
+      "width": 480,
       "normalJumpRange": 234
     },
     {
-      "x": 7650,
+      "x": 3650,
+      "width": 520,
+      "normalJumpRange": 234
+    },
+    {
+      "x": 5600,
+      "width": 520,
+      "normalJumpRange": 234
+    },
+    {
+      "x": 10980,
       "width": 100,
       "normalJumpRange": 234
     },
     {
-      "x": 11200,
-      "width": 120,
+      "x": 16035,
+      "width": 115,
       "normalJumpRange": 234
     },
     {
-      "x": 15800,
+      "x": 17160,
+      "width": 125,
+      "normalJumpRange": 234
+    },
+    {
+      "x": 19500,
       "width": 135,
       "normalJumpRange": 234
     },
     {
-      "x": 21300,
-      "width": 150,
+      "x": 24100,
+      "width": 145,
+      "normalJumpRange": 234
+    },
+    {
+      "x": 29690,
+      "width": 155,
       "normalJumpRange": 234
     }
   ],
-  "pickups": 278,
-  "pathDetails": 154,
-  "checkpoints": 15,
+  "pickups": 375,
+  "pathDetails": 148,
+  "checkpoints": 21,
   "scenery": {
-    "placed": 192,
-    "omitted": []
+    "placed": 164,
+    "omitted": [
+      {
+        "id": "scenery-55",
+        "key": "rocks",
+        "x": 30800,
+        "visible": false
+      },
+      {
+        "id": "scenery-56",
+        "key": "rocks",
+        "x": 31800,
+        "visible": false
+      },
+      {
+        "id": "cluster-55",
+        "key": "plants",
+        "x": 19515,
+        "visible": false
+      },
+      {
+        "id": "cluster-61",
+        "key": "plants",
+        "x": 20685,
+        "visible": false
+      },
+      {
+        "id": "cluster-62",
+        "key": "plants",
+        "x": 20700,
+        "visible": false
+      },
+      {
+        "id": "snow-gite-summit",
+        "key": "snow-gite",
+        "x": 850,
+        "visible": false
+      },
+      {
+        "id": "snow-scenery-1",
+        "key": "snow-chunk",
+        "x": 300,
+        "visible": false
+      },
+      {
+        "id": "snow-scenery-2",
+        "key": "snow-chunk",
+        "x": 600,
+        "visible": false
+      },
+      {
+        "id": "snow-scenery-3",
+        "key": "snow-chunk",
+        "x": 1900,
+        "visible": false
+      },
+      {
+        "id": "snow-scenery-5",
+        "key": "snow-chunk",
+        "x": 3300,
+        "visible": false
+      },
+      {
+        "id": "snow-scenery-6",
+        "key": "snow-chunk",
+        "x": 4800,
+        "visible": false
+      },
+      {
+        "id": "snow-scenery-7",
+        "key": "snow-chunk",
+        "x": 5400,
+        "visible": false
+      },
+      {
+        "id": "snow-scenery-8",
+        "key": "snow-chunk",
+        "x": 6800,
+        "visible": false
+      }
+    ]
   },
   "missingAssets": []
 }

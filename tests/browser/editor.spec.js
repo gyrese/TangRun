@@ -1,7 +1,15 @@
 import {test,expect} from '@playwright/test';
+test('editor is available only by its direct address with no game link',async({page})=>{
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('/');await page.waitForFunction(()=>window.__LTN__?.game.scene.getScene('run')?.level);
+ await expect(page.locator('a[href*="editeur"], .admin-link, #open-editor')).toHaveCount(0);
+ await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN__?.game.scene.getScene('run')?.level);expect(await page.evaluate(()=>Boolean(window.__LTN_EDITOR__))).toBe(false);
+ await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);await expect(page.locator('h1')).toHaveText('Bibliothèque');
+ await page.goto('/editeur/');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);expect(errors).toEqual([]);
+});
 test('editor places, edits, restores, saves and plays the authored level',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto('/?admin');await expect(page.locator('h1')).toHaveText('Bibliothèque');
+ await page.goto('/editeur');await expect(page.locator('h1')).toHaveText('Bibliothèque');
  await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  await expect(page.locator('#game-preview canvas')).toBeVisible();
  await expect(page.locator('.asset-card img').first()).toHaveAttribute('src',/^data:image/);
@@ -25,7 +33,7 @@ test('editor places, edits, restores, saves and plays the authored level',async(
 
 test('game panoramas stay within their edges at every editor zoom and region',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  for(const [region,index]of [['0',0],['8400',1],['16800',2],['25200',3]]){
   await page.locator('#region').selectOption(region);
   for(const zoom of ['0.25','1','1.5']){
@@ -51,7 +59,7 @@ test('game panoramas stay within their edges at every editor zoom and region',as
 
 test('platform handles edit the collision slope directly on the game preview',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  await page.getByRole('button',{name:'Corniche',exact:true}).click();
  const map=await page.locator('#map').boundingBox();await page.mouse.click(map.x+240,map.y+150);
  await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
@@ -68,7 +76,7 @@ test('platform handles edit the collision slope directly on the game preview',as
 });
 
 test('moving one original decoration preserves every other sprite and its own scale',async({page})=>{
- const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  const baseline=await page.evaluate(()=>({objects:window.__LTN_EDITOR__.objects,level:structuredClone(window.__LTN_EDITOR__.level),view:window.__LTN_EDITOR__.view}));
  await page.waitForTimeout(600);expect(await page.evaluate(()=>window.__LTN_EDITOR__.objects)).toEqual(baseline.objects);
  const map=await page.locator('#map').boundingBox();
@@ -86,7 +94,7 @@ test('moving one original decoration preserves every other sprite and its own sc
 });
 
 test('an overlapping new platform cannot remove or relocate original decoration',async({page})=>{
- await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  const before=await page.evaluate(()=>window.__LTN_EDITOR__.objects);const view=await page.evaluate(()=>window.__LTN_EDITOR__.view),map=await page.locator('#map').boundingBox();
  const target=before.find(p=>p.key.startsWith('adventure.landmarks:')&&p.bounds?.x>200&&p.bounds.x+p.bounds.w<map.width);
  await page.getByRole('button',{name:'Corniche',exact:true}).click();await page.mouse.click(map.x+target.bounds.x,map.y+target.bounds.y-view.y);
@@ -95,7 +103,7 @@ test('an overlapping new platform cannot remove or relocate original decoration'
 });
 
 test('clicks stay clean and Escape cancels a drag as one transaction',async({page})=>{
- await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  const baseline=await page.evaluate(()=>JSON.stringify(window.__LTN_EDITOR__.level));const map=await page.locator('#map').boundingBox();const view=await page.evaluate(()=>window.__LTN_EDITOR__.view);
  const target=await page.evaluate(()=>window.__LTN_EDITOR__.objects.find(p=>p.key.startsWith('tokens:')&&p.bounds?.x>250&&p.bounds.x<400));
  const x=map.x+target.bounds.x+target.bounds.w/2,y=map.y+target.bounds.y+target.bounds.h/2-view.y;
@@ -105,7 +113,7 @@ test('clicks stay clean and Escape cancels a drag as one transaction',async({pag
 });
 
 test('invalid properties and malformed imports leave the current level intact',async({page})=>{
- const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  await page.getByRole('button',{name:'Corniche',exact:true}).click();const map=await page.locator('#map').boundingBox();await page.mouse.click(map.x+240,map.y+160);await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  const baseline=await page.evaluate(()=>JSON.stringify(window.__LTN_EDITOR__.level));
  await page.getByLabel('Y · hauteur',{exact:true}).fill('999999');await page.getByLabel('Y · hauteur',{exact:true}).press('Tab');await expect(page.locator('#status')).toContainText('limites');
@@ -115,7 +123,7 @@ test('invalid properties and malformed imports leave the current level intact',a
 });
 
 test('duplicate, saved dirty state, export and import retain exactly the authored layout',async({page})=>{
- const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  await page.getByRole('button',{name:'Corniche',exact:true}).click();const map=await page.locator('#map').boundingBox();await page.mouse.click(map.x+240,map.y+150);await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  await page.locator('#duplicate').click();await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  const ids=await page.evaluate(()=>window.__LTN_EDITOR__.level.platforms.map(p=>p.id));expect(new Set(ids).size).toBe(ids.length);
@@ -130,7 +138,7 @@ test('duplicate, saved dirty state, export and import retain exactly the authore
 });
 
 test('small-screen editing and undo preserve the original level',async({page})=>{
- const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.setViewportSize({width:640,height:900});await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.setViewportSize({width:640,height:900});await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  const baseline=await page.evaluate(()=>JSON.stringify(window.__LTN_EDITOR__.level));
  await page.getByRole('button',{name:'Corniche',exact:true}).click();const map=await page.locator('#map').boundingBox();await page.mouse.click(map.x+100,map.y+100);await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  const after=await page.evaluate(()=>window.__LTN_EDITOR__.level.platforms.length);expect(after).toBe(JSON.parse(baseline).platforms.length+1);
@@ -139,7 +147,7 @@ test('small-screen editing and undo preserve the original level',async({page})=>
 });
 
 test('overlapping objects can be selected separately and a return drag makes no edit',async({page})=>{
- await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);await page.getByRole('button',{name:'Corniche',exact:true}).click();
+ await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);await page.getByRole('button',{name:'Corniche',exact:true}).click();
  const map=await page.locator('#map').boundingBox();
  for(let i=0;i<2;i++){await page.mouse.click(map.x+240,map.y+140);await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);}
  await page.locator('#select').click();const last=await page.evaluate(()=>window.__LTN_EDITOR__.selection.index);
@@ -150,7 +158,7 @@ test('overlapping objects can be selected separately and a return drag makes no 
 });
 
 test('dragging previews the selected sprite without rebuilding the world',async({page})=>{
- await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  await page.getByRole('button',{name:'Corniche',exact:true}).click();const map=await page.locator('#map').boundingBox();await page.mouse.click(map.x+240,map.y+140);await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);await page.locator('#select').click();
  const metrics=await page.evaluate(()=>window.__LTN_EDITOR__.metrics),before=await page.evaluate(()=>window.__LTN_EDITOR__.objects);
  await page.mouse.move(map.x+320,map.y+150);await page.mouse.down();await page.mouse.move(map.x+460,map.y+110,{steps:24});
@@ -161,7 +169,7 @@ test('dragging previews the selected sprite without rebuilding the world',async(
 });
 
 test('search, layer controls, cursor zoom, keyboard nudge and overview work together',async({page})=>{
- const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  await page.getByRole('searchbox',{name:'Rechercher un objet'}).fill('drone');await expect(page.locator('.asset-card')).toHaveCount(1);await page.getByRole('button',{name:'Drone',exact:true}).click();
  let map=await page.locator('#map').boundingBox();await page.mouse.click(map.x+250,map.y+160);await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);await page.locator('#select').click();await page.locator('#map').focus();
  const x=await page.evaluate(()=>window.__LTN_EDITOR__.level.adventure.enemies.at(-1).x);await page.keyboard.press('Shift+ArrowRight');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);expect(await page.evaluate(()=>window.__LTN_EDITOR__.level.adventure.enemies.at(-1).x)).toBe(x+10);
@@ -175,13 +183,13 @@ test('search, layer controls, cursor zoom, keyboard nudge and overview work toge
 });
 
 test('test-here starts the custom game in the edited region',async({page})=>{
- await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);await page.locator('#region').selectOption('8400');await page.locator('#test-here').click();await expect(page).toHaveURL(/custom=1&spawn=/);
+ await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);await page.locator('#region').selectOption('8400');await page.locator('#test-here').click();await expect(page).toHaveURL(/custom=1&spawn=/);
  await page.waitForFunction(()=>window.__LTN__?.game.scene.getScene('run')?.level);if(await page.locator('#boot-screen').isVisible())await page.locator('#skip-boot').click();await page.locator('#play').click();
- const state=await page.evaluate(()=>window.__LTN__.state);expect(state.x).toBeGreaterThanOrEqual(8400);expect(state.x).toBeLessThan(10000);await expect(page.getByRole('link',{name:'RETOUR À L’ÉDITEUR'})).toBeVisible();
+ const state=await page.evaluate(()=>window.__LTN__.state);expect(state.x).toBeGreaterThanOrEqual(8400);expect(state.x).toBeLessThan(10000);await expect(page.locator('a[href*="editeur"]')).toHaveCount(0);
 });
 
 test('expanded library, GD slope metrics, auto token arcs and live animation preview work together',async({page})=>{
- const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/editeur');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
  await page.locator('#kind').selectOption('scenery');await expect(page.locator('.asset-card')).toHaveCount(27);
  await page.locator('#kind').selectOption('platforms');await page.getByRole('button',{name:'Corniche',exact:true}).click();
  const map=await page.locator('#map').boundingBox();await page.mouse.click(map.x+260,map.y+150);await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);

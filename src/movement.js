@@ -55,7 +55,7 @@ export function stepRunner(p,input,level,dt){
   l.angle+=speed/l.radius*dt;const a=Math.min(Math.PI*2,l.angle);
   p.x=l.x+Math.sin(a)*l.radius;p.feet=l.baseY-l.radius+Math.cos(a)*l.radius;
   p.vx=Math.cos(a)*speed;p.vy=-Math.sin(a)*speed;p.angle=-a;p.sliding=true;p.grounded=false;p.lastJump=!!input.jump;
-  if(l.angle>=Math.PI*2){p.loop=null;p.loopCooldown=3;p.x=l.x+14;p.feet=l.baseY;p.grounded=true;p.surfaceId=surfaceAt(level,p.x,'ground-0')?.id;p.vx=l.entry;p.vy=0;p.angle=0;}
+  if(l.angle>=Math.PI*2){p.loop=null;p.loopCooldown=3;p.lastLoop=l.id;p.x=l.x+14;p.feet=l.baseY;p.grounded=true;p.surfaceId=surfaceAt(level,p.x,l.surface??'ground-0')?.id;p.vx=l.entry;p.vy=0;p.angle=0;}
   return{jumped:false,landed:false};
  }
  const previousX=p.x,previousFeet=p.feet,wasGrounded=p.grounded,wasSliding=p.sliding,wasRolling=p.rolling;
@@ -166,7 +166,8 @@ export function stepRunner(p,input,level,dt){
  const crossed=(x,radius)=>x>=Math.min(previousX,p.x)-radius&&x<=Math.max(previousX,p.x)+radius;
  if(p.grounded&&p.padCooldown===0){const pad=(level.pads||[]).find(q=>q.surface===p.surfaceId&&crossed(q.x,24));if(pad&&p.vx>=0){p.vx=Math.max(p.vx,pad.speed);p.padCooldown=.6;}}
  if(p.grounded&&p.springCooldown===0){const spring=(level.springs||[]).find(s=>(s.surface?s.surface===p.surfaceId:p.surfaceId?.startsWith('ground'))&&crossed(s.x,16));if(spring){p.vy=-spring.power;if(spring.boost)p.vx=Math.max(p.vx,spring.boost);p.grounded=false;p.sliding=false;p.rolling=false;p.surfaceId=null;p.springCooldown=spring.cooldown??1;p.coyote=0;jumped=true;}}
- if(p.grounded&&p.loopCooldown===0&&p.vx>0){const l=(level.loops||[]).find(l=>previousX<=l.x&&p.x>=l.x&&p.vx>=l.minSpeed&&Math.abs(p.feet-l.baseY)<2);if(l){p.loop={...l,angle:0,entry:p.vx};p.x=l.x;p.feet=l.baseY;p.grounded=false;p.surfaceId=null;p.sliding=true;}}
+ // The cooldown only blocks the loop just exited, so two loops can be chained.
+ if(p.grounded&&p.vx>0){const l=(level.loops||[]).find(l=>(p.loopCooldown===0||l.id!==p.lastLoop)&&previousX<=l.x&&p.x>=l.x&&p.vx>=l.minSpeed&&Math.abs(p.feet-l.baseY)<2);if(l){p.loop={...l,angle:0,entry:p.vx};p.x=l.x;p.feet=l.baseY;p.grounded=false;p.surfaceId=null;p.sliding=true;}}
  p.angle=p.grounded?Math.atan(p.slope):0;p.maxSpeed=Math.max(p.maxSpeed,Math.abs(p.vx));
  return{jumped,landed:landed||!wasGrounded&&p.grounded};
 }

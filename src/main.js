@@ -3,6 +3,8 @@ import {touchesLava} from './ravine-art.js';
 import {loadPlayableLevel} from './editor-store.js';
 import './style.css';
 import './title-screen.css';
+import './leaderboard.css';
+import {createLeaderboardUI} from './leaderboard.js';
 import {preloadArt,drawBackdrop,drawStreet,drawPlatformArt,updateMascot,drawCourseMechanisms,updateCourseMechanisms} from './art.js';
 import {buildLevel,formatTime,readBest,WORLD_WIDTH,GOAL_X,SPEED,MAX_SPEED,ZONES,STAGES,recordKey,groundAt,heightOn} from './level.js';
 import {landInSnow} from './snow-effects.js';
@@ -16,13 +18,14 @@ import {preparePropArt} from './prop-art.js';
 import {resetBarArrival,beginBarArrival,updateBarArrival} from './bar-arrival.js';
 const $=id=>document.getElementById(id),reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const touch={left:false,right:false,jump:false,slide:false};let gameScene,best=null,selectedStage='campaign';
+const leaderboard=createLeaderboardUI();
 try{best=readBest(localStorage);}catch{}
 $('best').textContent=best?formatTime(best):'— — : — —';
 const audio={enabled:false,context:null,
  unlock(){try{this.context??=new(window.AudioContext||window.webkitAudioContext)();this.context.resume().catch(()=>{});}catch{this.enabled=false;}},
  tone(hz,seconds=.1){if(!this.enabled||!this.context)return;try{const o=this.context.createOscillator(),g=this.context.createGain(),t=this.context.currentTime;o.type='triangle';o.frequency.setValueAtTime(hz,t);o.frequency.exponentialRampToValueAtTime(hz*.65,t+seconds);g.gain.setValueAtTime(.045,t);g.gain.exponentialRampToValueAtTime(.001,t+seconds);o.connect(g);g.connect(this.context.destination);o.start();o.stop(t+seconds);}catch{}}
 };
-function overlay({kicker='',title,copy='',button}){$('overlay-kicker').textContent=kicker;$('overlay-title').innerHTML=title;$('overlay-copy').textContent=copy;$('play').textContent=button;$('overlay').hidden=false;$('stage-picker').hidden=gameScene?.mode==='paused';$('restart').hidden=gameScene?.mode!=='paused';}
+function overlay({kicker='',title,copy='',button}){$('overlay-kicker').textContent=kicker;$('overlay-title').innerHTML=title;$('overlay-copy').textContent=copy;$('play').textContent=button;$('overlay').hidden=false;$('restart').hidden=gameScene?.mode!=='paused';}
 function clearControls(){resetStick();Object.keys(touch).forEach(k=>touch[k]=false);document.querySelectorAll('[data-control]').forEach(b=>b.classList.remove('pressed'));}
 
 class RunScene extends Phaser.Scene{
@@ -59,6 +62,9 @@ class RunScene extends Phaser.Scene{
   this.updateHud();$('play').disabled=false;$('play').textContent='JOUER';
  }
  startRun(){
+  document.body.classList.remove('show-results');
+  leaderboard.start(selectedStage==='campaign'&&!new URLSearchParams(location.search).has('custom'));
+  $('return-home').hidden=true;
   resetBarArrival(this);
   this.adventure=createAdventureState();this.adventureArt.chapter=-1;
   clearControls();resetSpeedFeedback(this);this.input.keyboard.resetKeys();this.mode='running';document.body.classList.add('is-playing');this.runner=createRunner();this.elapsed=0;this.count=0;this.falls=0;this.zone=0;this.clock=0;this.accumulator=0;this.lastHud=0;this.trails=[];this.checkpoint=ZONES[0].checkpoint;
@@ -117,14 +123,17 @@ class RunScene extends Phaser.Scene{
   this.showFinish(newBest);
  }
  showFinish(newBest){
+  document.body.classList.add('show-results');
   this.mode='finished';
   const atBar=this.runEnd===GOAL_X;
   overlay({kicker:atBar?`${newBest?'RECORD PERSONNEL · ':''}${formatTime(this.elapsed)}`:newBest?'RECORD PERSONNEL':this.activeStage?.name??'LES TOILES NOIRES',title:atBar?'Bienvenue à<br><em>Les Toiles Noires</em>':`${formatTime(this.elapsed)}<br><em>ARRIVÉE</em>`,button:'REJOUER'});
   $('split-results').textContent=this.splits.map(s=>`${STAGES[s.zone].name} : ${formatTime(s.ms)}`).join(' · ');
   const rating=adventureRank(this.adventure,this.falls,this.elapsed/1000,this.adventure.relics.size);
   $('overlay-copy').textContent=`RANG ${rating.rank} · ${rating.total.toLocaleString('fr-FR')} pts · ${this.adventure.relics.size}/${this.activeStage?3:12} emblèmes · ${this.adventure.defeated.size} sentinelles · ${this.falls} reprises`;
-  $('next-stage').hidden=!this.activeStage||this.zone===3;$('stage-picker').hidden=false;
+  $('next-stage').hidden=!this.activeStage||this.zone===3;
   $('finish-share').hidden=false;this.updateHud();$('progress').style.width='100%';$('announcer').textContent=`${this.activeStage?'Niveau terminé':'Arrivée au bar'} en ${formatTime(this.elapsed)}.`;audio.tone(1046,.25);$('play').focus({preventScroll:true});
+  if(!this.activeStage){$('overlay-copy').textContent='';$('split-results').textContent='';leaderboard.finish(this.elapsed);}
+  $('return-home').hidden=false;
  }
  updateHud(){
   $('timer').textContent=formatTime(this.elapsed);$('zone-number').textContent=String(this.zone+1).padStart(2,'0');$('zone-name').textContent=ZONES[this.zone].name;
@@ -183,7 +192,6 @@ class RunScene extends Phaser.Scene{
    this.lastTelemetry=this.clock;
    if(this.telemetry.points.length<900)this.telemetry.points.push([Math.round(this.runner.x),Math.round(this.runner.feet),Math.round(this.runner.vx),this.runner.sliding?1:0]);
    try{sessionStorage.setItem('ltn-editor-telemetry-v1',JSON.stringify(this.telemetry));}catch{}
-   const backLink=document.querySelector('.admin-link');if(backLink)backLink.href=`/?admin&x=${Math.max(0,Math.round(this.runner.x-200))}`;
   }
   const zone=this.runner.x>=ZONES[3].x?3:this.runner.x>=ZONES[2].x?2:this.runner.x>=ZONES[1].x?1:0;
   if(zone>this.zone){this.splits.push({zone:this.zone,ms:this.elapsed-this.splitStarted});this.splitStarted=this.elapsed;this.zone=zone;this.checkpoint=ZONES[zone].checkpoint;audio.tone(700,.14);}
@@ -206,7 +214,11 @@ $('play').addEventListener('click',pressStart);
 let bootFinished=false;
 function finishBoot(){if(bootFinished)return;bootFinished=true;$('boot-screen').hidden=true;document.body.classList.remove('booting');$('play').focus({preventScroll:true});}
 $('skip-boot').addEventListener('click',finishBoot);
-window.addEventListener('keydown',e=>{if(e.code==='Enter'&&!e.repeat){e.preventDefault();if(!bootFinished)finishBoot();else if(gameScene?.mode!=='running')pressStart();}});
+window.addEventListener('keydown',e=>{if(e.target.closest?.('input,form,button:not(#play)'))return;if(e.code==='Enter'&&!e.repeat){e.preventDefault();if(!bootFinished)finishBoot();else if(gameScene?.mode!=='running')pressStart();}});
+$('return-home').addEventListener('click',()=>{
+ leaderboard.leaveFinish();gameScene.mode='ready';resetBarArrival(gameScene);clearControls();document.body.classList.remove('has-started','is-playing','show-results');
+ $('overlay-kicker').textContent='UNE AVENTURE À LA RÉUNION';$('overlay-title').innerHTML='<img class="tangrun-logo" src="/assets/tangrun-logo.svg" alt="TangRun" />';$('overlay-copy').textContent='';$('split-results').textContent='';$('play').textContent='JOUER';$('return-home').hidden=true;$('next-stage').hidden=true;$('restart').hidden=true;$('finish-share').hidden=true;leaderboard.refresh();$('play').focus({preventScroll:true});
+});
 setTimeout(finishBoot,reducedMotion?700:3400);
 const barLogo=new Image();barLogo.src='/assets/logo-les-toiles-noires.png';
 barLogo.onload=()=>{for(const canvas of document.querySelectorAll('.pixel-logo')){const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.drawImage(barLogo,0,0,canvas.width,canvas.height);}};

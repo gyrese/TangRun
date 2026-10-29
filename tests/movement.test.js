@@ -110,7 +110,7 @@ test('crossing above a loop on another route cannot capture the runner',()=>{
 
 test('moving platforms carry a stationary rider through a full cycle',()=>{
  const level=buildLevel(),platform=level.movers[0],p=createRunner(platform.x+platform.w/2,platform.y);p.surfaceId=platform.id;
- for(let i=0;i<456;i++){stepRunner(p,{},level,DT);assert.equal(p.surfaceId,platform.id);assert.ok(p.grounded);}
+ for(let i=0;i<Math.round(platform.motion.period*120);i++){stepRunner(p,{},level,DT);assert.equal(p.surfaceId,platform.id);assert.ok(p.grounded);}
  assert.ok(Math.abs(p.feet-platform.y)<.01);assert.ok(Math.abs(p.x-platform.x-platform.w/2)<.01);
 });
 

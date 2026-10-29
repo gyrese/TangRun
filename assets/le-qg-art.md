@@ -3,7 +3,7 @@
 Asset: `public/assets/v3/le-qg.png` (1774 × 887, transparent PNG).
 Generated with the built-in imagegen tool. Architectural reference: the QG photograph confirmed by the user, saved as `assets/reference/qg.jpg`, from https://www.privateaser.com/lieu/50902-qg . Front elevation is an adaptation from the cropped oblique photograph, not a measured reconstruction. Style and sunset-lighting reference: `public/assets/v3/etiquette.png`.
 
-Decorative placement: x=19230, y=605, scale=0.23, after the lagoon loop and before L’Étiquette. This is distinct from the existing `qg` texture used for the Les Toiles Noires finish building. Pixel data and transparency preserved from generation.
+Decorative placement: authored x=19170 (world x=27570 after the snow-region shift), y=605, scale=0.23, after the lagoon loop and before L’Étiquette. At least 1400px of clear space separate successive venues. This is distinct from the existing `qg` texture used for the Les Toiles Noires finish building. Pixel data and transparency preserved from generation.
 
 ## Prompt
 

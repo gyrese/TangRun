@@ -1,4 +1,4 @@
-export const LEVEL_VERSION='v8-snow-descent';
+export const LEVEL_VERSION='v9-volcano-summits';
 export const BEST_KEY=`ltn-qg-best-${LEVEL_VERSION}${typeof location!=='undefined'&&new URLSearchParams(location.search).get('custom')==='1'?'-editor':''}`;
 export const WORLD_WIDTH=33600,GOAL_X=33100,GROUND_Y=450,SPEED=330,MAX_SPEED=850,JUMP_SPEED=550,GRAVITY=1550;
 export const ZONES=[
@@ -9,7 +9,7 @@ export const ZONES=[
 ];
 export const STAGES=[
  {id:'snow',name:'Le Piton des Neiges',focus:'Pentes à 75 %, grands sauts et descente sans remontée',difficulty:'Frissons',start:80,end:8315,zone:0,color:0x93c5fd},
- {id:'volcano',name:'Le Piton de la Fournaise',focus:'Coulées de lave et caldeira',difficulty:'Découverte',start:8480,end:16750,zone:1,color:0xed936c},
+ {id:'volcano',name:'Le Piton de la Fournaise',focus:'Trois sommets, balcons de basalte et remontées depuis les terrasses',difficulty:'Ascension',start:8480,end:16750,zone:1,color:0xed936c},
  {id:'mafate',name:'Les sentiers de Mafate',focus:'Choisir sa route et maîtriser les appuis',difficulty:'Précision',start:16880,end:25150,zone:2,color:0xbdd59d},
  {id:'coast',name:'Le sprint de Saint-Gilles',focus:'Enchaîner vitesse, looping et toits',difficulty:'Maîtrise',start:25280,end:GOAL_X,zone:3,color:0x9ed6db},
 ];
@@ -31,31 +31,33 @@ const STRIPS=[
  // ZONE 1: LE PITON DE LA FOURNAISE (8400 to 16800) - Original Volcano shifted +8400
  [[8400,420],[9050,420],[9650,680],[10050,680],[10650,450],[10980,450]],
  [[11080,450],[11600,450],[12200,700],[12600,700],[13100,420],[13600,420],[14250,710],[14650,710],[15250,420],[15650,420],[16035,420]],
- [[16150,450],[17300,450],[17900,700],[18400,700],[19000,450],[19600,450]],
 
- // ZONE 2: LES REMPARTS DE MAFATE (16800 to 25200) - Original Mafate shifted +8400
- [[19725,480],[20200,480],[20800,710],[21250,710],[21900,420],[22400,420],[23050,680],[23450,680],[24000,400],[24200,400]],
- [[24340,420],[25900,420],[26500,600],[28100,600],[28700,390],[29200,390],[29690,390]],
+ // ZONE 2: MAFATE v3 — porte, Rivière des Galets (bief 1), îlet et lacet, étages de Trois-Roches (bief 2).
+ [[16150,450],[17160,450]],
+ [[17285,450],[17400,450],[17700,500],[18550,500],[18550,660],[19500,660]],
+ [[19635,660],[20220,660],[20220,500],[20300,500],[21000,230],[21400,230],[22250,286],[22400,286],[22400,660],[24100,660]],
+ // Ravine 3 sits 550 px after the second breach landing, with a run-up arc.
+ [[24245,660],[24550,660],[24550,500],[24750,420],[25200,420]],
+ [[25200,420],[25900,420],[26500,600],[28100,600],[28700,390],[29200,390],[29690,390]],
 
  // ZONE 3: SAINT-GILLES · CAP SUR LE BAR (25200 to 33600) - Original Coast shifted +8400
  [[29845,420],[30400,420],[31000,700],[31450,700],[32100,450],[WORLD_WIDTH,450]],
 ];
 
 const HIGH_ROUTES=[
- // ZONE 1: VOLCAN ACTE 1 — Crête haute après le looping, rejoint le carrefour à x=2240+SHIFT
+ // Optional summit route: jump onto the low shelf, then take its relay spring.
+ // The wide landing absorbs both jogging and full-speed approaches.
  {route:'cinder-ridge',style:'basalt',sections:[
-  [[1680+SHIFT,340],[1880+SHIFT,150],[2060+SHIFT,150],[2240+SHIFT,350]],
+  [[600+SHIFT,180],[1050+SHIFT,180],[1600+SHIFT,-100],[1800+SHIFT,-100],[2200+SHIFT,160],[2500+SHIFT,260]],
  ]},
- // ZONE 1: VOLCAN ACTES 2 & 3 — Grimpe à y=70, rejoint le carrefour à x=5580+SHIFT
+ // Two more climbs, separated by a broad landing for the terrace relay below.
  {route:'volcano',style:'basalt',sections:[
-  [[3310+SHIFT,300],[3680+SHIFT,150],[4080+SHIFT,75],[4500+SHIFT,65],[4950+SHIFT,115],[5300+SHIFT,235],[5580+SHIFT,350],[5950+SHIFT,140],[6350+SHIFT,65],[6800+SHIFT,95],[7200+SHIFT,190],[7600+SHIFT,335],[7900+SHIFT,345]],
+  [[3310+SHIFT,300],[3680+SHIFT,150],[4080+SHIFT,-180],[4500+SHIFT,-220],[4950+SHIFT,-100],[5300+SHIFT,170],[5580+SHIFT,300],[5950+SHIFT,200],[6980+SHIFT,200],[7400+SHIFT,-120],[7600+SHIFT,80],[7900+SHIFT,260]],
  ]},
- // ZONE 2: MAFATE — 3 grandes arches aériennes
- {route:'mafate',style:'ropebridge',sections:[
-  [[9040+SHIFT,340],[9300+SHIFT,340],[9680+SHIFT,120],[10080+SHIFT,75],[10480+SHIFT,115],[10850+SHIFT,235],[11150+SHIFT,335]],
-  [[11260+SHIFT,335],[11650+SHIFT,210],[12050+SHIFT,90],[12500+SHIFT,70],[12900+SHIFT,175],[13250+SHIFT,330]],
-  [[13360+SHIFT,320],[13750+SHIFT,210],[14150+SHIFT,105],[14600+SHIFT,65],[15050+SHIFT,85],[15450+SHIFT,185],[15800+SHIFT,295],[16050+SHIFT,325]],
- ]},
+ // Mafate v3 : îlot flottant (jaune 1), canalisation (orange), arche de Trois-Roches (jaune 3).
+ {route:"mafate-sky",style:'ropebridge',sections:[[[20300,200],[20680,200],[20720,210]]]},
+ {route:"mafate-crest",style:'canal',sections:[[[22675,248],[22800,248],[22950,300],[23150,300],[23250,330],[24400,330],[24600,345],[24700,350]]]},
+ {route:"mafate-arch",style:'ropebridge',sections:[[[23500,220],[24150,220],[24300,250]]]},
  // ZONE 3: SAINT-GILLES — Grimpe sur les hauts toits et redescend
  {route:'city',style:'comics',linear:true,sections:[
   [[21600+SHIFT,300],[21950+SHIFT,300],[22300+SHIFT,130],[22650+SHIFT,85],[23050+SHIFT,85],[23400+SHIFT,115],[23750+SHIFT,95],[24050+SHIFT,210],[24300+SHIFT,360]],
@@ -63,9 +65,10 @@ const HIGH_ROUTES=[
 ];
 
 const smooth=t=>t*t*(3-2*t);
-function sampleProfile(points,ease,make){
+function sampleProfile(points,ease,make,step=120){
  for(let i=1;i<points.length;i++){
-  const [start,y]=points[i-1],[end,y2]=points[i],count=y===y2?1:Math.ceil((end-start)/120);
+  // Keep the entry ramp's landing footprint; refine the crests beyond it.
+  const [start,y]=points[i-1],[end,y2]=points[i],count=y===y2?1:Math.ceil((end-start)/(i===1?120:step));
   for(let j=0;j<count;j++){
    const t=j/count,u=(j+1)/count,x=start+(end-start)*t,x2=start+(end-start)*u;
    const a=y+(y2-y)*ease(t),b=y+(y2-y)*ease(u);
@@ -95,11 +98,19 @@ export function buildLevel(){
   chapters:[],
  };
 
+ // Mafate is authored here and in adventure-level.js; drop the older course pieces.
+ const inMafate=x=>x>=ZONES[2].x&&x<ZONES[3].x;
+ level.platforms=level.platforms.filter(p=>!(inMafate(p.x)&&['beam','crate'].includes(p.kind)));
+ for(const key of ['movers','pads','springs'])level[key]=level[key].filter(p=>!inMafate(p.x));
+ level.signs=level.signs.filter(s=>!(inMafate(s.x)&&s.text.startsWith('Ravine')));
+ level.scenery=level.scenery.filter(s=>!(inMafate(s.x)&&s.key==='waterfall'));
  for(const strip of STRIPS)sampleProfile(strip,strip[0][0]<SHIFT?t=>t:smooth,(x,w,a,b)=>terrain.push({id:`ground-${terrain.length}`,kind:'ground',x,w,y:a,y2:b,h:900-Math.min(a,b),slope:(b-a)/w}));
  level.platforms=level.platforms.filter(p=>!HIGH_ROUTES.some(r=>r.route===p.route)&&p.route!=='volcano'&&p.route!=='mafate'&&p.route!=='city');
  for(const {route,style,sections,linear}of HIGH_ROUTES){
   let index=0;
-  for(const points of sections)sampleProfile(points,linear?t=>t:smooth,(x,w,a,b)=>level.platforms.push({id:`${route}-${index++}`,kind:'roof',rail:true,route,style,x,w,y:a,y2:b,h:22,slope:(b-a)/w}));
+  // Short chords keep rounded basalt crests smooth in both art and collision.
+  // At 120px, a short summit face becomes just two straight sides.
+  for(const points of sections)sampleProfile(points,linear?t=>t:smooth,(x,w,a,b)=>level.platforms.push({id:`${route}-${index++}`,kind:'roof',rail:true,route,style,x,w,y:a,y2:b,h:22,slope:(b-a)/w}),style==='basalt'?24:120);
  }
  for(const pad of level.pads){
   const route=pad.surface?HIGH_ROUTES.find(r=>pad.surface.startsWith(r.route+'-'))?.route:null;
@@ -107,8 +118,41 @@ export function buildLevel(){
  }
  level.gaps=STRIPS.slice(1).map((s,i)=>[STRIPS[i].at(-1)[0],s[0][0]]).filter(([a,b])=>b>a);
  const floorAt=x=>{const s=groundAt({terrain},x);return heightOn(s,x);};
+ // Mafate v3 : pont de lianes, passerelles (brèches), rochers à ressort.
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-gate-0","route":"mafate-gate","style":"basalt","x":16960,"y":370,"y2":370,"w":160});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-gate-1","route":"mafate-gate","style":"ropebridge","x":17120,"y":370,"y2":370,"w":210});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-0","route":"mafate","style":"ropebridge","x":18552,"y":500,"y2":500,"w":174});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-1","route":"mafate","style":"ropebridge","x":18726,"y":500,"y2":500,"w":174});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-2","route":"mafate","style":"ropebridge","x":19050,"y":500,"y2":500,"w":195});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-3","route":"mafate","style":"ropebridge","x":19245,"y":500,"y2":500,"w":195});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-4","route":"mafate","style":"ropebridge","x":19440,"y":500,"y2":500,"w":195});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-5","route":"mafate","style":"ropebridge","x":19635,"y":500,"y2":500,"w":195});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-6","route":"mafate","style":"ropebridge","x":19830,"y":500,"y2":500,"w":195});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-7","route":"mafate","style":"ropebridge","x":20025,"y":500,"y2":500,"w":195});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-ledge-0","route":"mafate-ledge","style":"basalt","x":19700,"y":420,"y2":420,"w":150});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-ledge-1","route":"mafate-ledge","style":"basalt","x":19850,"y":420,"y2":420,"w":150});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-ledge-2","route":"mafate-ledge","style":"basalt","x":20000,"y":420,"y2":420,"w":150});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-trois-0","route":"mafate-trois","style":"ropebridge","x":22402,"y":500,"y2":500,"w":190});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-trois-1","route":"mafate-trois","style":"ropebridge","x":22592,"y":500,"y2":500,"w":189});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-trois-2","route":"mafate-trois","style":"ropebridge","x":22781,"y":500,"y2":500,"w":190});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-trois-3","route":"mafate-trois","style":"ropebridge","x":22971,"y":500,"y2":500,"w":189});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-trois-4","route":"mafate-trois","style":"ropebridge","x":23160,"y":500,"y2":500,"w":190});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-trois-5","route":"mafate-trois","style":"ropebridge","x":23500,"y":500,"y2":500,"w":210});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-trois-6","route":"mafate-trois","style":"ropebridge","x":23710,"y":500,"y2":500,"w":210});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-trois-7","route":"mafate-trois","style":"ropebridge","x":23920,"y":500,"y2":500,"w":210});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-trois-8","route":"mafate-trois","style":"ropebridge","x":24130,"y":500,"y2":500,"w":210});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-trois-9","route":"mafate-trois","style":"ropebridge","x":24340,"y":500,"y2":500,"w":210});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-ledge2-0","route":"mafate-ledge2","style":"basalt","x":23000,"y":420,"y2":420,"w":125});
+ level.platforms.push({"kind":"roof","slope":0,"h":22,"id":"mafate-ledge2-1","route":"mafate-ledge2","style":"basalt","x":23125,"y":420,"y2":420,"w":125});
+ // River beds of the two Rivière des Galets reaches, drawn as pebbles and water.
+ level.rivers=[[18550,20220],[22400,24550]];
+ // Falls behind the Mafate paths: ravine falls run off screen, the others end on the floor.
+ level.cascades=[[17222,64],[18975,48],[19567,64],[23425,48],[24172,120]].map(([x,width])=>{
+  const gap=level.gaps.some(([a,b])=>x>a&&x<b);
+  return{x,width,top:-180,bottom:gap?1720:floorAt(x)};
+ });
 
- const sceneryFixes={'scenery-4':2720+SHIFT,'scenery-8':8050+SHIFT,'scenery-10':7480+SHIFT,'scenery-12':9570+SHIFT,'scenery-14':11100+SHIFT,'scenery-17':12750+SHIFT,'scenery-20':14780+SHIFT,'scenery-27':19350+SHIFT,'scenery-30':21900+SHIFT,'scenery-31':23150+SHIFT,'scenery-37':2080+SHIFT,'cluster-13':2770+SHIFT,'cluster-62':12300+SHIFT,'cluster-75':15200+SHIFT,'cluster-104':21000+SHIFT};
+ const sceneryFixes={'scenery-4':2720+SHIFT,'scenery-8':8050+SHIFT,'scenery-10':7480+SHIFT,'scenery-12':9570+SHIFT,'scenery-14':20900,'scenery-17':12750+SHIFT,'scenery-20':14780+SHIFT,'scenery-27':19350+SHIFT,'scenery-30':21900+SHIFT,'scenery-31':23150+SHIFT,'scenery-37':2080+SHIFT,'cluster-13':2770+SHIFT,'cluster-62':12300+SHIFT,'cluster-75':15200+SHIFT,'cluster-104':21000+SHIFT};
  for(const item of level.scenery){
   if(sceneryFixes[item.id]!==undefined)item.x=sceneryFixes[item.id];
   if(item.x>=ZONES[1].x&&item.x<ZONES[2].x&&(item.key==='rocks'||item.key==='plants'))item.key='lavarocks';
@@ -116,6 +160,7 @@ export function buildLevel(){
 
  // Zone 0 snow decor
  level.scenery.push(
+  {id:'snow-gite-summit',key:'snow-gite',x:850,y:-5380,scale:.10,anchor:'absolute',authored:true},
   {id:'snow-scenery-1',key:'snow-chunk',x:300,scale:.7,anchor:'ground',depth:1},
   {id:'snow-scenery-2',key:'snow-chunk',x:600,scale:.7,anchor:'ground',depth:1},
   {id:'snow-scenery-3',key:'snow-chunk',x:1900,scale:.8,anchor:'ground',depth:1},
@@ -142,7 +187,7 @@ export function buildLevel(){
   else if(p.kind==='crate'){const y=Math.round(floorAt(p.x+p.w/2)-p.h);p.y=p.y2=y;}
  }
 
- level.checkpoints=[80,2300,4290,6240,8000, 8400+80,8400+2250,8400+2850,8400+4800,8400+7250, 8400+8500,8400+10800,8400+11800,8400+13900,8400+15650, 8400+16900,8400+19700,8400+20850,8400+22000,8400+23900].map(x=>({x,y:floorAt(x)-20}));
+ level.checkpoints=[80,2300,4290,6240,8000, 8400+80,8400+2250,8400+2850,8400+4800,8400+7250, 16900,17400,18450,21050,22320,24800, 8400+16900,8400+19700,8400+20850,8400+22000,8400+23900].map(x=>({x,y:floorAt(x)-20}));
  const adventure=enrichAdventure(level,terrain);
  level.signs=[
   {x:180,text:'→ Le Piton des Neiges · -5°C'},
@@ -151,15 +196,22 @@ export function buildLevel(){
   {x:3300,text:'↘ Garde ton élan · Plonge dans le couloir blanc'},
   {x:7900,text:'→ Fin du blizzard · Vers le Piton de la Fournaise'},
   {x:230+SHIFT,text:'→ Courir · Espace sauter'}, {x:700+SHIFT,text:'↓ Descendre en boule = élan'},
+  {x:140+SHIFT,text:'↗ Saute sur le balcon · Ressort vers la crête'},
   {x:1980+SHIFT,text:'↓ Maintenir pour passer dessous'},
   {x:500+SHIFT,text:'Éclats = protection · caisse = bonus'},
   {x:790+SHIFT,text:'↓ Rouler ou sauter sur les sentinelles'},
-  {x:5630+SHIFT,text:'↗ Terrasses de lave · emblème caché'},
-  {x:14200+SHIFT,text:'↗ Cascade · appuis vers le sommet'},
+  {x:5050+SHIFT,text:'↗ Balcons intermédiaires · Ressort vers le dernier sommet'},
+  {"x":18350,"text":"Passerelle cassée ↗ saute · ou descends à la rivière ↓"},
+  {"x":19600,"text":"↗ Rocher · îlot flottant"},
+  {"x":19850,"text":"↑ Ressort · remonte au sentier"},
+  {"x":21000,"text":"↓ Roule dans le lacet · élan pour le canal"},
+  {"x":22150,"text":"Saute au bord ↗ si tu as l’élan"},
+  {"x":22850,"text":"↗ Rocher · arche des Trois-Roches"},
+  {"x":24300,"text":"↑ Ressort · rejoins la sortie"},
+  {"x":24800,"text":"Sortie du cirque → Saint-Gilles"},
   {x:22220+SHIFT,text:'↗ Promenade haute · emblème bonus'},
-  ...level.gaps.map(([a])=>({x:a-300,text:a<SHIFT?'↘ Grand saut · Continue vers le bas':'Ravine ↗ · Maintenir le saut'})),
-  ...level.springs.filter(s=>!s.surface).map(s=>({x:s.x-220,text:'↑ Ressort · route bonus'})),
-  {x:11550+SHIFT,text:'Appuis mobiles · chemin bas libre'},
+  ...level.gaps.filter(([a,b])=>!level.platforms.some(p=>p.bridge&&p.x<=a+1&&p.x+p.w>=b-1)).map(([a])=>({x:a-300,text:a<SHIFT?'↘ Grand saut · Continue vers le bas':'Ravine ↗ · Maintenir le saut'})),
+  ...level.springs.filter(s=>!s.surface&&!inMafate(s.x)).map(s=>({x:s.x-220,text:'↑ Ressort · route bonus'})),
   {x:17200+SHIFT,text:'04 · Saint-Gilles · Combine tes gestes'},
   {x:17800+SHIFT,text:'↓ Garde l’élan · boucle facultative'},
   {x:20100+SHIFT,text:'Reprends ton souffle · dernier quartier'},
@@ -168,12 +220,23 @@ export function buildLevel(){
 
  for(let x=350;x<GOAL_X-450;x+=180){
   const ground=groundAt({terrain},x);
+  const riverBed=level.rivers.some(([a,b])=>x>a&&x<b)&&heightOn(ground??{y:0,x,slope:0},x)>=640;
+  // Mafate river beds only carry shards around the first emblem.
+  if(riverBed&&Math.abs(x-19200)>160)continue;
   if(ground&&!level.gaps.some(([a,b])=>x>a-210&&x<b+160)&&!level.platforms.some(p=>(p.kind==='beam'||p.kind==='crate')&&x>p.x-45&&x<p.x+p.w+45))tokens.push({x,y:heightOn(ground,x)-40});
  }
  for(const [a,b]of level.gaps)for(let i=0;i<=5;i++){
   const t=i/5,x=a-95+t*(b-a+190);tokens.push({x,y:floorAt(a-5)*(1-t)+floorAt(b+5)*t-42-Math.sin(t*Math.PI)*82});
  }
- for(const p of level.platforms.filter(p=>p.kind==='roof'))for(let x=p.x+55;x<p.x+p.w-25;x+=100)tokens.push({x,y:heightOn(p,x)-43});
+ for(const p of level.platforms.filter(p=>p.kind==='roof'&&!inMafate(p.x)))for(let x=p.x+55;x<p.x+p.w-25;x+=100)tokens.push({x,y:heightOn(p,x)-43});
+ // Mafate: dense shards on the footbridges, sparse ones on the canal, none elsewhere.
+ for(const [routes,step]of [[['mafate','mafate-trois','mafate-gate'],100],[['mafate-crest'],250]]){
+  const deck=level.platforms.filter(p=>routes.includes(p.route));
+  const start=Math.min(...deck.map(p=>p.x)),end=Math.max(...deck.map(p=>p.x+p.w));
+  for(let x=start+55;x<end-25;x+=step){const p=deck.find(p=>x>=p.x&&x<=p.x+p.w);if(p)tokens.push({x,y:heightOn(p,x)-43});}
+ }
+ // Mafate guide arcs: each one shows a choice from the point where it is made.
+ for(const [x,y]of [[16900,440],[16940,428],[16980,416],[17020,404],[17060,392],[17100,380],[18880,460],[18918,419],[18956,393],[18994,393],[19032,419],[19070,460],[19000,560],[19080,600],[19150,625],[19620,470],[19680,440],[20060,330],[20140,250],[20220,190],[22420,350],[22480,315],[22540,293],[22600,293],[22660,315],[22720,350],[22920,470],[22980,440],[23300,380],[23360,300],[23420,240],[23480,190],[23850,622],[23900,614],[23950,606],[24000,598]])tokens.push({x,y});
  for(const loop of level.loops)for(let i=1;i<12;i++){
   const angle=i*Math.PI*2/12;tokens.push({x:loop.x+Math.sin(angle)*(loop.radius-30),y:loop.baseY-loop.radius+Math.cos(angle)*(loop.radius-30)});
  }

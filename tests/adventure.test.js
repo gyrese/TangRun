@@ -20,7 +20,7 @@ test('rolling and descending attacks defeat sentinels; pickups cannot farm score
  const bounce=createRunner(100,425);bounce.grounded=false;bounce.vy=200;const fresh=createAdventureState();stepAdventure(fresh,bounce,a,1/120,0);assert.equal(fresh.defeated.size,1);assert.equal(bounce.vy,-420);
 });
 test('nine sections and rewards have safe sockets; hazards telegraph before activating',()=>{
- const l=buildLevel(),a=l.adventure;assert.equal(a.chapters.length,12);assert.equal(a.relics.length,12);assert.equal(l.loops.length,2);
+ const l=buildLevel(),a=l.adventure;assert.equal(a.chapters.length,12);assert.equal(a.relics.length,12);assert.equal(l.loops.length,3);
  for(const m of a.monitors){const f=groundAt(l,m.x);assert.ok(f);assert.equal(m.y,heightOn(f,m.x)-22);}
  for(const e of a.enemies)assert.ok(Number.isFinite(enemyPosition(e,3).x));
  assert.equal(ventPhase({phase:0},1),'idle');assert.equal(ventPhase({phase:0},2.5),'warning');assert.equal(ventPhase({phase:0},3),'active');
@@ -49,5 +49,5 @@ test('rolling smashes crates for bonus shards and relay springs apply directiona
  assert.ok(p.brokenCrates.has(crate.id),'Rolling runner smashes through crate');
  const r=stepAdventure(s,p,l.adventure,1/60,0);
  assert.ok(s.smashed.has(crate.id));assert.equal(r.balance,3*s.smashed.size);assert.equal(s.score,75*s.smashed.size);
- assert.ok(l.loops.length===2&&l.movers.length>=6&&l.springs.length>=7&&l.adventure.enemies.length>=22);
+ assert.ok(l.loops.length===3&&l.movers.length>=4&&l.springs.length>=7&&l.adventure.enemies.length>=22);
 });

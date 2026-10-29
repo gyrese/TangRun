@@ -2,7 +2,7 @@
 
 Asset: `public/assets/v3/etiquette.png` (1430 × 1100, transparent PNG).
 Generated with the built-in imagegen tool. Architectural source: the daytime photograph supplied by the user. Style reference: `public/assets/qg-v1.webp`.
-Placed at x=21000 in Saint-Gilles, before Les Toiles Noires; decorative facade behind the runner, also editable in the level editor. Original generation retained without pixel modifications.
+Placed at authored x=21040 (world x=29440 after the snow-region shift) in Saint-Gilles, before Les Toiles Noires; decorative facade behind the runner, also editable in the level editor. At least 1400px of clear space separate successive venues. Original generation retained without pixel modifications.
 
 ## Final prompt
 
