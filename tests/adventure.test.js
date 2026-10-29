@@ -20,7 +20,7 @@ test('rolling and descending attacks defeat sentinels; pickups cannot farm score
  const bounce=createRunner(100,425);bounce.grounded=false;bounce.vy=200;const fresh=createAdventureState();stepAdventure(fresh,bounce,a,1/120,0);assert.equal(fresh.defeated.size,1);assert.equal(bounce.vy,-420);
 });
 test('nine sections and rewards have safe sockets; hazards telegraph before activating',()=>{
- const l=buildLevel(),a=l.adventure;assert.equal(a.chapters.length,9);assert.equal(a.relics.length,9);assert.equal(l.loops.length,2);
+ const l=buildLevel(),a=l.adventure;assert.equal(a.chapters.length,12);assert.equal(a.relics.length,12);assert.equal(l.loops.length,2);
  for(const m of a.monitors){const f=groundAt(l,m.x);assert.ok(f);assert.equal(m.y,heightOn(f,m.x)-22);}
  for(const e of a.enemies)assert.ok(Number.isFinite(enemyPosition(e,3).x));
  assert.equal(ventPhase({phase:0},1),'idle');assert.equal(ventPhase({phase:0},2.5),'warning');assert.equal(ventPhase({phase:0},3),'active');
@@ -41,4 +41,13 @@ test('full traversal with encounters remains survivable using movement and rolli
   if(p.x>=GOAL_X){finished=true;break;}
  }
  assert.ok(finished);assert.ok(s.defeated.size>3);assert.ok(s.hits<=2,'The main path leaves room to recover from a missed attack');
+});
+test('rolling smashes crates for bonus shards and relay springs apply directional boost',()=>{
+ const l=buildLevel(),crate=l.platforms.find(p=>p.kind==='crate'),p=createRunner(crate.x-28,crate.y+crate.h),s=createAdventureState();
+ p.vx=320;p.sliding=true;p.rolling=true;
+ for(let i=0;i<15&&!p.brokenCrates.has(crate.id);i++)stepRunner(p,{right:true,slide:true},l,1/120);
+ assert.ok(p.brokenCrates.has(crate.id),'Rolling runner smashes through crate');
+ const r=stepAdventure(s,p,l.adventure,1/60,0);
+ assert.ok(s.smashed.has(crate.id));assert.equal(r.balance,3*s.smashed.size);assert.equal(s.score,75*s.smashed.size);
+ assert.ok(l.loops.length===2&&l.movers.length>=6&&l.springs.length>=7&&l.adventure.enemies.length>=22);
 });

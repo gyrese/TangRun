@@ -437,39 +437,39 @@
   },
   "bird": {
     "animated": true,
-    "source": "/assets/source/props-polish-v2/bird.png",
+    "source": "/assets/source/props-polish-v2/paille-en-queue-v1.png",
     "frames": [
       {
-        "x": 250,
-        "y": 45,
-        "w": 444,
-        "h": 458,
-        "anchorX": 463.477,
-        "anchorY": 384.386
+        "x": 62,
+        "y": 36,
+        "w": 685,
+        "h": 449,
+        "anchorX": 560.624,
+        "anchorY": 423.975
       },
       {
-        "x": 903,
-        "y": 190,
-        "w": 503,
-        "h": 313,
-        "anchorX": 1176.065,
-        "anchorY": 385.691
+        "x": 801,
+        "y": 191,
+        "w": 690,
+        "h": 294,
+        "anchorX": 1304.984,
+        "anchorY": 423.879
       },
       {
-        "x": 126,
-        "y": 681,
-        "w": 576,
-        "h": 268,
-        "anchorX": 470.032,
-        "anchorY": 824.579
+        "x": 62,
+        "y": 759,
+        "w": 687,
+        "h": 237,
+        "anchorX": 562.609,
+        "anchorY": 828.867
       },
       {
-        "x": 952,
-        "y": 557,
-        "w": 467,
-        "h": 394,
-        "anchorX": 1184.185,
-        "anchorY": 824.642
+        "x": 801,
+        "y": 577,
+        "w": 698,
+        "h": 326,
+        "anchorX": 1314.709,
+        "anchorY": 838.362
       }
     ]
   },

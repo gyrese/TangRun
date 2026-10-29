@@ -1120,189 +1120,189 @@
         "h": 40
       }
     },
-    "polish-gate-feet": {
+    "bird-0": {
       "frame": {
         "x": 744,
         "y": 184,
-        "w": 128,
-        "h": 28
+        "w": 48,
+        "h": 36
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 128,
-        "h": 28
+        "w": 48,
+        "h": 36
       },
       "sourceSize": {
-        "w": 128,
-        "h": 28
-      }
-    },
-    "bird-0": {
-      "frame": {
-        "x": 874,
-        "y": 184,
-        "w": 32,
-        "h": 24
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 32,
-        "h": 24
-      },
-      "sourceSize": {
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       }
     },
     "bird-1": {
       "frame": {
-        "x": 908,
+        "x": 794,
         "y": 184,
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       },
       "sourceSize": {
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       }
     },
     "bird-2": {
       "frame": {
-        "x": 942,
+        "x": 844,
         "y": 184,
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       },
       "sourceSize": {
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       }
     },
     "bird-3": {
       "frame": {
-        "x": 976,
+        "x": 894,
         "y": 184,
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       },
       "sourceSize": {
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       }
     },
     "bird-4": {
       "frame": {
-        "x": 0,
-        "y": 230,
-        "w": 32,
-        "h": 24
+        "x": 944,
+        "y": 184,
+        "w": 48,
+        "h": 36
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       },
       "sourceSize": {
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       }
     },
     "bird-5": {
       "frame": {
-        "x": 34,
+        "x": 0,
         "y": 230,
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       },
       "sourceSize": {
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       }
     },
     "bird-6": {
       "frame": {
-        "x": 68,
+        "x": 50,
         "y": 230,
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       },
       "sourceSize": {
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       }
     },
     "bird-7": {
       "frame": {
-        "x": 102,
+        "x": 100,
         "y": 230,
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
       },
       "sourceSize": {
-        "w": 32,
-        "h": 24
+        "w": 48,
+        "h": 36
+      }
+    },
+    "polish-gate-feet": {
+      "frame": {
+        "x": 150,
+        "y": 230,
+        "w": 128,
+        "h": 28
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 28
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 28
       }
     },
     "polish-boost-0": {
       "frame": {
-        "x": 136,
+        "x": 280,
         "y": 230,
         "w": 88,
         "h": 24
@@ -1322,7 +1322,7 @@
     },
     "polish-boost-1": {
       "frame": {
-        "x": 226,
+        "x": 370,
         "y": 230,
         "w": 88,
         "h": 24
@@ -1342,7 +1342,7 @@
     },
     "polish-boost-2": {
       "frame": {
-        "x": 316,
+        "x": 460,
         "y": 230,
         "w": 88,
         "h": 24
@@ -1362,7 +1362,7 @@
     },
     "polish-boost-3": {
       "frame": {
-        "x": 406,
+        "x": 550,
         "y": 230,
         "w": 88,
         "h": 24
@@ -1382,7 +1382,7 @@
     },
     "polish-gate-cap-0": {
       "frame": {
-        "x": 496,
+        "x": 640,
         "y": 230,
         "w": 128,
         "h": 24
@@ -1402,7 +1402,7 @@
     },
     "polish-gate-cap-1": {
       "frame": {
-        "x": 626,
+        "x": 770,
         "y": 230,
         "w": 128,
         "h": 24
@@ -1422,8 +1422,8 @@
     },
     "polish-gate-cap-2": {
       "frame": {
-        "x": 756,
-        "y": 230,
+        "x": 0,
+        "y": 268,
         "w": 128,
         "h": 24
       },
@@ -1442,8 +1442,8 @@
     },
     "polish-gate-cap-3": {
       "frame": {
-        "x": 886,
-        "y": 230,
+        "x": 130,
+        "y": 268,
         "w": 128,
         "h": 24
       },
@@ -1462,8 +1462,8 @@
     },
     "token": {
       "frame": {
-        "x": 0,
-        "y": 256,
+        "x": 260,
+        "y": 268,
         "w": 22,
         "h": 24
       },
@@ -1482,8 +1482,8 @@
     },
     "token-spin-0": {
       "frame": {
-        "x": 24,
-        "y": 256,
+        "x": 284,
+        "y": 268,
         "w": 22,
         "h": 24
       },
@@ -1502,8 +1502,8 @@
     },
     "token-spin-1": {
       "frame": {
-        "x": 48,
-        "y": 256,
+        "x": 308,
+        "y": 268,
         "w": 22,
         "h": 24
       },
@@ -1522,8 +1522,8 @@
     },
     "token-spin-2": {
       "frame": {
-        "x": 72,
-        "y": 256,
+        "x": 332,
+        "y": 268,
         "w": 22,
         "h": 24
       },
@@ -1542,8 +1542,8 @@
     },
     "token-spin-3": {
       "frame": {
-        "x": 96,
-        "y": 256,
+        "x": 356,
+        "y": 268,
         "w": 22,
         "h": 24
       },
@@ -1562,8 +1562,8 @@
     },
     "token-spin-4": {
       "frame": {
-        "x": 120,
-        "y": 256,
+        "x": 380,
+        "y": 268,
         "w": 22,
         "h": 24
       },
@@ -1582,8 +1582,8 @@
     },
     "token-spin-5": {
       "frame": {
-        "x": 144,
-        "y": 256,
+        "x": 404,
+        "y": 268,
         "w": 22,
         "h": 24
       },
@@ -1602,8 +1602,8 @@
     },
     "token-spin-6": {
       "frame": {
-        "x": 168,
-        "y": 256,
+        "x": 428,
+        "y": 268,
         "w": 22,
         "h": 24
       },
@@ -1622,8 +1622,8 @@
     },
     "token-spin-7": {
       "frame": {
-        "x": 192,
-        "y": 256,
+        "x": 452,
+        "y": 268,
         "w": 22,
         "h": 24
       },
@@ -1645,7 +1645,7 @@
     "image": "atlas.png",
     "size": {
       "w": 1024,
-      "h": 288
+      "h": 304
     },
     "scale": "1",
     "generator": "ImageGen; native 32-color pixel-art preparation"

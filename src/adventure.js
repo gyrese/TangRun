@@ -1,4 +1,4 @@
-export function createAdventureState(){return{time:0,shield:false,invincible:0,score:0,hits:0,combo:0,defeated:new Set(),relics:new Set(),opened:new Set(),scatter:[]};}
+export function createAdventureState(){return{time:0,shield:false,invincible:0,score:0,hits:0,combo:0,defeated:new Set(),relics:new Set(),opened:new Set(),smashed:new Set(),scatter:[]};}
 export function enemyPosition(enemy,time){
  const offset=Math.sin(time*1.5+enemy.phase)*enemy.range;
  let y=enemy.y;
@@ -10,6 +10,12 @@ export function ventPhase(vent,time){const phase=(time+vent.phase)%4;return phas
 export function stepAdventure(state,p,adventure,dt,bank){
  state.time+=dt;state.invincible=Math.max(0,state.invincible-dt);
  const events=[];let balance=bank;
+ if(p.brokenCrates){
+  state.smashed??=new Set();
+  for(const id of p.brokenCrates)if(!state.smashed.has(id)){
+   state.smashed.add(id);balance+=3;state.score+=75;events.push({type:'smash',id,x:p.x,y:p.feet-22});
+  }
+ }
  const overlaps=(x,y,w=28,h=30)=>Math.abs(p.x-x)<w&&Math.abs(p.feet-20-y)<h;
  const damage=()=>{
   if(state.invincible>0||p.loop)return;

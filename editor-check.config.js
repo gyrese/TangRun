@@ -1,0 +1,1 @@
+import base from "./playwright.config.js"; export default {...base,use:{...base.use,baseURL:"http://127.0.0.1:5196",launchOptions:{executablePath:"C:/Program Files/Google/Chrome/Application/chrome.exe"}},webServer:{command:"node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5196 --strictPort",url:"http://127.0.0.1:5196",timeout:15000}};

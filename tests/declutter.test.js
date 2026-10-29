@@ -14,7 +14,7 @@ test('decor selection leaves space between sprites and protects the loop silhoue
  assert.ok(plan.all.some(p=>p.key==='basaltarch'),'Keep the natural arches on valid foundations');
  for(const key of ['lava','tamarin','case-creole','fern','vacoa','pirogue'])assert.ok(plan.landmarks.some(p=>p.key===`v6-${key}`),`Réunion landmark must actually be visible: ${key}`);
  for(let i=0;i<plan.all.length;i++){
-  const a=plan.all[i];assert.ok(a.width<=220.001&&a.height<=165.001);
+  const a=plan.all[i];if(!a.authored)assert.ok(a.width<=220.001&&a.height<=165.001);
   for(const b of plan.all.slice(i+1))assert.ok(!decorOverlap(a.bounds,b.bounds,42),`Overlapping decor ${a.id}/${b.id}`);
   for(const l of level.loops)assert.ok(!decorOverlap(a.bounds,{left:l.x-l.radius-35,right:l.x+l.radius+35,top:l.baseY-2*l.radius-20,bottom:l.baseY+8},12));
  }

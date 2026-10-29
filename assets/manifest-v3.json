@@ -1,5 +1,20 @@
 [
   {
+    "key": "le-qg",
+    "file": "public/assets/v3/le-qg.png",
+    "size": [1774, 887]
+  },
+  {
+    "key": "choka-bleu",
+    "file": "public/assets/v3/choka-bleu.png",
+    "size": [1586, 992]
+  },
+  {
+    "key": "etiquette",
+    "file": "public/assets/v3/etiquette.png",
+    "size": [1430, 1100]
+  },
+  {
     "key": "pier",
     "file": "public/assets/v3/pier.webp",
     "source": "assets/source/v3/harbor.png",

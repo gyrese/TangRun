@@ -1,0 +1,9 @@
+Method: built-in ImageGen (transparent edit of assets/source/props-polish-v2/bird.png).
+Species reference: https://www.seor.fr/oiseau-16-phaeton-a-brins-blancs.html
+
+Use case: precise-object-edit.
+Asset type: replacement animated pixel-art sprite sheet for the existing Reunion Island platform game LTN.
+Input image 1 is the existing generic seabird sprite sheet: keep its four-frame 2-by-2 layout, chunky 16-bit pixel-art medium, flying toward the RIGHT, and small background-bird role. Replace the bird identity in all four frames with a Reunion WHITE-TAILED TROPICBIRD (paille-en-queue / Phaethon lepturus).
+Species silhouette must be unmistakable: slim white-ivory body, TWO extremely long narrow WHITE tail streamers trailing to the LEFT, approximately as long as head plus body; fine pointed golden-yellow beak; small black eye stripe; white long pointed wings with restrained dark charcoal markings near their tips. Tiny feet tucked away. The long tail must be clearly visible, not shortened to a gull's tail, not dark, not a broad swallow fork.
+Exactly four poses in reading order: wings raised high, wings halfway down, wings lowered below body, wings halfway up. Same bird, scale, body/head/tail at identical relative coordinates in every cell; only wings change. At the target size of 48 by 32 pixels, use broad clean white clusters and tail filaments thick enough to survive downsampling. Entire tail and wing tips must fit in EVERY cell with empty transparent margins. Body on right half of each cell, leaving left half for long tail.
+Limited 16-color palette, hard aliased pixel edges, subtle cool grey underside shading, no continuous gradient or blur. Transparent background with actual alpha, NO ground, glow, shadow, background painting, labels, grid, border, text, logos or watermark. Wide empty transparent gutter between equal-sized cells.

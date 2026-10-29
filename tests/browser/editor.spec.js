@@ -26,7 +26,7 @@ test('editor places, edits, restores, saves and plays the authored level',async(
 test('game panoramas stay within their edges at every editor zoom and region',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
- for(const [region,index]of [['0',0],['8400',1],['16800',2]]){
+ for(const [region,index]of [['0',0],['8400',1],['16800',2],['25200',3]]){
   await page.locator('#region').selectOption(region);
   for(const zoom of ['0.25','1','1.5']){
    await page.locator('#zoom').selectOption(zoom);
@@ -178,4 +178,18 @@ test('test-here starts the custom game in the edited region',async({page})=>{
  await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);await page.locator('#region').selectOption('8400');await page.locator('#test-here').click();await expect(page).toHaveURL(/custom=1&spawn=/);
  await page.waitForFunction(()=>window.__LTN__?.game.scene.getScene('run')?.level);if(await page.locator('#boot-screen').isVisible())await page.locator('#skip-boot').click();await page.locator('#play').click();
  const state=await page.evaluate(()=>window.__LTN__.state);expect(state.x).toBeGreaterThanOrEqual(8400);expect(state.x).toBeLessThan(10000);await expect(page.getByRole('link',{name:'RETOUR À L’ÉDITEUR'})).toBeVisible();
+});
+
+test('expanded library, GD slope metrics, auto token arcs and live animation preview work together',async({page})=>{
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('/?admin');await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ await page.locator('#kind').selectOption('scenery');await expect(page.locator('.asset-card')).toHaveCount(27);
+ await page.locator('#kind').selectOption('platforms');await page.getByRole('button',{name:'Corniche',exact:true}).click();
+ const map=await page.locator('#map').boundingBox();await page.mouse.click(map.x+260,map.y+150);await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ await expect(page.locator('#gd-metrics')).toContainText('Pente');
+ const tokensBefore=await page.evaluate(()=>window.__LTN_EDITOR__.level.tokens.length);
+ await page.locator('#token-arc').click();await page.waitForFunction(()=>window.__LTN_EDITOR__?.ready);
+ expect(await page.evaluate(()=>window.__LTN_EDITOR__.level.tokens.length)).toBeGreaterThan(tokensBefore);
+ await page.locator('#live-preview').click();expect(await page.evaluate(()=>window.__LTN_EDITOR__.livePreview)).toBe(true);
+ await page.locator('#live-preview').click();expect(await page.evaluate(()=>window.__LTN_EDITOR__.livePreview)).toBe(false);
+ expect(errors).toEqual([]);
 });

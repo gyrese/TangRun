@@ -1,12 +1,12 @@
 {
-  "name": "La course au bar — Les Toiles Noires",
-  "short_name": "La course au bar",
+  "name": "TangRun — L’île à toute allure",
+  "short_name": "TangRun",
   "lang": "fr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "landscape",
-  "background_color": "#101614",
-  "theme_color": "#101614",
+  "background_color": "#0b2938",
+  "theme_color": "#0b2938",
   "icons": [{"src": "/assets/logo-les-toiles-noires.png", "type": "image/png", "sizes": "any"}]
 }

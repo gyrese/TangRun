@@ -59,7 +59,8 @@ export function preparePropSources(scene){
   ['cache','v6-cache',42,44,21,44],['shield','v6-shield',42,44,21,44],
   ['boost','polish-boost',88,24,44,22],['sign','polish-sign',40,44,20,42],
   ['finish','polish-finish',64,104,14,102],['aura','polish-aura',76,76,38,38],
-  ['bird','polish-bird',32,24,16,18],['guest','polish-guest',24,40,12,40],
+  // Extra room behind the body preserves the paille-en-queue's two long tail feathers.
+  ['bird','polish-bird',48,36,34,24],['guest','polish-guest',24,40,12,40],
  ])animatedTextures(scene,name,prefix,w,h,x,y);
  for(let frame=0;frame<4;frame++){
   variantTexture(scene,`polish-hit-${frame}`,`polish-aura-${frame}`,colorMap([19,20,21,22,23,24,25,26,27],[13,14,15,16,17,13,15,16,17]));

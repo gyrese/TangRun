@@ -555,6 +555,33 @@ export const COURSE = {
   ],
   "scenery": [
     {
+      "id": "saint-gilles-le-qg",
+      "key": "le-qg",
+      "x": 19230,
+      "y": 605,
+      "scale": 0.23,
+      "anchor": "absolute",
+      "authored": true
+    },
+    {
+      "id": "saint-gilles-choka-bleu",
+      "key": "choka-bleu",
+      "x": 18320,
+      "y": 605,
+      "scale": 0.27,
+      "anchor": "absolute",
+      "authored": true
+    },
+    {
+      "id": "saint-gilles-etiquette",
+      "key": "etiquette",
+      "x": 21000,
+      "y": 400,
+      "scale": 0.34,
+      "anchor": "absolute",
+      "authored": true
+    },
+    {
       "id": "scenery-0",
       "key": "lavarocks",
       "x": 180,
@@ -977,7 +1004,7 @@ export const COURSE = {
     },
     {
       "id": "cluster-4",
-      "key": "rocks",
+      "key": "lavarocks",
       "x": 1170,
       "scale": 0.445,
       "anchor": "ground",
@@ -985,7 +1012,7 @@ export const COURSE = {
     },
     {
       "id": "cluster-7",
-      "key": "rocks",
+      "key": "lavarocks",
       "x": 1755,
       "scale": 0.445,
       "anchor": "ground",
@@ -1001,7 +1028,7 @@ export const COURSE = {
     },
     {
       "id": "cluster-13",
-      "key": "rocks",
+      "key": "lavarocks",
       "x": 2925,
       "scale": 0.445,
       "anchor": "ground",
@@ -1009,7 +1036,7 @@ export const COURSE = {
     },
     {
       "id": "cluster-17",
-      "key": "rocks",
+      "key": "lavarocks",
       "x": 3705,
       "scale": 0.49,
       "anchor": "ground",
@@ -1017,7 +1044,7 @@ export const COURSE = {
     },
     {
       "id": "cluster-20",
-      "key": "rocks",
+      "key": "lavarocks",
       "x": 4290,
       "scale": 0.49,
       "anchor": "ground",
@@ -1025,7 +1052,7 @@ export const COURSE = {
     },
     {
       "id": "cluster-22",
-      "key": "rocks",
+      "key": "lavarocks",
       "x": 4680,
       "scale": 0.445,
       "anchor": "ground",
@@ -1041,7 +1068,7 @@ export const COURSE = {
     },
     {
       "id": "cluster-25",
-      "key": "rocks",
+      "key": "lavarocks",
       "x": 5265,
       "scale": 0.445,
       "anchor": "ground",
@@ -1057,7 +1084,7 @@ export const COURSE = {
     },
     {
       "id": "cluster-28",
-      "key": "rocks",
+      "key": "lavarocks",
       "x": 5850,
       "scale": 0.445,
       "anchor": "ground",
@@ -1073,7 +1100,7 @@ export const COURSE = {
     },
     {
       "id": "cluster-32",
-      "key": "rocks",
+      "key": "lavarocks",
       "x": 6630,
       "scale": 0.49,
       "anchor": "ground",
