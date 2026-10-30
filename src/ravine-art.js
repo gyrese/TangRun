@@ -14,8 +14,8 @@ export function createRavineArt(scene){
  }
  // Moving glints on the Mafate river beds and on the flat stretches of the canal.
  if(!scene.textures.exists('river-ripple')){
-  const r=scene.textures.createCanvas('river-ripple',48,4),rc=r.context;
-  for(const [x,y,w]of [[2,1,5],[14,2,3],[22,0,6],[35,2,4],[42,1,3]]){rc.fillStyle='#c8f2ed';rc.globalAlpha=.8;rc.fillRect(x,y,w,1);}
+  const r=scene.textures.createCanvas('river-ripple',192,4),rc=r.context;
+  for(const [x,y,w]of [[5,1,7],[31,3,3],[58,0,11],[93,2,5],[129,1,8],[173,3,4]]){rc.fillStyle='#b0dfcf';rc.globalAlpha=.48;rc.fillRect(x,y,w,1);}
   r.refresh();
  }
  const flatRiver=scene.level.terrain.filter(p=>p.slope===0&&p.y>=640&&(scene.level.rivers||[]).some(([a,b])=>p.x>=a-1&&p.x+p.w<=b+1));

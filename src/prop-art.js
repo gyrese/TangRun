@@ -72,21 +72,32 @@ export function drawRockRail(scene,p){
  t.refresh();scene.add.image(p.x,top,key).setOrigin(0).setDepth(3);
 }
 
-// Orangers canal: mortared stone wall with a water channel under its coping.
+// Orangers canal: wet, mossy basalt carrying a narrow ribbon of water.
 function drawCanalRail(scene,p){
- const top=Math.floor(Math.min(p.y,p.y2))-2,width=Math.ceil(p.w)+1,height=Math.ceil(Math.abs(p.y2-p.y))+44;
+ const source=scene.textures.get('island-ledge').getSourceImage();
+ const scale=.48,contact=27,rockHeight=(source.height-contact)*scale;
+ const top=Math.floor(Math.min(p.y,p.y2))-2,width=Math.ceil(p.w)+1,height=Math.ceil(Math.abs(p.y2-p.y))+rockHeight+12;
  const key=`canal-rail-${p.id}`,t=scene.textures.createCanvas(key,width,height),c=t.context;
+ c.imageSmoothingEnabled=false;
+ const period=(source.width-12)*scale;
  for(let x=0;x<width;x++){
   const gx=Math.floor(p.x+x),y=Math.round(p.y+x*p.slope-top);
-  c.fillStyle='#d6ccb4';c.fillRect(x,y,1,3);
-  c.fillStyle=gx%9===0?'#bfe8e4':'#3d8aa0';c.fillRect(x,y+3,1,6);
-  c.fillStyle='#2b5f6e';c.fillRect(x,y+9,1,1);
-  for(let row=0;row<3;row++){
-   const by=y+10+row*11,joint=(gx+(row%2)*11)%22===0;
-   c.fillStyle=joint?'#5a5347':['#8a8170','#7d7567','#938a77'][(Math.floor((gx+(row%2)*11)/22)+row)%3];c.fillRect(x,by,1,10);
-   c.fillStyle='#5a5347';c.fillRect(x,by+10,1,1);
+  const sx=6+((gx%period+period)%period)/scale;
+  c.drawImage(source,sx,contact,1/scale,source.height-contact,x,y+9,1,rockHeight);
+  // A damp shadow joins the water to the rock, without a straight coping line.
+  c.fillStyle='#192f32';c.fillRect(x,y+7,1,3+(Math.sin(gx*.13)>0?1:0));
+  for(let row=0;row<8;row++){
+   const flow=Math.sin(gx*.047+row*.8)+Math.sin(gx*.119-row*.6)*.45;
+   c.fillStyle=row<2?(flow>.6?'#72b7ac':'#468c8b'):row<5?(flow>.4?'#397e80':'#28646e'):(flow>.5?'#3c7d7b':'#234c59');
+   c.fillRect(x,y+row,1,1);
   }
-  c.fillStyle='#3e3a33';c.fillRect(x,y+43,1,1);
+  // Short reflections follow the current; no repeated vertical grid marks.
+  if(Math.sin(gx*.071)+Math.sin(gx*.173)>1.55){
+   c.fillStyle='#a0d4c5';c.fillRect(x,y+2+Math.floor((1+Math.sin(gx*.021))*1.5),1,1);
+  }
+  if(Math.sin(gx*.093)+Math.sin(gx*.037)>1.45){
+   c.fillStyle='#698253';c.fillRect(x,y+9,1,2+Math.floor(2+2*Math.sin(gx*.19)));
+  }
  }
  t.refresh();scene.add.image(p.x,top,key).setOrigin(0).setDepth(3);
 }
