@@ -12,3 +12,9 @@ export function contactPose(runner,bounds,frameHeight=64){
   scale:runner.sliding||runner.loop?ROLL_DIAMETER/Math.max(1,bounds.bottom-bounds.top):1,
   rotation};
 }
+// Centre du corps pour ramasser les pièces. Dans un looping, le corps est
+// tourné vers le centre de l'anneau : au plafond, il pend sous les pieds.
+export function pickupCenter(runner,height=25){
+ if(!runner.loop)return{x:runner.x,y:runner.feet-height};
+ return{x:runner.x+Math.sin(runner.angle)*height,y:runner.feet-Math.cos(runner.angle)*height};
+}

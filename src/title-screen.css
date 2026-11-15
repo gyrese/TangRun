@@ -36,3 +36,16 @@ body:not(.has-started) .admin-link{bottom:78px;right:24px;font-size:9px;opacity:
 @media(max-height:550px){body:not(.has-started) .screen-overlay{padding:44px 28px 48px}body:not(.has-started) .overlay-content{max-width:460px;display:block}body:not(.has-started) .eyebrow{grid-column:1;font-size:8px;letter-spacing:2px;margin:0;align-self:end}body:not(.has-started) .overlay-content h2{grid-column:1;grid-row:2;margin:0 -12px}body:not(.has-started) .title-tagline{grid-column:1;grid-row:3;font-size:9px;letter-spacing:2px;margin:0;align-self:start}.stage-number{font-size:14px}.stage-tag{display:none}.stage-icon{font-size:20px;width:22px}body:not(.has-started) .menu-actions{grid-column:1;grid-row:4;margin:12px 0 0;align-self:start}body:not(.has-started) .primary-button{min-width:210px;min-height:46px;font-size:12px}body:not(.has-started) .start-hint{grid-column:1;grid-row:5;font-size:7px;margin:12px 0 0}body:not(.has-started) .title-topbar{top:8px;font-size:9px}#menu-sound{min-height:36px;font-size:9px}body:not(.has-started) .title-bottom{bottom:10px;font-size:8px}.title-credit b{display:none}.title-ground{height:37px}.title-runner{display:none}body:not(.has-started) .admin-link{bottom:3px;right:14px;font-size:8px}.controller-dots{gap:3px}.controller-dots i{width:5px;height:5px}}
 
 @media(max-height:550px){body:not(.has-started) .eyebrow{margin-bottom:8px}body:not(.has-started) .title-tagline{margin:0 0 20px}body:not(.has-started) .menu-actions{margin-top:20px}body:not(.has-started) .start-hint{margin-top:14px}}
+/* Sélecteur de parcours : visible uniquement sur l'écran titre. */
+body.has-started .stage-picker{display:none}
+body:not(.has-started) .stage-picker{margin:0 auto 6px;max-width:none}
+body:not(.has-started) .stage-options{gap:8px}
+body:not(.has-started) .stage-options button{display:flex;align-items:center;gap:8px;min-height:46px;padding:7px 10px;border:2px solid #fff0b333;border-radius:0;background:#081f2ccc;color:var(--pixel-cream);text-align:left;font:bold 10px/1.3 monospace;letter-spacing:1px;cursor:pointer}
+body:not(.has-started) .stage-options button[data-stage=campaign]{grid-column:1/-1;justify-content:center}
+body:not(.has-started) .stage-options button[aria-pressed=true]{border-color:var(--pixel-gold);background:#3d3020e6;box-shadow:inset 0 -3px var(--pixel-gold)}
+body:not(.has-started) .stage-options button:focus-visible{outline:2px solid var(--pixel-gold);outline-offset:2px}
+body:not(.has-started) .stage-options small{margin-top:3px;font-size:8px;letter-spacing:0;color:#d2e6d9}
+body:not(.has-started) .stage-number{color:var(--pixel-gold)}
+body:not(.has-started) .stage-tag{margin-left:auto;font-size:8px;color:var(--pixel-gold)}
+@media(max-width:600px){body:not(.has-started) .stage-options{grid-template-columns:repeat(2,1fr)}}
+@media(max-height:550px){body:not(.has-started) .stage-options{gap:6px}body:not(.has-started) .stage-options button{min-height:44px;padding:5px 8px;font-size:9px}body:not(.has-started) .stage-options small{display:none}body:not(.has-started) .stage-picker{margin-bottom:0}}

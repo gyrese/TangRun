@@ -2,7 +2,11 @@ import {randomUUID} from 'node:crypto';
 import {mkdir,readFile,writeFile,rename} from 'node:fs/promises';
 import {dirname} from 'node:path';
 
-export function createLeaderboard(file){
+// Borne physique de la traversée : 33 020 px (80 → 33 100) à la vitesse maximale
+// de 850 px/s donnent 38,8 s. Aucun run réel ne peut être plus rapide.
+export const MIN_RUN_MS=38000;
+
+export function createLeaderboard(file,{minMs=MIN_RUN_MS,now=Date.now}={}){
  let queue=Promise.resolve();
  const sessions=new Map();
  const load=async()=>{try{return JSON.parse(await readFile(file,'utf8'));}catch(error){if(error.code==='ENOENT')return [];throw error;}};
@@ -11,11 +15,11 @@ export function createLeaderboard(file){
  const transaction=fn=>{const task=queue.then(async()=>{const rows=await load();const result=await fn(rows);await mkdir(dirname(file),{recursive:true});await writeFile(`${file}.tmp`,JSON.stringify(rows),'utf8');await rename(`${file}.tmp`,file);return result;});queue=task.catch(()=>{});return task;};
  return {
   async list(){await queue;return snapshot(await load());},
-  start(){const now=Date.now();for(const [id,session]of sessions)if(now-session.started>86400000)sessions.delete(id);const id=randomUUID();sessions.set(id,{started:now});return {id};},
+  start(){const time=now();for(const [id,session]of sessions)if(time-session.started>86400000)sessions.delete(id);const id=randomUUID();sessions.set(id,{started:time});return {id};},
   finish(id,ms){return transaction(rows=>{
    const session=sessions.get(id);if(!session)throw Object.assign(new Error('Run introuvable ou expiré.'),{status:404});
    const previous=rows.find(row=>row.id===id);if(previous)return snapshot(rows,id);
-   if(!Number.isSafeInteger(ms)||ms<=0||ms>Date.now()-session.started+2000)throw Object.assign(new Error('Temps du run invalide.'),{status:400});
+   if(!Number.isSafeInteger(ms)||ms<=0||ms<minMs||ms>now()-session.started+2000)throw Object.assign(new Error('Temps du run invalide.'),{status:400});
    rows.push({id,ms,name:'ANONYME',finishedAt:Date.now()});return snapshot(rows,id);
   });},
   name(id,value){return transaction(rows=>{

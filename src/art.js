@@ -6,6 +6,7 @@ import {contactPose,frameBounds} from './runner-pose.js';
 import {advanceMascotCycle} from './mascot-animation.js';
 import {preloadPropArt,drawLowGate,drawRockRail,basaltTile} from './prop-art.js';
 import {prepareLoopArt,loopArtPose} from './loop-art.js';
+import {terrainTextureLayout} from './terrain-texture.js';
 
 export function preloadArt(scene){
  preloadPropArt(scene);
@@ -33,8 +34,78 @@ export function drawBackdrop(scene){
  c.drawImage(coast,0,510,coast.width,30,0,378,coast.width,162);framed.refresh();
  scene.backgrounds=['snow-bg','volcano','mafate','coast-framed'].map((key,i)=>scene.add.tileSprite(0,0,scene.scale.width,540,key).setOrigin(0).setScrollFactor(0).setDepth(-30+i).setAlpha(i===0?1:0));
  scene.background=scene.backgrounds[0];
+ drawSummitShoulder(scene);
  const motes=scene.add.graphics().setScrollFactor(.12).setDepth(-10);
  for(let i=0;i<80;i++){motes.fillStyle(i%3?0xe88b5a:0xffbe77,.25);motes.fillRect((i*379+140)%3000,60+(i*53)%285,i%4?1:2,1);}
+}
+
+function drawSummitShoulder(scene){
+ const start=groundAt(scene.level,80);
+ if(!start)return;
+ const left=start.x-590,top=heightOn(start,80)-155;
+ const key='snow-summit-shoulder';
+ if(!scene.textures.exists(key)){
+  const width=720,height=540;
+  const texture=scene.textures.createCanvas(key,width,height),ctx=texture.context;
+  const ridge=[[0,156],[47,142],[83,143],[112,117],[151,109],[187,77],
+   [228,70],[253,48],[274,50],[300,22],[334,17],[356,28],[380,24],
+   [410,51],[433,51],[462,82],[497,87],[519,109],[543,116],[564,139],
+   [577,149],[590,155],[630,155],[676,165],[720,188]];
+  const traceRidge=()=>{
+   ctx.beginPath();
+   ctx.moveTo(...ridge[0]);
+   for(const [x,y] of ridge.slice(1))ctx.lineTo(x,y);
+  };
+  traceRidge();
+  ctx.lineTo(width,height);ctx.lineTo(0,height);ctx.closePath();
+  ctx.save();ctx.clip();
+  ctx.fillStyle='#1e2d42';ctx.fillRect(0,0,width,height);
+  const basalt=ctx.createPattern(basaltTile(scene),'repeat');
+  basalt.setTransform(new DOMMatrix().translate(-left%340,-top%700));
+  ctx.globalAlpha=.28;ctx.fillStyle=basalt;ctx.fillRect(0,0,width,height);
+  ctx.globalAlpha=.24;ctx.fillStyle='#2a3d58';ctx.fillRect(0,0,width,height);
+  ctx.globalAlpha=1;
+  const faces=[
+   ['#92abc044',[[112,117],[228,70],[274,50],[217,157],[184,287],[99,420],[153,245]]],
+   ['#101d3177',[[274,50],[334,17],[324,128],[284,208],[268,342],[192,540],[220,326],[254,228]]],
+   ['#819db83b',[[334,17],[410,51],[370,153],[391,215],[336,358],[300,382],[331,249],[312,197]]],
+   ['#12223888',[[410,51],[497,87],[476,173],[447,229],[461,285],[393,459],[414,289],[401,214]]],
+   ['#7895b339',[[519,109],[543,116],[564,139],[538,235],[550,295],[506,413],[508,283]]],
+  ];
+  for(const [color,points] of faces){
+   ctx.beginPath();ctx.moveTo(...points[0]);
+   for(const [x,y] of points.slice(1))ctx.lineTo(x,y);
+   ctx.closePath();ctx.fillStyle=color;ctx.fill();
+  }
+  ctx.lineJoin='bevel';
+  ctx.save();ctx.translate(0,5);
+  traceRidge();ctx.strokeStyle='#93b4d8';ctx.lineWidth=10;ctx.stroke();
+  ctx.restore();ctx.translate(0,1.5);
+  traceRidge();ctx.strokeStyle='#f0f6ff';ctx.lineWidth=3;ctx.stroke();
+  ctx.restore();
+  texture.refresh();
+ }
+ scene.add.image(left,top,key).setOrigin(0).setDepth(3);
+ const signKey='snow-summit-sign';
+ if(!scene.textures.exists(signKey)){
+  const sign=scene.textures.createCanvas(signKey,102,33),ctx=sign.context;
+  ctx.fillStyle='#201d20';ctx.fillRect(2,3,100,30);
+  const planks=['#54382d','#664133','#52362d'];
+  for(const [row,color] of planks.entries()){
+   const y=row*10;
+   ctx.fillStyle=color;ctx.fillRect(0,y,100,9);
+   ctx.fillStyle='#805a43';ctx.fillRect(1,y,98,1);
+   ctx.fillStyle='#382923';ctx.fillRect(2,y+4,2,2);ctx.fillRect(95,y+4,2,2);
+  }
+  ctx.fillStyle='#f6ead7';
+  ctx.font='bold 8px monospace';ctx.textAlign='center';
+  ctx.fillText('PITON DES NEIGES',50,8);
+  ctx.fillText('ALT. 3070 m',50,18);
+  ctx.fillRect(30,24,40,2);
+  ctx.fillRect(29,23,2,4);ctx.fillRect(31,22,2,1);ctx.fillRect(31,27,2,1);
+  sign.refresh();
+ }
+ scene.add.image(start.x-120,top+157,signKey).setOrigin(0).setDepth(3.1);
 }
 
 export function drawPlatformArt(scene,p){
@@ -47,10 +118,13 @@ export function drawPlatformArt(scene,p){
   scene.crateArt.set(p.id,img);return;
  }
  if(p.kind==='ground'){
-  const minY=Math.floor(Math.min(p.y,p.y2)),bottom=1120,h=bottom-minY,key=`terrain-art-${p.id}`;
+  const {top:minY,bottom,height:h}=terrainTextureLayout(p),key=`terrain-art-${p.id}`;
   const leftEdge=scene.level.gaps.some(([,b])=>Math.abs(b-p.x)<1),rightEdge=scene.level.gaps.some(([a])=>Math.abs(a-p.x-p.w)<1);
   const pad=18,t=scene.textures.createCanvas(key,Math.ceil(p.w)+1+pad*2,h),c=t.context; c.translate(pad,0);
   const isSnow=p.x<ZONES[1].x,isVolcano=p.x>=ZONES[1].x&&p.x<ZONES[2].x,isMafate=p.x>=ZONES[2].x&&p.x<ZONES[3].x;
+  if(minY+h<bottom){
+   scene.add.rectangle(p.x,minY+h-1,p.w+1,bottom-minY-h+1,isSnow?0x1e2d42:isVolcano?0x202b2e:isMafate?0x1e2e24:0x1e2c32).setOrigin(0).setDepth(4);
+  }
   const basalt=basaltTile(scene,isVolcano);
   const isRiver=isMafate&&Math.min(p.y,p.y2)>=640&&(scene.level.rivers||[]).some(([a,b])=>p.x>=a-1&&p.x+p.w<=b+1);
   c.imageSmoothingEnabled=false;c.beginPath();c.moveTo(0,p.y-minY);c.lineTo(p.w,p.y2-minY);

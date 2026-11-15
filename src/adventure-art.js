@@ -40,7 +40,12 @@ export function createAdventureArt(scene){
   a.vents.set(vent.id,{base,fire,water});
  }
 
- for(const e of scene.level.adventure.enemies)a.enemies.set(e.id,scene.add.image(e.x,e.y,`v6-${e.kind}-0`).setDepth(8));
+ for(const e of scene.level.adventure.enemies){
+  const sprite=scene.add.image(e.x,e.y,`v6-${e.kind}-0`).setDepth(8);
+  // The Meshy render's feet sit on row 46, eighteen pixels below the collision center.
+  if(e.kind==='crab')sprite.setOrigin(.5,28/48);
+  a.enemies.set(e.id,sprite);
+ }
  for(const r of scene.level.adventure.relics)a.relics.set(r.id,scene.add.image(r.x,r.y,'v6-relic-0').setDepth(8));
  for(const m of scene.level.adventure.monitors)a.monitors.set(m.id,scene.add.image(m.x,m.y,`v6-${m.type}-0`).setDepth(7));
  for(const l of scene.decorPlan.landmarks){

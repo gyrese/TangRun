@@ -3,10 +3,12 @@ import {ZONES,groundAt,heightOn} from './level.js';
 // Runtime loads only the baked low-resolution atlas, not the large source art.
 export function preloadPropArt(scene){
  scene.load.atlas('polish-pixel-atlas','/assets/pixel-props-v2/atlas.png','/assets/pixel-props-v2/atlas.json');
+ for(let i=0;i<4;i++)scene.load.image(`v6-crab-${i}`,`/assets/meshy-crab/crab-${i}.png`);
 }
 export function preparePropArt(scene){
  const atlas=scene.textures.get('polish-pixel-atlas'),source=atlas.getSourceImage();
  for(const key of atlas.getFrameNames()){
+  if(key.startsWith('v6-crab-'))continue;
   const frame=atlas.get(key),t=scene.textures.createCanvas(key,frame.cutWidth,frame.cutHeight),c=t.context;
   c.imageSmoothingEnabled=false;c.drawImage(source,frame.cutX,frame.cutY,frame.cutWidth,frame.cutHeight,0,0,frame.cutWidth,frame.cutHeight);t.refresh();
  }

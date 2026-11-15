@@ -30,12 +30,12 @@ export function updateAmbientLife(scene,reduced){
  const visible=x=>x>camera.scrollX-180&&x<camera.scrollX+w+180;
  life.sky.clear();life.air.clear();
  // Slow surf lines on the water, beneath all terrain and foreground props.
- for(let row=0;row<7;row++)for(let i=0;i<8;i++){
+ if(coast>0)for(let row=0;row<7;row++)for(let i=0;i<8;i++){
   const x=((i*167+row*49+time*(5+row*2))%(w+180))-90,y=416+row*17+Math.sin(time*.8+i)*2;
   life.sky.fillStyle(0xb9d7cb,coast*(.1+row*.012));life.sky.fillRect(x,y,22+(i%3)*18,1);
  }
  // Wind-driven mist through Mafate, with no large opaque overlay.
- for(let i=0;i<6;i++){
+ if(forest>0)for(let i=0;i<6;i++){
   const x=((i*230+time*8)%(w+260))-160,y=285+i%3*40;
   life.sky.fillStyle(0xcfdfd2,forest*.055);life.sky.fillEllipse(x,y,210,20);
  }
@@ -51,7 +51,7 @@ export function updateAmbientLife(scene,reduced){
   life.air.fillStyle(plant.x<16800?0x96b67c:0xe5bc76,(1-age)*.6);life.air.fillRect(x,y,3,2);
  }}
  // Low plumes and rising cinders add depth to the volcanic flats, or light snow mist on Piton des Neiges.
- for(const vent of life.vents){if(!visible(vent.x))continue;for(let i=0;i<5;i++){
+ if(volcano>0)for(const vent of life.vents){if(!visible(vent.x))continue;for(let i=0;i<5;i++){
   const age=(time*.2+i*.2+vent.x*.001)%1,x=vent.x+Math.sin(age*5+i)*15+age*24,y=vent.y-20-age*115;
   life.air.fillStyle(0x9f9a91,(1-age)*.1*volcano);life.air.fillEllipse(x,y,12+age*26,6+age*12);
  }}

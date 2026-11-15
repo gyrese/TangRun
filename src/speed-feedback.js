@@ -1,35 +1,30 @@
-import {groundAt,heightOn} from './level.js';
+import {DEBUG} from './debug-flags.js';
 import {createSnowEffects,resetSnowEffects,updateSnowEffects} from './snow-effects.js';
 const clamp=v=>Math.max(0,Math.min(1,v));
+// À pleine vitesse, la caméra recule de 15 % et regarde plus loin devant,
+// pour laisser le temps de voir arriver sentinelles, évents et réceptions.
+export const SPEED_WIDEN=.15,SPEED_LOOK_AHEAD=100;
 export function speedProfile(velocity,reduced=false){
  const intensity=reduced?0:clamp((Math.abs(velocity)-360)/490);
  return{intensity,zoom:1,lookAhead:(velocity< -30?-1:1)*(60+intensity*40)};
 }
 export function createSpeedFeedback(scene){
  createSnowEffects(scene);
- scene.speedFeedback={intensity:0,lookAhead:60,facing:1,focusFeet:scene.runner.feet,streakCount:0,trail:[],lastEmission:-Infinity,
+ scene.speedFeedback={intensity:0,lookAhead:24,facing:1,focusFeet:scene.runner.feet,streakCount:0,trail:[],lastEmission:-Infinity,
   wind:scene.add.graphics().setScrollFactor(0).setDepth(15),dust:scene.add.graphics().setDepth(9)};
 }
 export function resetSpeedFeedback(scene){
  resetSnowEffects(scene);
  const f=scene.speedFeedback;if(!f)return;
  f.zoomVelocity=0;f.zoomHoldUntil=-Infinity;f.heldZoom=null;f.snowLeadVelocity=0;f.verticalLead=0;f.verticalLeadVelocity=0;
- f.intensity=0;f.lookAhead=60;f.snowLead=-65;f.zoom=scene.baseZoom??1;f.facing=1;f.focusFeet=scene.runner.feet;f.streakCount=0;f.trail=[];f.lastEmission=-Infinity;f.wind.clear();f.dust.clear();
+ f.intensity=0;f.lookAhead=24;f.snowLead=-25;f.zoom=scene.baseZoom??1;f.facing=1;f.focusFeet=scene.runner.feet;f.streakCount=0;f.trail=[];f.lastEmission=-Infinity;f.wind.clear();f.dust.clear();
  scene.cameras.main.setZoom(scene.baseZoom??1);
 }
-// Frame the downhill corridor, including the lower shelf across a deep jump.
+// Keep the runner prominent even above deep drops. Terrain anticipation is
+// deliberately small so a landing cannot pull the camera away from the player.
 export function snowCameraPlan(p,level,height=540){
  if(p.x<0||p.x>=8400||p.loop)return null;
- const speed=Math.abs(p.vx),vertical=p.grounded?Math.max(0,p.vx*(p.slope||0)):Math.max(0,p.vy);
- const gap=(level.gaps||[]).find(([a,b])=>a<8400&&p.x<b&&a-p.x<Math.max(300,speed*.85));
- const landing=gap?groundAt(level,gap[1]+1):null;
- const drop=landing?Math.max(0,heightOn(landing,gap[1]+1)-p.feet):0;
- const descending=vertical>100||!!gap;
- const zoom=drop>400?Math.max(.56,Math.min(.82,height/(drop+220))):descending?.82:1;
- const viewHeight=height/zoom;
- return{zoom,lookAhead:(p.vx< -30?-1:1)*(gap?260:descending?180:60),
-  lead:gap&&drop>400?viewHeight*.30:descending?viewHeight*(p.grounded?.16:.23):-65,
-  vertical,gap:!!gap};
+ return{zoom:1,lookAhead:(p.vx< -30?-1:1)*24,lead:-25,vertical:0,gap:false};
 }
 // Exact critically damped motion: value and velocity stay continuous even
 // when a new slope or landing changes the desired camera framing.
@@ -38,7 +33,7 @@ export function dampCameraValue(value,velocity,target,dt,omega){
  return{value:target+(error+carry*dt)*decay,velocity:(velocity-omega*carry*dt)*decay};
 }
 export function cameraZoom(f,plan,baseZoom,delta,now,reduced=false){
- let target=plan?.zoom??baseZoom;
+ let target=(plan?.zoom??1)*baseZoom;
  if(plan?.gap){
   f.heldZoom=f.heldZoom==null?target:Math.min(f.heldZoom,target);
   f.zoomHoldUntil=now+550;
@@ -54,21 +49,23 @@ export function cameraZoom(f,plan,baseZoom,delta,now,reduced=false){
 export function snapCameraToRunner(scene){
  const p=scene.runner,c=scene.cameras.main;
  const f=scene.speedFeedback,plan=snowCameraPlan(p,scene.level,scene.scale.height);
- if(f){f.zoomVelocity=0;f.zoomHoldUntil=-Infinity;f.heldZoom=null;f.snowLeadVelocity=0;f.verticalLead=0;f.verticalLeadVelocity=0;f.focusFeet=p.feet;f.snowLead=plan?.lead??-65;f.lookAhead=plan?.lookAhead??60;f.zoom=plan?.zoom??scene.baseZoom??1;}
- c.setZoom(plan?.zoom??scene.baseZoom??1);
- const x=p.x+(f?.lookAhead??60),y=p.feet+(plan?.lead??-65);
+ if(f){f.zoomVelocity=0;f.zoomHoldUntil=-Infinity;f.heldZoom=null;f.snowLeadVelocity=0;f.verticalLead=0;f.verticalLeadVelocity=0;f.focusFeet=p.feet;f.snowLead=plan?.lead??-25;f.lookAhead=plan?.lookAhead??24;f.zoom=(plan?.zoom??1)*(scene.baseZoom??1);}
+ c.setZoom((plan?.zoom??1)*(scene.baseZoom??1));
+ const x=p.x+(f?.lookAhead??24),y=p.feet+(plan?.lead??-25);
  c.setFollowOffset(scene.player.x-x,scene.player.y-y);c.centerOn(x,y);
 }
 export function cameraFocus(feedback,p,delta,reduced=false,plan=null){
  const dt=Math.max(0,Math.min(delta,100)),velocity=p.loop?p.loop.entry:p.vx;
  if(Math.abs(velocity)>60)feedback.facing=Math.sign(velocity);
- const profile=speedProfile(velocity,reduced),target=plan?.lookAhead??feedback.facing*(60+profile.intensity*40);
+ const profile=speedProfile(velocity,reduced),target=plan?.lookAhead??feedback.facing*(24+profile.intensity*SPEED_LOOK_AHEAD);
  feedback.lookAhead+=(target-feedback.lookAhead)*(1-Math.exp(-dt/240));
  if(!Number.isFinite(feedback.focusFeet))feedback.focusFeet=p.feet;
  if(p.loop){
-  // Keep the whole ring readable; chasing the feet makes the scenery orbit.
-  feedback.focusFeet=p.loop.baseY-p.loop.radius+65;
-  return{x:p.loop.x+feedback.lookAhead*.2,y:feedback.focusFeet-65};
+  // Frame the ring as one space; chasing the whole orbit makes the scenery spin.
+  // Follow 40% of the vertical motion so the close-up still keeps the runner in view.
+  const center=p.loop.baseY-p.loop.radius;
+  feedback.focusFeet=p.feet;
+  return{x:p.loop.x+feedback.lookAhead*.2,y:center+(p.feet-center)*.4};
  }
  if(plan){
   if(!Number.isFinite(feedback.snowLead))feedback.snowLead=plan.lead;
@@ -81,16 +78,29 @@ export function cameraFocus(feedback,p,delta,reduced=false,plan=null){
   else feedback.focusFeet=Math.max(p.feet-85,Math.min(p.feet+105,feedback.focusFeet));
   return{x:p.x+feedback.lookAhead,y:feedback.focusFeet+feedback.snowLead+feedback.verticalLead};
  }
+ // Hold the horizon on small jumps, otherwise the whole screen bobs.
  if(p.grounded)feedback.focusFeet=p.feet;
  else feedback.focusFeet=Math.max(p.feet-85,Math.min(p.feet+105,feedback.focusFeet));
- return{x:p.x+feedback.lookAhead,y:feedback.focusFeet-65};
+ return{x:p.x+feedback.lookAhead,y:feedback.focusFeet-25};
 }
 export function fitSpeedBackdrop(scene){
  const width=scene.scale.width,height=scene.scale.height,zoom=scene.cameras.main.zoom;
- const left=(width-width/zoom)/2,top=(height-height/zoom)/2;
- for(const background of scene.backgrounds)background.setPosition(left,top).setSize(width/zoom,height/zoom);
- const snow=scene.backgrounds[0],source=snow.texture?.getSourceImage();
- if(source){snow.setTileScale(Math.max(snow.width/source.width,snow.height/source.height));}
+ // Les fonds sont dimensionnés une seule fois, pour le recul maximal de la caméra.
+ // Redimensionner une TileSprite réalloue sa texture : le faire à chaque image
+ // pendant le recul de vitesse faisait saccader les téléphones.
+ const minZoom=(scene.baseZoom??zoom)*(1-SPEED_WIDEN);
+ const previous=scene.backdropFit;
+ if(previous?.width!==width||previous.height!==height||previous.minZoom!==minZoom){
+  scene.backdropFit={width,height,minZoom};
+  // Canvas dimensions must be integers, otherwise Canvas rendering reallocates
+  // the backing store every frame when comparing it with a fractional size.
+  for(const background of scene.backgrounds)background.setSize(Math.ceil(width/minZoom),Math.ceil(height/minZoom));
+  const snow=scene.backgrounds[0],source=snow.texture?.getSourceImage();
+  if(source){snow.setTileScale(Math.max(snow.width/source.width,snow.height/source.height));}
+ }
+ // À chaque image, seule une mise à l'échelle (gratuite) suit le zoom courant.
+ const left=(width-width/zoom)/2,top=(height-height/zoom)/2,scale=minZoom/zoom;
+ for(const background of scene.backgrounds)background.setPosition(left,top).setScale(scale);
  scene.speedFeedback?.wind.setPosition(left,top).setScale(1/zoom);
 }
 export function updateSpeedFeedback(scene,delta,reduced=false){
@@ -102,7 +112,9 @@ export function updateSpeedFeedback(scene,delta,reduced=false){
  const baseZoom=scene.baseZoom??1;
  const plan=snowCameraPlan(p,scene.level,scene.scale.height);
  f.zoom??=camera.zoom;
- camera.setZoom(cameraZoom(f,plan,baseZoom,delta,scene.visualClock,reduced));
+ // L'intensité est déjà lissée : le recul suit l'élan sans pomper à chaque appui.
+ const widen=reduced||DEBUG.has('nowiden')?1:1-SPEED_WIDEN*f.intensity;
+ camera.setZoom(cameraZoom(f,plan,baseZoom*widen,delta,scene.visualClock,reduced));
  const focus=cameraFocus(f,p,delta,reduced,plan);
  camera.setFollowOffset(scene.player.x-focus.x,scene.player.y-focus.y);
  camera.setLerp(reduced?1:1-Math.exp(-Math.min(delta,100)/70),reduced?1:1-Math.exp(-Math.min(delta,100)/(plan?45:100)));

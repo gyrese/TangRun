@@ -46,8 +46,6 @@ export function createLivingWorld(scene){
    live.glows.push({sprite:glow,phase,key:item.key});
   }
  }
- live.crater=scene.add.sprite(684,205,'volcanic-fire',0).setScrollFactor(0).setOrigin(.5,1).setScale(.42).setDepth(-26).setAlpha(.55);
- live.sprites.push({sprite:live.crater,key:'fire',x:8480,y:205,phase:0,crater:true});
  live.barGlow=scene.add.image(GOAL_X,335,'warm-glow').setScale(3.2,2.2).setDepth(0).setAlpha(.15);
 
  if(scene.textures.exists('snowflakes')){
@@ -88,10 +86,8 @@ export function updateLivingWorld(scene,reducedMotion){
   const pulse=reducedMotion?1:.85+.15*Math.sin(seconds*2.2+glow.phase);
   glow.sprite.setAlpha(glow.key==='lavarocks'?.35*pulse:.22*pulse);
  }
- const volcanoAlpha=scene.backgrounds[1].alpha*(1-scene.backgrounds[2].alpha);
- live.crater.setPosition(((692-scene.backgrounds[1].tilePositionX)%1920+1920)%1920,193).setAlpha(.55*volcanoAlpha);
  for(const item of live.sprites||[]){
-  if(!item.crater&&!inView(item.x))continue;
+  if(!inView(item.x))continue;
   item.sprite.setFrame(animationFrame(time,8,8,item.phase));
  }
  const snowAlpha=scene.backgrounds[0].alpha*(1-scene.backgrounds[1].alpha);

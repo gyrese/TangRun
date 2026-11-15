@@ -4,11 +4,16 @@ import {loadPlayableLevel} from './editor-store.js';
 import './style.css';
 import './title-screen.css';
 import './leaderboard.css';
+import './hud.css';
 import {createLeaderboardUI} from './leaderboard.js';
 import {preloadArt,drawBackdrop,drawStreet,drawPlatformArt,updateMascot,drawCourseMechanisms,updateCourseMechanisms} from './art.js';
 import {buildLevel,formatTime,readBest,WORLD_WIDTH,GOAL_X,SPEED,MAX_SPEED,ZONES,STAGES,recordKey,groundAt,heightOn} from './level.js';
 import {landInSnow} from './snow-effects.js';
 import {createRunner,stepRunner,sampleRunner} from './movement.js';
+import {pickupCenter} from './runner-pose.js';
+import {VENUE,venueStatus} from './venue.js';
+import {DEBUG} from './debug-flags.js';
+import {installRenderCulling} from './render-cull.js';
 import {createLivingWorld,updateLivingWorld} from './living-world.js';
 import {drawPathDetails} from './route-dressing.js';
 import {createSpeedFeedback,resetSpeedFeedback,updateSpeedFeedback,fitSpeedBackdrop,snapCameraToRunner} from './speed-feedback.js';
@@ -25,6 +30,14 @@ const audio={enabled:false,context:null,
  unlock(){try{this.context??=new(window.AudioContext||window.webkitAudioContext)();this.context.resume().catch(()=>{});}catch{this.enabled=false;}},
  tone(hz,seconds=.1){if(!this.enabled||!this.context)return;try{const o=this.context.createOscillator(),g=this.context.createGain(),t=this.context.currentTime;o.type='triangle';o.frequency.setValueAtTime(hz,t);o.frequency.exponentialRampToValueAtTime(hz*.65,t+seconds);g.gain.setValueAtTime(.045,t);g.gain.exponentialRampToValueAtTime(.001,t+seconds);o.connect(g);g.connect(this.context.destination);o.start();o.stop(t+seconds);}catch{}}
 };
+// Fiche du bar : liens fixes, statut d'ouverture recalculé à chaque arrivée.
+$('bar-address').textContent=VENUE.address;$('bar-phone').textContent=VENUE.phone;$('bar-phone').href=VENUE.phoneHref;
+for(const key of ['maps','reserve','instagram'])$(`bar-${key}`).href=VENUE.links[key];
+function showBarCard(visible){
+ $('bar-card').hidden=!visible;document.body.classList.toggle('has-bar-card',visible);if(!visible)return;
+ const status=venueStatus();$('bar-status').textContent=status.text;$('bar-status').classList.toggle('open',status.open);
+ $('bar-reward').hidden=!VENUE.reward;$('bar-reward').textContent=VENUE.reward??'';
+}
 function overlay({kicker='',title,copy='',button}){$('overlay-kicker').textContent=kicker;$('overlay-title').innerHTML=title;$('overlay-copy').textContent=copy;$('play').textContent=button;$('overlay').hidden=false;$('restart').hidden=gameScene?.mode!=='paused';}
 function clearControls(){resetStick();Object.keys(touch).forEach(k=>touch[k]=false);document.querySelectorAll('[data-control]').forEach(b=>b.classList.remove('pressed'));}
 
@@ -43,9 +56,10 @@ class RunScene extends Phaser.Scene{
   this.visualClock=0;this.landedAt=-1000;createLivingWorld(this);
   this.dust=this.add.graphics().setDepth(9);createSpeedFeedback(this);updateMascot(this);
   const cameraTop=Math.min(-360,...this.level.terrain.map(p=>Math.min(p.y,p.y2)-500));
-  this.cameras.main.setBounds(0,cameraTop,WORLD_WIDTH,1120-cameraTop);
+  this.cameras.main.setBounds(-960,cameraTop,WORLD_WIDTH+1920,1120-cameraTop);
   this.cameras.main.startFollow(this.player,false,reducedMotion?1:.25,reducedMotion?1:.3,-60,45);
   this.cameras.main.setDeadzone();
+  if(!DEBUG.has('nocull'))installRenderCulling(this);
   this.adventure=createAdventureState();createAdventureArt(this);updateAdventureArt(this,reducedMotion);
   fitGameViewport();
   this.keys=this.input.keyboard.addKeys('LEFT,RIGHT,UP,DOWN,SPACE,A,D,Q,W,Z,S,SHIFT,R,P,ESC');
@@ -62,7 +76,7 @@ class RunScene extends Phaser.Scene{
   this.updateHud();$('play').disabled=false;$('play').textContent='JOUER';
  }
  startRun(){
-  document.body.classList.remove('show-results');
+  document.body.classList.remove('show-results');showBarCard(false);
   leaderboard.start(selectedStage==='campaign'&&!new URLSearchParams(location.search).has('custom'));
   $('return-home').hidden=true;
   resetBarArrival(this);
@@ -126,15 +140,17 @@ class RunScene extends Phaser.Scene{
   document.body.classList.add('show-results');
   this.mode='finished';
   const atBar=this.runEnd===GOAL_X;
-  overlay({kicker:atBar?`${newBest?'RECORD PERSONNEL · ':''}${formatTime(this.elapsed)}`:newBest?'RECORD PERSONNEL':this.activeStage?.name??'LES TOILES NOIRES',title:atBar?'Bienvenue à<br><em>Les Toiles Noires</em>':`${formatTime(this.elapsed)}<br><em>ARRIVÉE</em>`,button:'REJOUER'});
+  overlay({kicker:atBar?`${newBest?'RECORD PERSONNEL · ':''}${formatTime(this.elapsed)}`:newBest?'RECORD PERSONNEL':this.activeStage?.name??'LES TOILES NOIRES',title:atBar?'Bienvenue à <br><em>Les Toiles Noires</em>':`${formatTime(this.elapsed)}<br><em>ARRIVÉE</em>`,button:'REJOUER'});
   $('split-results').textContent=this.splits.map(s=>`${STAGES[s.zone].name} : ${formatTime(s.ms)}`).join(' · ');
   const rating=adventureRank(this.adventure,this.falls,this.elapsed/1000,this.adventure.relics.size);
-  $('overlay-copy').textContent=`RANG ${rating.rank} · ${rating.total.toLocaleString('fr-FR')} pts · ${this.adventure.relics.size}/${this.activeStage?3:12} emblèmes · ${this.adventure.defeated.size} sentinelles · ${this.falls} reprises`;
+  $('overlay-copy').textContent=`RANG ${rating.rank} · ${rating.total.toLocaleString('fr-FR')} pts · ${this.adventure.relics.size}/${this.relicTotal()} emblèmes · ${this.adventure.defeated.size} sentinelles · ${this.falls} reprises`;
   $('next-stage').hidden=!this.activeStage||this.zone===3;
   $('finish-share').hidden=false;this.updateHud();$('progress').style.width='100%';$('announcer').textContent=`${this.activeStage?'Niveau terminé':'Arrivée au bar'} en ${formatTime(this.elapsed)}.`;audio.tone(1046,.25);$('play').focus({preventScroll:true});
   if(!this.activeStage){$('overlay-copy').textContent='';$('split-results').textContent='';leaderboard.finish(this.elapsed);}
-  $('return-home').hidden=false;
+  $('return-home').hidden=false;showBarCard(atBar);
  }
+ // Total d'emblèmes du parcours joué : la région choisie, ou toute l'île.
+ relicTotal(){const relics=this.level.adventure?.relics??[];return this.activeStage?relics.filter(r=>r.x>=this.runStart-200&&r.x<=this.runEnd).length:relics.length;}
  updateHud(){
   $('timer').textContent=formatTime(this.elapsed);$('zone-number').textContent=String(this.zone+1).padStart(2,'0');$('zone-name').textContent=ZONES[this.zone].name;
   $('progress').style.width=`${Math.max(0,Math.min(100,(this.runner.x-this.runStart)/(this.runEnd-this.runStart)*100))}%`;
@@ -142,7 +158,7 @@ class RunScene extends Phaser.Scene{
   $('speed-value').textContent=`×${momentum.toFixed(1)}`;$('speed-fill').style.width=`${Math.min(100,Math.abs(this.runner.vx)/MAX_SPEED*100)}%`;
   $('speed-meter').classList.toggle('boosted',momentum>1.3);
   $('shard-count').textContent=String(this.count).padStart(2,'0');
-  $('relic-count').textContent=`${this.adventure?.relics.size??0}/${this.activeStage?3:9}`;
+  $('relic-count').textContent=`${this.adventure?.relics.size??0}/${this.relicTotal()}`;
   $('shield-state').textContent=this.adventure?.shield?'BOUCLIER':'ÉCLATS';
  }
  update(_,delta){
@@ -170,7 +186,8 @@ class RunScene extends Phaser.Scene{
    const event=stepRunner(this.runner,input,this.level,1/120);this.accumulator-=1/120;
    if(event.jumped)audio.tone(540);
    if(event.landed){this.landedAt=this.visualClock;landInSnow(this,this.runner,Math.max(0,impactVy-this.runner.vx*this.runner.slope));}
-   for(const coin of this.coins)if(coin.active&&Math.abs(coin.x-this.runner.x)<23&&Math.abs(coin.y-(this.runner.feet-25))<32){coin.setActive(false).setVisible(false);this.count++;audio.tone(880,.06);}
+   const body=pickupCenter(this.runner);
+   for(const coin of this.coins)if(coin.active&&Math.abs(coin.x-body.x)<23&&Math.abs(coin.y-body.y)<32){coin.setActive(false).setVisible(false);this.count++;audio.tone(880,.06);}
    const encounter=stepAdventure(this.adventure,this.runner,this.level.adventure,1/120,this.count);this.count=encounter.balance;
    let hitRespawn=false;
    for(const e of encounter.events){
@@ -204,7 +221,7 @@ class RunScene extends Phaser.Scene{
 }
 $('play').disabled=true;
 function pressStart(){
- if(!document.fullscreenElement)document.documentElement.requestFullscreen?.({navigationUI:'hide'}).catch(()=>{});
+ if(!phoneMedia.matches&&!document.fullscreenElement)document.documentElement.requestFullscreen?.({navigationUI:'hide'}).catch(()=>{});
  if(!bootFinished){finishBoot();return;}
  if(!gameScene)return;
  if(gameScene.mode==='arriving')return;
@@ -214,9 +231,9 @@ $('play').addEventListener('click',pressStart);
 let bootFinished=false;
 function finishBoot(){if(bootFinished)return;bootFinished=true;$('boot-screen').hidden=true;document.body.classList.remove('booting');$('play').focus({preventScroll:true});}
 $('skip-boot').addEventListener('click',finishBoot);
-window.addEventListener('keydown',e=>{if(e.target.closest?.('input,form,button:not(#play)'))return;if(e.code==='Enter'&&!e.repeat){e.preventDefault();if(!bootFinished)finishBoot();else if(gameScene?.mode!=='running')pressStart();}});
+window.addEventListener('keydown',e=>{if(e.target.closest?.('input,form,a,button:not(#play)'))return;if(e.code==='Enter'&&!e.repeat){e.preventDefault();if(!bootFinished)finishBoot();else if(gameScene?.mode!=='running')pressStart();}});
 $('return-home').addEventListener('click',()=>{
- leaderboard.leaveFinish();gameScene.mode='ready';resetBarArrival(gameScene);clearControls();document.body.classList.remove('has-started','is-playing','show-results');
+ leaderboard.leaveFinish();showBarCard(false);gameScene.mode='ready';resetBarArrival(gameScene);clearControls();document.body.classList.remove('has-started','is-playing','show-results');
  $('overlay-kicker').textContent='UNE AVENTURE À LA RÉUNION';$('overlay-title').innerHTML='<img class="tangrun-logo" src="/assets/tangrun-logo.svg" alt="TangRun" />';$('overlay-copy').textContent='';$('split-results').textContent='';$('play').textContent='JOUER';$('return-home').hidden=true;$('next-stage').hidden=true;$('restart').hidden=true;$('finish-share').hidden=true;leaderboard.refresh();$('play').focus({preventScroll:true});
 });
 setTimeout(finishBoot,reducedMotion?700:3400);
@@ -244,13 +261,35 @@ stickZone.addEventListener('pointerdown',e=>{
 stickZone.addEventListener('pointermove',e=>{if(e.pointerId===stickPointer){e.preventDefault();moveStick(e);}});
 for(const type of ['pointerup','pointercancel','lostpointercapture'])stickZone.addEventListener(type,e=>{if(e.pointerId===stickPointer)resetStick();});
 function updatePhoneMode(){
- document.body.classList.toggle('phone-mode',phoneMedia.matches);clearControls();
+ const changed=document.body.classList.contains('phone-mode')!==phoneMedia.matches;
+ document.body.classList.toggle('phone-mode',phoneMedia.matches);
+ if(changed)clearControls();
  if(phoneMedia.matches&&innerHeight>innerWidth&&gameScene?.mode==='running')gameScene.togglePause();
 }
 phoneMedia.addEventListener('change',updatePhoneMode);window.addEventListener('resize',updatePhoneMode);updatePhoneMode();
 for(const b of document.querySelectorAll('[data-control]')){
  const key=b.dataset.control;b.addEventListener('pointerdown',e=>{e.preventDefault();if(gameScene?.mode!=='running')return;b.setPointerCapture(e.pointerId);touch[key]=true;b.classList.add('pressed');});
  for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,()=>{touch[key]=false;b.classList.remove('pressed');});
+}
+// Safari iOS ignore « user-scalable=no » : on bloque nous-mêmes le pincement
+// et le double-tap, sinon la page zoome et le joueur ne peut plus dézoomer.
+if(!DEBUG.has('notouch')){
+for(const type of ['gesturestart','gesturechange','gestureend'])document.addEventListener(type,e=>e.preventDefault(),{passive:false});
+let lastTouchEnd=0;
+document.addEventListener('touchend',e=>{const now=Date.now();if(now-lastTouchEnd<350&&!e.target.closest?.('input,textarea,a'))e.preventDefault();lastTouchEnd=now;},{passive:false});
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+}
+if(DEBUG.has('fps')){
+ const box=document.createElement('div');box.style.cssText='position:fixed;left:6px;top:50%;z-index:99;padding:4px 6px;background:#000b;color:#7f7;font:11px monospace;pointer-events:none;white-space:pre';document.body.append(box);
+ let frames=[],last=performance.now(),worst=0;
+ const tick=now=>{const d=now-last;last=now;frames.push(d);requestAnimationFrame(tick);};requestAnimationFrame(tick);
+ setInterval(()=>{if(!frames.length)return;const sorted=frames.slice().sort((a,b)=>a-b),p=q=>sorted[Math.floor(sorted.length*q)];worst=Math.max(...frames);
+  const z=gameScene?.cameras.main.zoom;box.textContent=`${Math.round(1000/p(.5))} img/s
+med ${p(.5).toFixed(0)}ms p95 ${p(.95).toFixed(0)}ms
+max ${worst.toFixed(0)}ms >40ms:${frames.filter(f=>f>40).length}
+zoom ${z?.toFixed(3)} ${game.renderer.type===Phaser.WEBGL?'WebGL':'Canvas'}
+${game.scale.gameSize.width}x${game.scale.gameSize.height} dpr${devicePixelRatio}
+${[...DEBUG].join(',')}`;frames=[];},1000);
 }
 window.addEventListener('blur',clearControls);document.addEventListener('visibilitychange',()=>{if(document.hidden&&gameScene?.mode==='running')gameScene.togglePause();});
 $('share').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(`${gameScene.activeStage?gameScene.activeStage.name:'La traversée de La Réunion'} : ${formatTime(gameScene.elapsed)} · ${gameScene.falls} chute(s) ! #LesToilesNoires #LaReunion`);$('share').textContent='COPIÉ ✓';}catch{$('share').textContent=formatTime(gameScene.elapsed);}});
@@ -268,7 +307,8 @@ function fitGameViewport(){
  if(game.scale.gameSize.width!==width)game.scale.setGameSize(width,540);
  else game.scale.refresh();
  if(gameScene?.backgrounds){
-  const baseZoom=phoneMedia.matches?1.25:1;
+  // PC : cadrage plus large qu'avant (1.4), qui rapprochait trop la vue.
+  const baseZoom=phoneMedia.matches?1.5:1.15;
   const previousZoom=gameScene.baseZoom??1;
   gameScene.baseZoom=baseZoom;
   gameScene.cameras.main.setZoom(gameScene.cameras.main.zoom/previousZoom*baseZoom);

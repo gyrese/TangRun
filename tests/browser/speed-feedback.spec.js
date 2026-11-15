@@ -19,25 +19,25 @@ const sample=page=>page.evaluate(()=>{
 
 test('boost framing, wind, path dressing, pause and restart work together',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));await launchFast(page);
- const fast=await sample(page);expect(fast.zoom).toBe(1);
+ const fast=await sample(page);expect(fast.zoom).toBeLessThan(1.15);expect(fast.zoom).toBeGreaterThanOrEqual(1.15*.85-.01);
  expect(fast.streaks).toBeGreaterThan(5);expect(fast.props).toBeGreaterThan(20);expect(fast.props).toBeLessThan(70);expect(fast.details).toBeLessThan(200);
  await page.screenshot({path:'.local/speed-update/coast-fast.png'});
  await page.keyboard.up('ArrowRight');await page.keyboard.up('ArrowDown');await page.locator('#pause').click();
  const paused=await sample(page);await page.waitForTimeout(200);expect(await sample(page)).toEqual(paused);
  await page.locator('#play').click();await page.keyboard.press('r');
- const reset=await sample(page);expect(reset.zoom).toBe(1);expect(reset.streaks).toBe(0);expect(reset.trail).toBe(0);
+ const reset=await sample(page);expect(reset.zoom).toBe(1.15);expect(reset.streaks).toBe(0);expect(reset.trail).toBe(0);
  expect(errors).toEqual([]);
 });
 
 test('reduced motion keeps the full-speed game free of camera zoom and wind streaks',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await launchFast(page);
- const fast=await sample(page);expect(fast.zoom).toBe(1);expect(fast.intensity).toBe(0);expect(fast.streaks).toBe(0);expect(fast.trail).toBe(0);
+ const fast=await sample(page);expect(fast.zoom).toBe(1.15);expect(fast.intensity).toBe(0);expect(fast.streaks).toBe(0);expect(fast.trail).toBe(0);
  await page.keyboard.up('ArrowRight');await page.keyboard.up('ArrowDown');
 });
 
 test('phone boost keeps the whole viewport covered through rotation',async({browser})=>{
  const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true}),page=await context.newPage();
- await launchFast(page);const fast=await sample(page);expect(fast.zoom).toBe(1.25);
+ await launchFast(page);const fast=await sample(page);expect(fast.zoom).toBeLessThan(1.5);expect(fast.zoom).toBeGreaterThanOrEqual(1.5*.85-.01);
  await page.keyboard.up('ArrowRight');await page.keyboard.up('ArrowDown');
  const covered=()=>page.evaluate(()=>{
   const s=window.__LTN__.game.scene.getScene('run'),c=s.cameras.main;

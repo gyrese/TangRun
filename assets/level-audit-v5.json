@@ -14,13 +14,21 @@
         "ok": true,
         "seconds": 10.22,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 0,
+        "relics": 1,
+        "shards": 13
       },
       "rolling": {
         "ok": true,
         "seconds": 10.36,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 0,
+        "relics": 1,
+        "shards": 13
       }
     },
     {
@@ -36,13 +44,21 @@
         "ok": true,
         "seconds": 18.71,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 1,
+        "defeated": 2,
+        "relics": 2,
+        "shards": 29
       },
       "rolling": {
         "ok": true,
         "seconds": 20.48,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 1,
+        "defeated": 3,
+        "relics": 2,
+        "shards": 30
       }
     },
     {
@@ -58,13 +74,21 @@
         "ok": true,
         "seconds": 21.4,
         "maxSpeed": 512,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 3,
+        "defeated": 1,
+        "relics": 0,
+        "shards": 18
       },
       "rolling": {
         "ok": true,
         "seconds": 18.77,
         "maxSpeed": 553,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 1,
+        "defeated": 4,
+        "relics": 0,
+        "shards": 60
       }
     },
     {
@@ -80,21 +104,33 @@
         "ok": true,
         "seconds": 16.4,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 2,
+        "relics": 1,
+        "shards": 65
       },
       "rolling": {
         "ok": true,
         "seconds": 16.78,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 2,
+        "relics": 1,
+        "shards": 65
       }
     }
   ],
   "campaign": {
     "ok": true,
-    "seconds": 45.29,
+    "seconds": 63.22,
     "maxSpeed": 850,
-    "stoppedFrames": 0
+    "stoppedFrames": 0,
+    "hits": 4,
+    "defeated": 5,
+    "relics": 5,
+    "shards": 125
   },
   "recovery": [
     {
@@ -103,7 +139,11 @@
         "ok": true,
         "seconds": 10.22,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 0,
+        "relics": 1,
+        "shards": 13
       }
     },
     {
@@ -112,7 +152,11 @@
         "ok": true,
         "seconds": 7.49,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 0,
+        "relics": 0,
+        "shards": 13
       }
     },
     {
@@ -121,7 +165,11 @@
         "ok": true,
         "seconds": 5.15,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 0,
+        "relics": 1,
+        "shards": 12
       }
     },
     {
@@ -130,7 +178,11 @@
         "ok": true,
         "seconds": 2.86,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 0,
+        "relics": 1,
+        "shards": 12
       }
     },
     {
@@ -139,7 +191,11 @@
         "ok": true,
         "seconds": 1.04,
         "maxSpeed": 330,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 0,
+        "relics": 0,
+        "shards": 2
       }
     },
     {
@@ -148,7 +204,11 @@
         "ok": true,
         "seconds": 18.71,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 1,
+        "defeated": 2,
+        "relics": 2,
+        "shards": 29
       }
     },
     {
@@ -157,7 +217,11 @@
         "ok": true,
         "seconds": 13.48,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 1,
+        "defeated": 0,
+        "relics": 2,
+        "shards": 11
       }
     },
     {
@@ -166,7 +230,11 @@
         "ok": true,
         "seconds": 11.77,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 1,
+        "defeated": 0,
+        "relics": 2,
+        "shards": 11
       }
     },
     {
@@ -175,7 +243,11 @@
         "ok": true,
         "seconds": 8.46,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 1,
+        "relics": 0,
+        "shards": 30
       }
     },
     {
@@ -184,7 +256,11 @@
         "ok": true,
         "seconds": 3.42,
         "maxSpeed": 330,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 0,
+        "relics": 0,
+        "shards": 10
       }
     },
     {
@@ -193,7 +269,11 @@
         "ok": true,
         "seconds": 21.34,
         "maxSpeed": 512,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 3,
+        "defeated": 1,
+        "relics": 0,
+        "shards": 18
       }
     },
     {
@@ -202,7 +282,11 @@
         "ok": true,
         "seconds": 20.22,
         "maxSpeed": 490,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 3,
+        "defeated": 1,
+        "relics": 0,
+        "shards": 15
       }
     },
     {
@@ -211,7 +295,11 @@
         "ok": true,
         "seconds": 19.6,
         "maxSpeed": 420,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 3,
+        "defeated": 0,
+        "relics": 0,
+        "shards": 14
       }
     },
     {
@@ -220,7 +308,11 @@
         "ok": true,
         "seconds": 12.01,
         "maxSpeed": 420,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 2,
+        "defeated": 0,
+        "relics": 0,
+        "shards": 14
       }
     },
     {
@@ -229,7 +321,11 @@
         "ok": true,
         "seconds": 8.33,
         "maxSpeed": 420,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 1,
+        "defeated": 0,
+        "relics": 0,
+        "shards": 14
       }
     },
     {
@@ -238,7 +334,11 @@
         "ok": true,
         "seconds": 1.15,
         "maxSpeed": 330,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 0,
+        "relics": 0,
+        "shards": 2
       }
     },
     {
@@ -247,7 +347,11 @@
         "ok": true,
         "seconds": 16.34,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 2,
+        "relics": 1,
+        "shards": 65
       }
     },
     {
@@ -256,7 +360,11 @@
         "ok": true,
         "seconds": 12.51,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 3,
+        "defeated": 0,
+        "relics": 0,
+        "shards": 18
       }
     },
     {
@@ -265,7 +373,11 @@
         "ok": true,
         "seconds": 9.02,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 2,
+        "defeated": 0,
+        "relics": 0,
+        "shards": 18
       }
     },
     {
@@ -274,7 +386,11 @@
         "ok": true,
         "seconds": 4.62,
         "maxSpeed": 850,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 0,
+        "relics": 0,
+        "shards": 21
       }
     },
     {
@@ -283,7 +399,11 @@
         "ok": true,
         "seconds": 1.23,
         "maxSpeed": 820,
-        "stoppedFrames": 0
+        "stoppedFrames": 0,
+        "hits": 0,
+        "defeated": 0,
+        "relics": 0,
+        "shards": 2
       }
     }
   ],

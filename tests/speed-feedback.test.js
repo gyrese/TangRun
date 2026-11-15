@@ -47,27 +47,26 @@ test('camera holds its horizon on small jumps and its facing when braking to res
  assert.ok(falling.y>high.y,'A fall cannot disappear beneath the camera');
 });
 
-test('camera frames a loop as one space instead of following its orbit',()=>{
+test('camera frames a loop as one space and only damps the orbit',()=>{
  const f={lookAhead:80,facing:1,focusFeet:600};
  const loop={x:1800,baseY:600,radius:180,entry:780};
  const bottom=cameraFocus(f,{x:1800,feet:600,vx:780,loop},0);
  const top=cameraFocus(f,{x:1800,feet:240,vx:-780,loop},0);
- assert.deepEqual(top,bottom);assert.equal(top.y,420);
+ assert.equal(bottom.x,top.x);assert.equal(bottom.y,492);assert.equal(top.y,348);
 });
 
 
-test('snow descent frames the terrain below and widens the view for deep landings',()=>{
+test('snow descent keeps a close centered view even above a deep landing',()=>{
  const l=buildLevel(),x=1650,support=groundAt(l,x),p={x,feet:heightOn(support,x),vx:850,vy:0,slope:support.slope,grounded:true};
  const plan=snowCameraPlan(p,l,540);
- assert.ok(plan.zoom<.7);assert.ok(plan.lead>200);assert.ok(plan.lookAhead>=200);
- const f={focusFeet:p.feet,lookAhead:plan.lookAhead,snowLead:plan.lead,zoom:plan.zoom,verticalLead:plan.vertical*.045},focus=cameraFocus(f,p,16,false,plan);
- const screenY=(p.feet-focus.y)*plan.zoom+270;
- assert.ok(screenY>55&&screenY<220,'Runner occupies the upper part of the view');
- const landing=groundAt(l,2181),landingY=(heightOn(landing,2181)-focus.y)*plan.zoom+270;
- assert.ok(landingY>screenY&&landingY<540,'Lower reception is visible before takeoff');
- assert.equal(snowCameraPlan({...p,x:9000},l),null,'Other stages retain their own framing');
+ const f={focusFeet:p.feet,lookAhead:plan.lookAhead,snowLead:plan.lead,zoom:2};
+ const zoom=cameraZoom(f,plan,2,16,0,true),focus=cameraFocus(f,p,16,true,plan);
+ assert.equal(zoom,2,'Snow must retain the desktop close-up');
+ assert.ok(Math.abs((p.feet-25-focus.y)*zoom)<55);
+ assert.ok(Math.abs((p.x-focus.x)*zoom)<55);
+ assert.equal(cameraZoom(f,plan,2.25,16,0,true),2.25,'Phone zoom is respected');
+ assert.equal(snowCameraPlan({...p,x:9000},l),null);
 });
-
 
 test('zoom eases with a continuous velocity and holds its wide view through a landing',()=>{
  const f={zoom:1,zoomVelocity:0};
