@@ -37,7 +37,7 @@ test('reduced motion keeps the full-speed game free of camera zoom and wind stre
 
 test('phone boost keeps the whole viewport covered through rotation',async({browser})=>{
  const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true}),page=await context.newPage();
- await launchFast(page);const fast=await sample(page);expect(fast.zoom).toBeLessThan(1.5);expect(fast.zoom).toBeGreaterThanOrEqual(1.5*.85-.01);
+ await launchFast(page);const fast=await sample(page);expect(fast.zoom).toBeLessThan(1.35);expect(fast.zoom).toBeGreaterThanOrEqual(1.35*.85-.01);
  await page.keyboard.up('ArrowRight');await page.keyboard.up('ArrowDown');
  const covered=()=>page.evaluate(()=>{
   const s=window.__LTN__.game.scene.getScene('run'),c=s.cameras.main;

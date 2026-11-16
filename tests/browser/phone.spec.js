@@ -7,7 +7,7 @@ test('phone landscape floating joystick, simultaneous jump and portrait pause',a
  await expect(page.locator('[data-control="slide"]')).toHaveCount(0);
  const view=await page.locator('#viewport').boundingBox();expect(view.x).toBe(0);expect(view.width).toBe(844);
  await expect.poll(()=>page.evaluate(()=>window.__LTN__.game.scale.gameSize.width)).toBe(Math.round(540*view.width/view.height));
- await expect.poll(()=>page.evaluate(()=>window.__LTN__.game.scene.scenes[0].cameras.main.zoom)).toBe(1.5);
+ await expect.poll(()=>page.evaluate(()=>window.__LTN__.game.scene.scenes[0].cameras.main.zoom)).toBe(1.35);
  const canvas=await page.locator('#game canvas').boundingBox();expect(Math.abs(canvas.x)).toBeLessThan(1);expect(Math.abs(canvas.width-view.width)).toBeLessThan(1);
  const cdp=await context.newCDPSession(page),finger={x:135,y:240,id:1};
  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[finger]});await expect(page.locator('#joystick')).toBeVisible();

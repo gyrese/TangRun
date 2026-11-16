@@ -308,7 +308,7 @@ function fitGameViewport(){
  else game.scale.refresh();
  if(gameScene?.backgrounds){
   // PC : cadrage plus large qu'avant (1.4), qui rapprochait trop la vue.
-  const baseZoom=phoneMedia.matches?1.5:1.15;
+  const baseZoom=phoneMedia.matches?1.35:1.15;
   const previousZoom=gameScene.baseZoom??1;
   gameScene.baseZoom=baseZoom;
   gameScene.cameras.main.setZoom(gameScene.cameras.main.zoom/previousZoom*baseZoom);
