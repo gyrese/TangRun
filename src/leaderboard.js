@@ -41,7 +41,7 @@ export function createLeaderboardUI(){
    try{
     const session=await pending;if(!session)throw Error('Classement indisponible pour ce run.');
     const result=await api(`runs/${session.id}/finish`,{ms:Math.floor(ms)});if(current!==version)return;
-    lastFinish={id:session.id};render(result);rank(`TON DERNIER RUN : ${result.rank===1?'1ER':`${result.rank}E`}`);
+    lastFinish={id:session.id};render(result);rank(result.rank<=10?'TOP 10 · AJOUTE TON PSEUDO':`TON TEMPS : ${result.rank}E`);
     if(result.rank<=10&&atFinish){$('record-form').hidden=false;$('record-name').value='';$('record-name').focus({preventScroll:true});}
    }catch(error){if(current===version)rank(error.message);}
   },

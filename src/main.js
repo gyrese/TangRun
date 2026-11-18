@@ -17,7 +17,7 @@ import {installRenderCulling} from './render-cull.js';
 import {createLivingWorld,updateLivingWorld} from './living-world.js';
 import {drawPathDetails} from './route-dressing.js';
 import {createSpeedFeedback,resetSpeedFeedback,updateSpeedFeedback,fitSpeedBackdrop,snapCameraToRunner} from './speed-feedback.js';
-import {createAdventureState,stepAdventure,adventureRank} from './adventure.js';
+import {createAdventureState,stepAdventure} from './adventure.js';
 import {preloadAdventure,createAdventureArt,updateAdventureArt} from './adventure-art.js';
 import {preparePropArt} from './prop-art.js';
 import {resetBarArrival,beginBarArrival,updateBarArrival} from './bar-arrival.js';
@@ -140,12 +140,11 @@ class RunScene extends Phaser.Scene{
   document.body.classList.add('show-results');
   this.mode='finished';
   const atBar=this.runEnd===GOAL_X;
-  overlay({kicker:atBar?`${newBest?'RECORD PERSONNEL · ':''}${formatTime(this.elapsed)}`:newBest?'RECORD PERSONNEL':this.activeStage?.name??'LES TOILES NOIRES',title:atBar?'Bienvenue à <br><em>Les Toiles Noires</em>':`${formatTime(this.elapsed)}<br><em>ARRIVÉE</em>`,button:'REJOUER'});
-  $('split-results').textContent=this.splits.map(s=>`${STAGES[s.zone].name} : ${formatTime(s.ms)}`).join(' · ');
-  const rating=adventureRank(this.adventure,this.falls,this.elapsed/1000,this.adventure.relics.size);
-  $('overlay-copy').textContent=`RANG ${rating.rank} · ${rating.total.toLocaleString('fr-FR')} pts · ${this.adventure.relics.size}/${this.relicTotal()} emblèmes · ${this.adventure.defeated.size} sentinelles · ${this.falls} reprises`;
+  overlay({kicker:newBest?'RECORD PERSONNEL':'ARRIVÉE',title:formatTime(this.elapsed),button:'REJOUER'});
+  $('split-results').textContent='';
+  $('overlay-copy').textContent='';
   $('next-stage').hidden=!this.activeStage||this.zone===3;
-  $('finish-share').hidden=false;this.updateHud();$('progress').style.width='100%';$('announcer').textContent=`${this.activeStage?'Niveau terminé':'Arrivée au bar'} en ${formatTime(this.elapsed)}.`;audio.tone(1046,.25);$('play').focus({preventScroll:true});
+  $('finish-share').hidden=true;this.updateHud();$('progress').style.width='100%';$('announcer').textContent=`${this.activeStage?'Niveau terminé':'Arrivée au bar'} en ${formatTime(this.elapsed)}.`;audio.tone(1046,.25);$('play').focus({preventScroll:true});
   if(!this.activeStage){$('overlay-copy').textContent='';$('split-results').textContent='';leaderboard.finish(this.elapsed);}
   $('return-home').hidden=false;showBarCard(atBar);
  }
