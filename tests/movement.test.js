@@ -7,6 +7,19 @@ const DT=1/120;
 const surface=(id,x,w,y,y2)=>({id,kind:'ground',x,w,y,y2,slope:(y2-y)/w});
 const run=(p,input,level,seconds)=>{for(let i=0;i<seconds*120;i++)stepRunner(p,input,level,DT);};
 
+test('automatic rolling stands up at low speed on flat ground and slopes',()=>{
+ for(const slope of [0,.4,-.4]){
+  const floor=surface('ground-0',0,3000,450,450+slope*3000);
+  const level={terrain:[floor],platforms:[],pads:[]};
+  for(const vx of [-220,0,150,220]){
+   const p=createRunner(500,heightOn(floor,500));p.vx=vx;p.rolling=true;p.sliding=true;
+   stepRunner(p,{},level,DT);
+   assert.equal(p.rolling,false,`rolling at speed ${vx} on slope ${slope}`);
+   assert.equal(p.sliding,false,`crouched at speed ${vx} on slope ${slope}`);
+  }
+ }
+});
+
 test('downhill automatically rolls, gains speed, follows the surface and coasts after release',()=>{
  const level={terrain:[surface('ground-0',0,600,300,540),surface('ground-1',600,3000,540,540)],platforms:[],pads:[]};
  const p=createRunner(80,332);p.vx=SPEED;

@@ -67,9 +67,10 @@ export function stepRunner(p,input,level,dt){
  if(input.jump&&!p.lastJump)p.buffer=.14;else p.buffer=Math.max(0,p.buffer-dt);
  p.coyote=p.grounded?.11:Math.max(0,p.coyote-dt);
  p.slope=p.grounded&&surface?surface.slope:0;
- const downhill=p.slope*Math.sign(p.vx)>.10&&Math.abs(p.vx)>110;
+ const rollingSpeed=Math.abs(p.vx)>220;
+ const downhill=p.slope*Math.sign(p.vx)>.10&&rollingSpeed;
  const braking=direction&&Math.sign(p.vx)!==direction;
- p.rolling=p.grounded?!braking&&((input.slide&&Math.abs(p.vx)>45)||downhill||(wasRolling&&Math.abs(p.vx)>220)):wasRolling;
+ p.rolling=p.grounded?!braking&&((input.slide&&Math.abs(p.vx)>45)||downhill||(wasRolling&&rollingSpeed)):wasRolling;
  p.sliding=p.rolling||(p.grounded?!!input.slide:wasSliding);
  // Recover traction on a steep ascent even if the player keeps crouch held.
  // Otherwise rolling acceleration loses to gravity and can trap a novice in a valley.
