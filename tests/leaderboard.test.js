@@ -61,3 +61,10 @@ test('legacy anonymous entries do not occupy leaderboard places',async t=>{
  await writeFile(file,JSON.stringify([{id:'old',name:'ANONYME',ms:50},{id:'named',name:'Tangue',ms:100}]));
  const result=await createLeaderboard(file).list();assert.equal(result.total,1);assert.deepEqual(result.top,[{rank:1,name:'Tangue',ms:100}]);
 });
+
+test('home leaderboard hides anonymous entries from an older API and closes rank gaps',async()=>{
+ const {visibleLeaderboardRows}=await import('../src/leaderboard.js');
+ const rows=visibleLeaderboardRows([{name:'ANONYME',ms:50},{name:' anonyme ',ms:60},{name:'',ms:70},{ms:80},{name:'Tangue',ms:100},{name:'Reunion',ms:110}]);
+ assert.deepEqual(rows,[{name:'Tangue',ms:100},{name:'Reunion',ms:110}]);
+ assert.deepEqual(visibleLeaderboardRows([{name:'ANONYME',ms:50}]),[]);
+});

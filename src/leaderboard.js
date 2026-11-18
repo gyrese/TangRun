@@ -1,21 +1,26 @@
 import {formatTime} from './level.js';
 
+export function visibleLeaderboardRows(rows){
+ return rows.filter(row=>typeof row?.name==='string'&&row.name.trim()&&row.name.trim().toUpperCase()!=='ANONYME').slice(0,10);
+}
+
 export function createLeaderboardUI(){
  const $=id=>document.getElementById(id);
  let run=null,lastFinish=null,version=0,atFinish=false;
  const api=async(path,data)=>{
-  const response=await fetch(`/api/${path}`,{method:data?'POST':'GET',headers:data?{'Content-Type':'application/json'}:undefined,body:data?JSON.stringify(data):undefined,signal:AbortSignal.timeout(10000)});
+  const response=await fetch(`/api/${path}`,{method:data?'POST':'GET',cache:'no-store',headers:data?{'Content-Type':'application/json'}:undefined,body:data?JSON.stringify(data):undefined,signal:AbortSignal.timeout(10000)});
   const value=await response.json();if(!response.ok)throw Error(value.error||'Classement indisponible.');return value;
  };
  function render(data){
+  const rows=visibleLeaderboardRows(data.top);
   $('leaderboard-rows').replaceChildren();
   for(let i=0;i<10;i++){
-   const row=data.top[i],tr=document.createElement('tr');
+   const row=rows[i],tr=document.createElement('tr');
    for(const value of [String(i+1).padStart(2,'0'),row?.name??'—',row?formatTime(row.ms):'— — : — —']){const td=document.createElement('td');td.textContent=value;tr.append(td);}
    $('leaderboard-rows').append(tr);
   }
-  $('leaderboard-status').textContent=data.total?'':'À toi de signer le premier chrono.';
-  $('leaderboard-status').hidden=!!data.total;
+  $('leaderboard-status').textContent=rows.length?'':'À toi de signer le premier chrono.';
+  $('leaderboard-status').hidden=!!rows.length;
  }
  async function refresh(){try{render(await api('leaderboard'));}catch{$('leaderboard-status').hidden=false;$('leaderboard-status').textContent='Classement indisponible. Réessaie dans un instant.';}}
  function rank(value){$('last-run-rank').hidden=false;$('last-run-rank').textContent=value;}
