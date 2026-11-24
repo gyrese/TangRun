@@ -4,7 +4,7 @@
 
 Asset: `public/assets/snow/gite-piton-neiges-large.png` (1860 × 845, transparent PNG), created with the built-in imagegen tool from the two architectural images supplied by the user. Central projecting gable, V-support, long wings, large terrace and stilts are retained in a snowy pixel-art interpretation. References are saved as `assets/reference/gite-piton-neiges-large-1.jpg` and `assets/reference/gite-piton-neiges-large-2.jpg`.
 
-Placement: x=850, y=-5380, scale=0.10 (186px wide), depth=-18. Reduced a further 57% from the 0.23 version to read as a distant mountain refuge. Cool atmospheric tint and 0.76 alpha soften its contrast; the smaller ledge uses depth=-19 and 0.7 alpha. The refuge remains below the summit behind the descent, without changing any collision geometry. Original small sprite retained as an unused earlier version.
+Placement: x=650, y=-5580, scale=0.18 (335px wide), depth=-18. The building is visible earlier in the first descent, above the slope and behind the track. A light cool tint and 0.95 alpha retain the mountain atmosphere while keeping the façade legible. The ledge uses depth=-19 and 0.7 alpha. Original small sprite retained as an unused earlier version.
 
 ### Large-refuge generation prompt
 

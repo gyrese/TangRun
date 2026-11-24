@@ -160,7 +160,7 @@ export function buildLevel(){
 
  // Zone 0 snow decor
  level.scenery.push(
-  {id:'snow-gite-summit',key:'snow-gite',x:850,y:-5380,scale:.10,anchor:'absolute',authored:true},
+  {id:'snow-gite-summit',key:'snow-gite',x:650,y:-5580,scale:.18,anchor:'absolute',authored:true},
   {id:'snow-scenery-1',key:'snow-chunk',x:300,scale:.7,anchor:'ground',depth:1},
   {id:'snow-scenery-2',key:'snow-chunk',x:600,scale:.7,anchor:'ground',depth:1},
   {id:'snow-scenery-3',key:'snow-chunk',x:1900,scale:.8,anchor:'ground',depth:1},

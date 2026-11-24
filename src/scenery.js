@@ -92,7 +92,7 @@ export function drawScenery(scene,level){
   if(VENUE_KEYS.includes(placement.key)||placement.key.startsWith('snow'))sprite.clearTint().setAlpha(1);
   let supportArt;
   if(placement.key==='snow-gite'){
-   sprite.setDepth(-18).setTint(0xb4c7d8).setAlpha(.76);
+   sprite.setDepth(-18).setTint(0xd8e5f2).setAlpha(.95);
    supportArt=drawRefugeShelf(scene,placement);
   }
   scene.placedScenery.push({...placement,sprite,supportArt});
